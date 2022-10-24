@@ -216,7 +216,7 @@ class Part{
 
 ```cpp
 class Part {
-	String description;+
+	string description;
 	void setDescription(string description){
 		this.description = description;
 	}
