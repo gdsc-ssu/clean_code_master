@@ -154,16 +154,21 @@ class DtaRcrd102 {
 	private Date genymdhms;
 	private Date modymdhms;
 }
+
 class Customer{
 	private Date generationTimestamp;
 	private Date modificationTimestamp;
 }
 ```
+
 둘중에 어느코드가 더 알아보기 쉽나? → 첫번째는 본인들만 아는 규칙으로 작성했기 때문에 알아보기 어렵다. 두번째는 이름을 보고 무슨 변수인지 알아낼 수 있다.
+
 ### 검색하기 쉬운 이름을 사용하라
+
 - 문자 하나를 사용하는 이름과 상수는 텍스트 코드에서 쉽게 눈에 띄지 않는다.
 - 이름 길이는 범위 크기에 비례해야 한다.
 - 변수나 상수를 코드 여러 곳에서 사용한다면 검색하기 쉬운 이름이 바람직하다.
+
 ```cpp
 int realDaysPerIdealDay = 4;
 const int WORK_DAYS_PER_WEEK = 5;
@@ -174,20 +179,32 @@ for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
 	sum += realTaskWeeks;
 }
 ```
+
 위 코드에서는 이름을 의미있게 지어서 길어지지만 검색 시 쉽고 빠르게 찾을 수 있다.
+
 → 이름은 짧을 수록 좋으나, 더이상 압축할 수 없을 만큼만 짧아야 한다.
+
 ### 인코딩을 피하라
+
 - 문제 해결에 집중하는 개발자에게 인코딩은 불필요한 정신적 부담이다.
 - 인코딩한 이름은 거의가 발음하기 어려우며 오타가 생기기도 쉽다.
+
 **헝가리식 표기법**
+
 : 이름의 앞에 데이터 타입을 명시하는 것.
+
 - 이름 길이가 제한된 옛날에는 이 규칙을 위반할수밖에 없었다.
+
   ex) 포트란은 첫 글자로 유형을 표현, 초창기 베이식은 글자 하나에 숫자 하나만 허용.
+
 - 요즘의 ide는 컴파일 하지 않고도 타입 오류를 감지할 정도로 발전했다.
   → 이제는 헝가리식 표기법이나 기타 인코딩 방식이 방해가 된다.
+
 **멤버 변수 접두어**
+
 - 이제는 멤버 변수에 m\_이라는 접두어를 붙일 필요도 없다. 클래스와 함수는 접두어가 필요 없을 정도로 작아야 한다.
 - 멤버 변수를 다른색상으로 표시하거나 눈에 띄게 보여주는 ide를 사용해야 한다.
+
 ```cpp
 class Part{
 	private String m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
@@ -320,11 +337,13 @@ class GuessStatisticsMessage{
 	private string number;
 	private string verb;
 	private string pluralModifier;
+
 	public string make(char candidate, int count){
 		createPluralDependentMessageParts(count);
 		string tmp = "There "+verb, number, candidate, pluralModifier;
 		return tmp;
 	}
+
 	private void createPluralDependentMessageParts(int count){
 		if(count ==0){
 			thereAreNoLetters();
@@ -333,6 +352,7 @@ class GuessStatisticsMessage{
 		} else {
 			thereAreManyLetters(count);
 		}
+
 	private void thereAreManyLetters(int count){
 		number = to_string(count);
 		verb = "are";
@@ -380,17 +400,3 @@ class GuessStatisticsMessage{
     → 그러므로 암기는 요즘 나오는 도구에게 맡기고, 문장이나 문단처럼 읽히는 코드를 짜는 데 집중해야한다.
 
 </aside>
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
