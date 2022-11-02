@@ -10,27 +10,30 @@
 
 → 당연한 말이지만 정말로 중요하다. 좋은 이름을 지으려면 시간이 걸리지만 좋은 이름으로 절약하는 시간이 훨씬 더 많다. (만약 이름을 짓고 넘어가도 더 좋은 이름이 떠오르면 바꿔라)
 
-```cpp
-int d //경과 시간 (단위: 날짜)
+```js
+let d; // 경과 시간 (단위: 날짜)
 ```
 
 이런 이름 d는 아무 의미도 없다. 측정하려는 값과 단위를 표현하는 이름이 필요하다.
 
-```cpp
-int daysSinceCreation;
-int fileAgeInDays;
+```js
+const elapsedTimeInDays;
+const daysSinceCreation;
+const daysSinceModification;
+const fileAgeInDays;
 ```
 
 이런식으로 의도가 드러나는 이름은 코드 이해와 변경이 쉬워진다.
 
-```cpp
-int* getThem(){
-	list<int> *list1 =new list<[int] >
-	for(int i=0;i<sizeof(theList);i++){
-		if(theList[0]==4)
-			list1.add(theList[i]);
-	}
-	return list1
+```js
+function getThem() {
+	const list1 = [];
+  for (let i = 0; i < theList.length; i++) {
+    if (theList[i] === 4) {
+      list1.push(theList[i]);
+    }
+  }
+	return list1;
 }
 ```
 
@@ -47,13 +50,15 @@ int* getThem(){
 
 아래처럼 각 개념에 이름만 붙여도 코드가 상당히 나아진다.
 
-```cpp
-int* getFlaggedCells(){
-	list<int> * flaggedcells =new list<[int] >
-	for(int i=0;i<sizeof(gameBoard);i++){
-		if(gameBoard[i][STATUS_VAULE]==FLAGGED)
-			flaggedCells.add(gameBoard[i]);
-	}
+```js
+function getFlaggedCells() {
+	const flaggedCells = [];
+  for (let i = 0; i < gameBoard.length; i++) {
+		const cell = gameBoard[i];
+    if (cell[STATUS_VALUE] === FLAGGED) {
+      flaggedCells.push(gameBoard[i]);
+    }
+  }
 	return flaggedCells;
 }
 ```
@@ -62,13 +67,15 @@ int* getFlaggedCells(){
 
 또한 int형이 아닌 간단한 클래스로 리스트를 만들어도 된다.
 
-```cpp
-int* getFlaggedCells(){
-	list<Cell> * flaggedcells =new list<[Cell] >
-	for(int i=0;i<sizeof(gameBoard);i++){
-		if(fameBoard[i].ifFlagged())
-			flaggedCells.add(gameBoard[i]);
-	}
+```js
+function getFlaggedCells() {
+	const flaggedCells = new CellList();
+  for (let i = 0; i < gameBoard.length; i++) {
+		const cell = gameBoard[i];
+    if (cell.isFlagged()) {
+      flaggedCells.add(gameBoard[i]);
+    }
+  }
 	return flaggedCells;
 }
 ```
@@ -85,29 +92,22 @@ int* getFlaggedCells(){
 
   ex) 계정을 그룹으로 묶을때 accountList라고 명명했을 때 list(배열) 자료형이 아닐 경우 잘못된 정보를 제공하는 것이다. → accountGroup 또는 단순히 Accounts라 명명한다.
 
-  ```cpp
+  ```js
   class accountList; //-> 이름은 list(배열)이지만 배열이 아니다.
   ```
-
 - 유사한 개념은 유사한 표기법을 사용한다.
   → 요즘 개발환경은 자동완성 기능을 제공한다. 만약 이름 몇 자만 입력한 후 뜨는 가능한 후보 목록에 유사한 개념이 나오고, 각 개념 차이가 명백히 드러난다면 자동완성을 굉장히 유용하게 사용할 수 있다.
 - 서로 다른 모듈에서 흡사한 이름을 사용하지 않도록 주의한다.
-
   ex) 한 모듈에서 XYZControllerForEfficientHandlingOfStrings라는 이름을 사용하고 다른 모듈에서 XYZControllerForEfficientStorageOfStrings라는 이름을 사용할 때 두 단어는 많이 비슷하다.
   → 다른 모듈이지만 이름이 비슷해 헷갈릴 수 있다.
-
 - 구별하기 어려울 정도로 비슷해 보이는 문자를 이름으로 사용하지 않도록 주의한다.
-
   ex) 숫자 1과 영어 소문자 L, 대문자 O와 숫자 0
-
-  ```cpp
-  int a = 1;
-  if (O==l)
-  a = O1;
-  else
-  l = 01;
+  ```js
+  let a = 1;
+  if (O === l) a = O1;
+  else l = 01;
   ```
-
+  
   → 실제 이런코드를 만나면 답이 없다.
 
 ### 의미 있게 구분하라
@@ -120,11 +120,11 @@ int* getFlaggedCells(){
 - 연속된 숫자를 덧붙이는 것도 안좋다.
 
   ex) a1,a2..aN같은 이름은 저자 의도가 전혀 드러나지 않는다.
-
-  ```cpp
-  void copyChars(char a1[], char a2[]{
-  	for(int i=0;i<a1.length;i++)
-  		a2[i]=a1[i];
+  ```js
+  function copyChars(a1, a2) {
+    for (let i = 0; i < a1.length; i++) {
+      a2[i] = a1[i];
+    }
   }
   ```
 
@@ -135,7 +135,7 @@ int* getFlaggedCells(){
 
   ex) 코드를 읽다가 Customer라는 클래스와 CustomerObject라는 클래스를 발견했을 때 차이를 알 수 있는가? → 이름만보고는 유추할 수 없다.
 
-  ```cpp
+  ```js
   getActiveAccount();
   getActiveAccounts();
   getActiveAccoutInfo();
@@ -149,15 +149,18 @@ int* getFlaggedCells(){
 - 발음하기 쉬운 이름을 사용해라! 어려운 이름은 토론하기 어렵다
   → 결국 프로그래밍은 사회 활동이기 때문에 원활한 의사소통을 위해선 발음하기 쉬운 이름을 사용하는게 좋다.
 
-```cpp
+```js
 class DtaRcrd102 {
-	private Date genymdhms;
-	private Date modymdhms;
+  constructor(genymdhms, modymdhms) {
+    this.genymdhms = genymdhms;
+    this.modymdhms = modymdhms;
+  }
 }
-
-class Customer{
-	private Date generationTimestamp;
-	private Date modificationTimestamp;
+class Customer {
+  constructor(generationTimestamp, modificationTimestamp) {
+    this.generationTimestamp = generationTimestamp;
+    this.modificationTimestamp = modificationTimestamp;
+  }
 }
 ```
 
@@ -169,14 +172,20 @@ class Customer{
 - 이름 길이는 범위 크기에 비례해야 한다.
 - 변수나 상수를 코드 여러 곳에서 사용한다면 검색하기 쉬운 이름이 바람직하다.
 
-```cpp
-int realDaysPerIdealDay = 4;
-const int WORK_DAYS_PER_WEEK = 5;
-int sum = 0;
-for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
-	int realTaskDays = taskEstimate[j]*realDaysPerIdealDay;
-	int realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK);
-	sum += realTaskWeeks;
+```js
+// ❌
+for (let j = 0; j < 34; j++) {
+    s += (t[j]*4)/5;
+}
+
+// ⭕️
+let realDayPerIdealDay = 4;
+const WORK_DAYS_PER_WEEK = 5;
+let sum = 0;
+for (let j = 0; j < NUMBER_OF_TASKS; j++) {
+    let realTaskDays = taskEstimate[j] * realDaysPerIdealDay;
+    let realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK);
+    sum += realTaskWeeks;
 }
 ```
 
@@ -205,22 +214,29 @@ for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
 - 이제는 멤버 변수에 m\_이라는 접두어를 붙일 필요도 없다. 클래스와 함수는 접두어가 필요 없을 정도로 작아야 한다.
 - 멤버 변수를 다른색상으로 표시하거나 눈에 띄게 보여주는 ide를 사용해야 한다.
 
-```cpp
-class Part{
-	private String m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
-	void setName(String name){
-		m_dsc=name;
-	}
-} //예전에는 이렇게 썼음
-```
-
-```cpp
+```js
+// ❌
 class Part {
-	string description;
-	void setDescription(string description){
-		this.description = description;
-	}
-} // 이런식으로 쓰는 것을 권장
+    constructor(m_dsc) {
+        this.m_dsc = m_dsc; // 설명문자열, m_은 멤버 변수를 뜻함.
+    }
+    
+    setName(name) {
+        m_dsc = name;
+    } // 예전에는 이렇게 썼음
+}
+
+// ⭕️
+class Part {
+    constructor(description) {
+        this.description = description;
+    }
+    
+    setDescription(description) {
+        this.description = description;
+    } // 이런 식으로 쓰는 것을 권장
+}
+
 ```
 
 ⇒ 접두어는 옛날에 작성한 코드라는 징표가 되어버림.
@@ -257,9 +273,9 @@ class Part {
 - 점근자(Accessor), 변경자(Mutator), 조건자(Predicate)는 표준에 따라 값 앞에 get, set,is를 붙인다.
 - 생상자를 중복정의할 때는 정적 팩토리 메서드를사용한다.
 
-```cpp
-Complex fulcrumPoint = Complex.FromRealNumber(23.0);
-Complex fulcrumPoint = new Complex(23.0);
+```js
+const fulcrumPoint = Complex.FromRealNumber(23.0);
+const fulcrumPoint = new Complex(23.0);
 //아래보다 위 코드가 더 좋다.
 ```
 
@@ -307,67 +323,70 @@ Complex fulcrumPoint = new Complex(23.0);
     ex) state라는 변수 하나만 사용했을때 이것이 주소의 일부라는 사실을 바로 알 수 있을까?
     → 어렵다. 그러므고 addr이라는 접두어를 추가해 addrState라 쓰면 좀 더 쉽게 알 수 있다.
 
-```cpp
-void printGuessStatistics(char candidate, int count){
-	string number;
-	string verb;
-	string pluralModifier;
-	if (count ==0){
-		number="no";
-		verb="are";
-		pluralModifier = "s";
-	} else if (count==1){
-		number="1";
-		verb="is";
-		pluralModifier = "";
-	} else{
-		number=count-'0';
-		verb="are";
-		pluralModifier = "s";
-	}
-	cout<<"There "<<verb<<number<<candidate, pluralModifier<<endl;
+```typescript
+function printGuessStatistics(candidate, count) {
+    let number;
+    let verb;
+    let pluralModifier;
+    if (count === 0) {
+        number = 'no';
+        verb = 'are';
+        pluralModifier = 's';
+    } else if (count === 1) {
+        number = '1';
+        verb = 'is';
+        pluralModifier = '';
+    } else {
+        number = count.toString();
+        verb = 'are';
+        pluralModifier = 's';
+    }
+  const guessMessage = `There ${verb} ${number} ${candidate}, ${pluralModifier}`;
+  console.log(guessMessage);
 }
 ```
 
 - 다음 코드를 보면 함수가 길고, 세 변수를 함수 전반에서 사용한다. (맥락이 불분명하다)
   그래서 클래스를 만든 후 세변수를 클래스에 넣어서 사용하고, 함수를 작은 조각으로 쪼개면 이 함수가 무엇을 하는지 더 분명해진다.
 
-```cpp
-class GuessStatisticsMessage{
-	private string number;
-	private string verb;
-	private string pluralModifier;
+```js
+class GuessStatisticsMessage {
+    constructor(number, verb, pluralModifier) {
+        this.number = number;
+        this.verb = verb;
+        this.pluralModifier = pluralModifier;
+    }
 
-	public string make(char candidate, int count){
-		createPluralDependentMessageParts(count);
-		string tmp = "There "+verb, number, candidate, pluralModifier;
-		return tmp;
-	}
-
-	private void createPluralDependentMessageParts(int count){
-		if(count ==0){
-			thereAreNoLetters();
-		} else if(count ==1) {
-			thereIsOneLEtter();
-		} else {
-			thereAreManyLetters(count);
-		}
-
-	private void thereAreManyLetters(int count){
-		number = to_string(count);
-		verb = "are";
-		pluralModifier;
-	}
-	private void thereIsOneLetter(){
-		number = "1";
-		verb = "is";
-		pluralModifier="";
-	}
-	private void thereAreNoLetters(){
-		number = "no";
-		verb = "are";
-		pluralModifier = "s";
-	}
+  make(candidate, count) {
+    this.createPluralDependentMessageParts(count);
+    const tmp = `There ${this.verb} ${this.number} ${candidate} ${
+      this.pluralModifier}`;
+    return tmp;
+  }
+  createPluralDependentMessageParts(count) {
+    if (count === 0) {
+      this.thereAreNoLetters();
+    } else if (count === 1) {
+      this.thereIsOneLetter();
+    } else {
+      this.thereAreManyLetters(count);
+    }
+  }
+  thereAreManyLetters(count) {
+    this.number = String(count);
+    this.verb = 'are';
+    this.pluralModifier = 's';
+  }
+  thereIsOneLetter() {
+    this.number = '1';
+    this.verb = 'is';
+    this.pluralModifier = '';
+  }
+  thereAreNoLetters() {
+    this.number = 'no';
+    this.verb = 'are';
+    this.pluralModifier = 's';
+  }
 }
 ```
 
@@ -390,7 +409,7 @@ class GuessStatisticsMessage{
 <br>
 <aside>
 	💡 사람들이 이름을 바꾸지 않으려는 이유 하나는 다른 개발자가 반대할까 두려워서다.
-    
+
 	→ 하지만 오히려 좋은 이름으로 바꿔주면 반갑고 고마워 한다.
 </aside>
 
