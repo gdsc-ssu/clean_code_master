@@ -10,27 +10,27 @@
 
 → 당연한 말이지만 정말로 중요하다. 좋은 이름을 지으려면 시간이 걸리지만 좋은 이름으로 절약하는 시간이 훨씬 더 많다. (만약 이름을 짓고 넘어가도 더 좋은 이름이 떠오르면 바꿔라)
 
-```cpp
-int d //경과 시간 (단위: 날짜)
+```dart
+int d; //경과 시간 (단위: 날짜)
 ```
 
 이런 이름 d는 아무 의미도 없다. 측정하려는 값과 단위를 표현하는 이름이 필요하다.
 
-```cpp
+```dart
 int daysSinceCreation;
 int fileAgeInDays;
 ```
 
 이런식으로 의도가 드러나는 이름은 코드 이해와 변경이 쉬워진다.
 
-```cpp
-int* getThem(){
-	list<int> *list1 =new list<[int] >
-	for(int i=0;i<sizeof(theList);i++){
-		if(theList[0]==4)
+```dart
+List<int> getThem(){
+	List<int> list1 = []
+	for(int i=0; i<list1.length(); i++) {
+		if(list1[0]==4)
 			list1.add(theList[i]);
 	}
-	return list1
+	return list1;
 }
 ```
 
@@ -47,9 +47,9 @@ int* getThem(){
 
 아래처럼 각 개념에 이름만 붙여도 코드가 상당히 나아진다.
 
-```cpp
-int* getFlaggedCells(){
-	list<int> * flaggedcells =new list<[int] >
+```dart
+List<int> getFlaggedCells() {
+	List<int> flaggedcells = [];
 	for(int i=0;i<sizeof(gameBoard);i++){
 		if(gameBoard[i][STATUS_VAULE]==FLAGGED)
 			flaggedCells.add(gameBoard[i]);
@@ -62,9 +62,9 @@ int* getFlaggedCells(){
 
 또한 int형이 아닌 간단한 클래스로 리스트를 만들어도 된다.
 
-```cpp
-int* getFlaggedCells(){
-	list<Cell> * flaggedcells =new list<[Cell] >
+```dart
+List<Cell> getFlaggedCells(){
+	List<Cell> * flaggedcells = []
 	for(int i=0;i<sizeof(gameBoard);i++){
 		if(fameBoard[i].ifFlagged())
 			flaggedCells.add(gameBoard[i]);
@@ -85,7 +85,7 @@ int* getFlaggedCells(){
 
   ex) 계정을 그룹으로 묶을때 accountList라고 명명했을 때 list(배열) 자료형이 아닐 경우 잘못된 정보를 제공하는 것이다. → accountGroup 또는 단순히 Accounts라 명명한다.
 
-  ```cpp
+  ```dart
   class accountList; //-> 이름은 list(배열)이지만 배열이 아니다.
   ```
 
@@ -100,7 +100,7 @@ int* getFlaggedCells(){
 
   ex) 숫자 1과 영어 소문자 L, 대문자 O와 숫자 0
 
-  ```cpp
+  ```dart
   int a = 1;
   if (O==l)
   a = O1;
@@ -121,8 +121,8 @@ int* getFlaggedCells(){
 
   ex) a1,a2..aN같은 이름은 저자 의도가 전혀 드러나지 않는다.
 
-  ```cpp
-  void copyChars(char a1[], char a2[]{
+  ```dart
+  void copyChars(String a1, String a2){
   	for(int i=0;i<a1.length;i++)
   		a2[i]=a1[i];
   }
@@ -135,7 +135,7 @@ int* getFlaggedCells(){
 
   ex) 코드를 읽다가 Customer라는 클래스와 CustomerObject라는 클래스를 발견했을 때 차이를 알 수 있는가? → 이름만보고는 유추할 수 없다.
 
-  ```cpp
+  ```dart
   getActiveAccount();
   getActiveAccounts();
   getActiveAccoutInfo();
@@ -149,15 +149,15 @@ int* getFlaggedCells(){
 - 발음하기 쉬운 이름을 사용해라! 어려운 이름은 토론하기 어렵다
   → 결국 프로그래밍은 사회 활동이기 때문에 원활한 의사소통을 위해선 발음하기 쉬운 이름을 사용하는게 좋다.
 
-```cpp
+```dart
 class DtaRcrd102 {
-	private Date genymdhms;
-	private Date modymdhms;
+	DateTime _genymdhms;
+	DateTime _modymdhms;
 }
 
 class Customer{
-	private Date generationTimestamp;
-	private Date modificationTimestamp;
+	DateTime _generationTimestamp;
+	DateTime _modificationTimestamp;
 }
 ```
 
@@ -169,7 +169,7 @@ class Customer{
 - 이름 길이는 범위 크기에 비례해야 한다.
 - 변수나 상수를 코드 여러 곳에서 사용한다면 검색하기 쉬운 이름이 바람직하다.
 
-```cpp
+```dart
 int realDaysPerIdealDay = 4;
 const int WORK_DAYS_PER_WEEK = 5;
 int sum = 0;
@@ -205,20 +205,20 @@ for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
 - 이제는 멤버 변수에 m\_이라는 접두어를 붙일 필요도 없다. 클래스와 함수는 접두어가 필요 없을 정도로 작아야 한다.
 - 멤버 변수를 다른색상으로 표시하거나 눈에 띄게 보여주는 ide를 사용해야 한다.
 
-```cpp
-class Part{
-	private String m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
+```dart
+class Part {
+	String _m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
 	void setName(String name){
-		m_dsc=name;
+		_m_dsc=name;
 	}
 } //예전에는 이렇게 썼음
 ```
 
-```cpp
+```dart
 class Part {
-	string description;
-	void setDescription(string description){
-		this.description = description;
+	String _description;
+	void setDescription(String description){
+		this._description = description;
 	}
 } // 이런식으로 쓰는 것을 권장
 ```
@@ -257,9 +257,9 @@ class Part {
 - 점근자(Accessor), 변경자(Mutator), 조건자(Predicate)는 표준에 따라 값 앞에 get, set,is를 붙인다.
 - 생상자를 중복정의할 때는 정적 팩토리 메서드를사용한다.
 
-```cpp
+```dart
 Complex fulcrumPoint = Complex.FromRealNumber(23.0);
-Complex fulcrumPoint = new Complex(23.0);
+Complex fulcrumPoint = Complex(23.0);
 //아래보다 위 코드가 더 좋다.
 ```
 
@@ -307,11 +307,11 @@ Complex fulcrumPoint = new Complex(23.0);
     ex) state라는 변수 하나만 사용했을때 이것이 주소의 일부라는 사실을 바로 알 수 있을까?
     → 어렵다. 그러므고 addr이라는 접두어를 추가해 addrState라 쓰면 좀 더 쉽게 알 수 있다.
 
-```cpp
-void printGuessStatistics(char candidate, int count){
-	string number;
-	string verb;
-	string pluralModifier;
+```dart
+void printGuessStatistics(Char candidate, int count){
+	String number;
+	String verb;
+	String pluralModifier;
 	if (count ==0){
 		number="no";
 		verb="are";
@@ -325,45 +325,47 @@ void printGuessStatistics(char candidate, int count){
 		verb="are";
 		pluralModifier = "s";
 	}
-	cout<<"There "<<verb<<number<<candidate, pluralModifier<<endl;
+	print("There $verb $number $candidate, $pluralModifier\n");
 }
 ```
 
 - 다음 코드를 보면 함수가 길고, 세 변수를 함수 전반에서 사용한다. (맥락이 불분명하다)
   그래서 클래스를 만든 후 세변수를 클래스에 넣어서 사용하고, 함수를 작은 조각으로 쪼개면 이 함수가 무엇을 하는지 더 분명해진다.
 
-```cpp
+```dart
 class GuessStatisticsMessage{
-	private string number;
-	private string verb;
-	private string pluralModifier;
+	String _number;
+	String _verb;
+	String _pluralModifier;
 
-	public string make(char candidate, int count){
-		createPluralDependentMessageParts(count);
-		string tmp = "There "+verb, number, candidate, pluralModifier;
+	String make(Char candidate, int count){
+		_createPluralDependentMessageParts(count);
+		String tmp = "There $verb $number $candidate $pluralModifier";
 		return tmp;
 	}
 
-	private void createPluralDependentMessageParts(int count){
+	void _createPluralDependentMessageParts(int count){
 		if(count ==0){
-			thereAreNoLetters();
+			_thereAreNoLetters();
 		} else if(count ==1) {
-			thereIsOneLEtter();
+			_thereIsOneLetter();
 		} else {
-			thereAreManyLetters(count);
+			_thereAreManyLetters(count);
 		}
 
-	private void thereAreManyLetters(int count){
+	void _thereAreManyLetters(int count){
 		number = to_string(count);
 		verb = "are";
 		pluralModifier;
 	}
-	private void thereIsOneLetter(){
+
+	void _thereIsOneLetter(){
 		number = "1";
 		verb = "is";
 		pluralModifier="";
 	}
-	private void thereAreNoLetters(){
+
+	void _thereAreNoLetters(){
 		number = "no";
 		verb = "are";
 		pluralModifier = "s";
