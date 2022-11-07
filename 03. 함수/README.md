@@ -127,9 +127,9 @@ def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool) -> str:
 
 ### **Switch문**
 
-\- **switch문은 작게 만들기 어렵다.
+\- **switch문은 작게 만들기 어렵다.**
 
-\- **다형성(polymorphism)**을 이용하여 각 switch문을 저차원 클래스에 숨기고 절대로 반복하지 않는 방법이 있다.
+\- **다형성(polymorphism)** 을 이용하여 각 switch문을 저차원 클래스에 숨기고 절대로 반복하지 않는 방법이 있다.
 
 ```python
 # python에는 switch-case라는 게 딱히 없고... if-elif-else로...
@@ -151,9 +151,9 @@ def calculatePay(e:Employee)->Money:
 
   - **'한 가지' 작업만 수행하지 않는다**
 
-  - **SRP(Single Responsibility Principle)**을 위반한다
+  - **SRP(Single Responsibility Principle)** 을 위반한다
 
-  - **OCP(Open Closed Principle)**을 위반한다
+  - **OCP(Open Closed Principle)** 을 위반한다
 
   - 위 함수와 **구조가 동일한 함수가 무한정 존재할 수 있음**. (ex. isPayday(e:Employee, date:Date)와 deliverPay(e:Employee, pay:Money)
 
@@ -284,7 +284,7 @@ def makeCircle(center:Point, radius:float) -> Circle:
 
 \- **함수에서 한가지를 하겠다고 약속하고선 클래스 변수를 수정하거나, 함수로 넘어온 인수나 시스템 전역 변수를 수정**한다.
 
-\- 많은 경우 **시간적인 결합(temporal coupling)**이나 **순서 종속성(order dependency)을 초래**한다.
+\- 많은 경우 **시간적인 결합(temporal coupling)** 이나 **순서 종속성(order dependency)을 초래**한다.
 
 ```python
 # UserValidator.py
@@ -379,11 +379,11 @@ else:
 
 ```python
 try:
-	deletePage(page)
+    deletePage(page)
     registry.deleteReference(page.name)
     configKeys.deleteKey(page.name.makeKey())
 catch (Exception as e):
-	logging.info(e.getMessage())
+    logging.info(e.getMessage())
 ```
 
 #### Try/Catch 블록 뽑아내기
