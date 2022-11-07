@@ -7,11 +7,11 @@
 ```python
 # 좋지 않은 코드
 def testableHtml(pageData:PageData, includeSuiteSetup:bool) -> str:
-	try:
+    try:
     	wikiPage = pageData.getWikiPage()
         buffer = StringBuffer()
         if pageData.hasAttribute("Test"):
-        	if includeSuiteSetup:
+            if includeSuiteSetup:
             	    suiteSetup = PageCrawlerImpl.getInheritedPage(SuiteResponder.SUITE_SETUP_NAME, wikiPage)
                 if suiteSetup != NULL:
                     pagePath = suiteSetup.getPageCrawler().getFullPath(suiteSetup)
@@ -56,7 +56,7 @@ def testableHtml(pageData:PageData, includeSuiteSetup:bool) -> str:
 ```python
 # 위 코드 리팩터링 버전
 def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool)->str:
-	try:
+    try:
     	isTestPage = pageData.hasAttribute("Test")
         if isTestPage:
             testPage = pageData.getWikiPage()
@@ -65,7 +65,7 @@ def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool)->str:
             newPageContent.append(pageData.getContent())
             includeTeardownpages(testPage, newPageContent, isSuite)
             pageData.setContent(str(newPageContent))
-   return pageData.getHTML()
+    return pageData.getHTML()
 ```
 
 ### **작게 만들어라!**
@@ -163,9 +163,9 @@ class Employee():
     def isPayday(self)->bool :
     	pass
     def calculatePay(self)->Money :
-		pass
+	pass
     def deliveryPay(self, pay:Money):
-		pass
+	pass
 
 class EmployeeFactory():
     def makeEmployee(r:EmployeeRecord):
@@ -174,13 +174,13 @@ class EmployeeFactory():
 class EmployeeFactoryImpl(EmployeeFactory):
     def makeEmployee(r:EmployeeRecord):
     	if r.type == "COMMISIONED":
-        	return CommisionedEmployee(r)
+            return CommisionedEmployee(r)
         elif r.type == "HOURLY":
-        	return HourlyEmployee(r)
+            return HourlyEmployee(r)
         elif r.type == "SALARIED":
-        	return SalariedEmployee(r)
+            return SalariedEmployee(r)
         else:
-        	raise Exception(InvalidEmployeeType(r.type))
+            raise Exception(InvalidEmployeeType(r.type))
 ```
 
 ### **서술적인 이름을 사용하라**
@@ -255,9 +255,9 @@ class EmployeeFactoryImpl(EmployeeFactory):
 
 ```python
 def makeCircle(x:float, y:float, radius:float) -> Circle:
-	pass
+    pass
 def makeCircle(center:Point, radius:float) -> Circle:
-	pass
+    pass
 ```
 
 \- 위 코드에서 x와 y를 묶었듯이 변수를 묶어 넘기려면 이름을 붙여야 하므로 결국은 개념을 표현하게 된다.
@@ -498,7 +498,7 @@ class SetUpTeardownIncluder:
     def render(self, isSuite:bool)->str:
     	self.isSuite = isSuite
         if self.isTestPage():
-        	self.includeSetupAndTeardownPages()
+            self.includeSetupAndTeardownPages()
         return self.pageData.getHtml()
         
     def isTestPage(self)->bool:
@@ -512,7 +512,7 @@ class SetUpTeardownIncluder:
         
     def includeSetupPages(self):
     	if self.isSuite:
-	        self.includeSuiteSetupPage()
+	    self.includeSuiteSetupPage()
         self.includeSetupPage()
         
     def includeSuiteSetupPage(self):
@@ -527,7 +527,7 @@ class SetUpTeardownIncluder:
     def includeTeardownPages(self):
     	self.includeTearDownPage():
         if self.isSuite:
-        	self.includeSuiteTeardownPage()
+            self.includeSuiteTeardownPage()
             
     def includeTeardownPage(self):
     	self.include("TearDown", "-teardown")
