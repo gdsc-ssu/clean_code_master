@@ -12,10 +12,10 @@ def testableHtml(pageData:PageData, includeSuiteSetup:bool) -> str:
         buffer = StringBuffer()
         if pageData.hasAttribute("Test"):
         	if includeSuiteSetup:
-            	suiteSetup = PageCrawlerImpl.getInheritedPage(SuiteResponder.SUITE_SETUP_NAME, wikiPage)
+            	    suiteSetup = PageCrawlerImpl.getInheritedPage(SuiteResponder.SUITE_SETUP_NAME, wikiPage)
                 if suiteSetup != NULL:
-                	pagePath = suiteSetup.getPageCrawler().getFullPath(suiteSetup)
-                	pagePathName = PathParser.render(pagePath)
+                    pagePath = suiteSetup.getPageCrawler().getFullPath(suiteSetup)
+                    pagePathName = PathParser.render(pagePath)
                     buffer.append("!include -setup .")
                     buffer.append(pagePathName)
                     buffer.append("\n")
@@ -28,7 +28,7 @@ def testableHtml(pageData:PageData, includeSuiteSetup:bool) -> str:
                 buffer.append("\n")
         buffer.append(pageData.getContent())
         if pageData.hasAttribute("Test"):
-        	teardown = PageCrawlerImpl.getInheritedPage("TearDown", wikiPage)
+            teardown = PageCrawlerImpl.getInheritedPage("TearDown", wikiPage)
             if teardown != NULL:
             	tearDownPath = wikiPage.getPageCralwer().getFullPath(teardown)
                 String tearDownPathName = PathParser.render(tearDownPath)
@@ -59,7 +59,7 @@ def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool)->str:
 	try:
     	isTestPage = pageData.hasAttribute("Test")
         if isTestPage:
-        	testPage = pageData.getWikiPage()
+            testPage = pageData.getWikiPage()
             newPageContent = StringBuffer()
             includeSetupPages(testPage, newPageContent, isSuite)
             newPageContent.append(pageData.getContent())
@@ -79,9 +79,9 @@ def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool)->str:
 ```python
 # 리-리팩토링한 코드
 def renderPageWithSetupsAndTeardowns(pageData:PageData, isSuite:bool) -> str:
-	try:
+    try:
     	if isTestPage(pageData):
-        	includeSetupAndTeardownPages(pageData, isSuite)
+            includeSetupAndTeardownPages(pageData, isSuite)
     return pageData.getHtml()
 ```
 
@@ -160,7 +160,7 @@ def calculatePay(e:Employee)->Money:
 ```python
 # 위 코드의 문제점 해결
 class Employee():
-	def isPayday(self)->bool :
+    def isPayday(self)->bool :
     	pass
     def calculatePay(self)->Money :
 		pass
@@ -168,11 +168,11 @@ class Employee():
 		pass
 
 class EmployeeFactory():
-	def makeEmployee(r:EmployeeRecord):
+    def makeEmployee(r:EmployeeRecord):
     	pass
         
 class EmployeeFactoryImpl(EmployeeFactory):
-	def makeEmployee(r:EmployeeRecord):
+    def makeEmployee(r:EmployeeRecord):
     	if r.type == "COMMISIONED":
         	return CommisionedEmployee(r)
         elif r.type == "HOURLY":
@@ -289,12 +289,12 @@ def makeCircle(center:Point, radius:float) -> Circle:
 ```python
 # UserValidator.py
 class UserValidator:
-	cryptographer = ""	# Cryptographer type
+    cryptographer = ""	# Cryptographer type
     
     def checkPassword(userName:str, password:str)->bool:
     	user = UserGateway.findByName(userName)
         if user != User.NULL:
-        	codedPhrase = user.getPhraseEncodedByPassword()
+            codedPhrase = user.getPhraseEncodedByPassword()
             phrase = cryptographer.decrypt(codedPhrase, password)
             if "Valid Password" == phrase:
             	Session.initialize()
@@ -328,7 +328,7 @@ class UserValidator:
 
 ```python
 def set(attribute:str, value:str) -> bool:
-	pass
+    pass
     
 # ------------------------------------------
 
@@ -345,7 +345,7 @@ if set("username", "unclebob")) ...
 
 ```python
 if attributeExists("username"):
-	setAttribute("username", "unclebob")
+    setAttribute("username", "unclebob")
 ```
 
 ### **오류 코드보다 예외를 사용하라!**
@@ -354,7 +354,7 @@ if attributeExists("username"):
 
 ```python
 if deletePage(page) == E_OK:
-	pass
+    pass
 ```
 
 \- 위 코드는 동사/형용사 혼란을 일으키지 않는 대신 여러 단계로 중첩되는 코드를 야기한다.
@@ -363,16 +363,16 @@ if deletePage(page) == E_OK:
 
 ```python
 if deletePage(page) == E_OK:
-	if registry.deleteReference(page.name) == E_OK:
+    if registry.deleteReference(page.name) == E_OK:
     	if configKeys.deleteKey(page.name.makeKey()) == E_OK:
-        	logging.info("page deleted")
+	    logging.info("page deleted")
         else:
-        	logging.info("configKey not deleted")
+	    logging.info("configKey not deleted")
     else:
     	logging.info("deleteReference from registry failed")
 else:
-	logging.info("delete failed")
-    return E_ERROR
+    logging.info("delete failed")
+return E_ERROR
 ```
 
 \- **오류 코드 대신 예외를 사용하면 오류 처리 코드가 원래 코드에서 분리되므로 코드가 깔끔해진다.**
@@ -394,18 +394,18 @@ catch (Exception as e):
 
 ```python
 def delete(page:Page):
-	try:
+    try:
     	deletePageAndAllReferences(page)
     catch (Exception as e):
     	logError(e)
 
 def deletePageAndAllReferences(page:Page):
-	deletePage(page)
+    deletePage(page)
     registry.deleteReference(page.name)
     configKeys.deleteKey(page.name.makeKey())
     
 def logError(e:Exception):
-	logging.info(e.getMessage())
+    logging.info(e.getMessage())
 ```
 
 \- 위에서 delete 함수는 모든 오류를 처리하기 때문에 코드를 이해하기 쉽다.
@@ -424,7 +424,7 @@ def logError(e:Exception):
 
 ```java
 public enum Error{
-	OK,
+    OK,
     INVALID,
     NO_SUCH,
     LOCKED,
@@ -476,14 +476,14 @@ public enum Error{
 ```python
 # 위에 import 부분 생략
 class SetUpTeardownIncluder:
-	def __init__(self):
+    def __init__(self):
     	self.pageData = 0	# PageData type
         self.isSuite = 0		# bool type
         self.testPage = 0	# WikiPage type
         self.newPageContent = ""
         self.pageCralwer = 0	# PageCrawler type
         
-	def render(self, pageData:PageData)->str:
+    def render(self, pageData:PageData)->str:
     	return self.render(pageData, False)
         
     def render(self, pageData:PageData, isSuite:boolean)->str:
@@ -541,7 +541,7 @@ class SetUpTeardownIncluder:
     def include(self, pageName:str, arg:str):
     	self.inheritedPage = self.findInheritedPage(pageName)
         if self.inheritedPage != NULL:
-        	self.pagePathName = self.getPathNameForPage(self.inheritedPage)
+	    self.pagePathName = self.getPathNameForPage(self.inheritedPage)
             self.buildIncludeDirective(self.pagePathName, arg)
             
     def findInheritedPage(self, pageName:str):
