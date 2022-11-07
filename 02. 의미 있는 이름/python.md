@@ -10,28 +10,26 @@
 
 → 당연한 말이지만 정말로 중요하다. 좋은 이름을 지으려면 시간이 걸리지만 좋은 이름으로 절약하는 시간이 훨씬 더 많다. (만약 이름을 짓고 넘어가도 더 좋은 이름이 떠오르면 바꿔라)
 
-```cpp
-int d //경과 시간 (단위: 날짜)
+```python
+d = 0 //경과 시간 (단위: 날짜)
 ```
 
 이런 이름 d는 아무 의미도 없다. 측정하려는 값과 단위를 표현하는 이름이 필요하다.
 
-```cpp
-int daysSinceCreation;
-int fileAgeInDays;
+```python
+daysSinceCreation = 0
+fileAgeInDays = 0
 ```
 
 이런식으로 의도가 드러나는 이름은 코드 이해와 변경이 쉬워진다.
 
-```cpp
-int* getThem(){
-	list<int> *list1 =new list<[int] >
-	for(int i=0;i<sizeof(theList);i++){
-		if(theList[0]==4)
-			list1.add(theList[i]);
-	}
+```python
+def getThem() -> List(int):
+	list1 = ArrayList()
+	for x in theList:
+		if x[0] == 4:
+			list1.append(x)
 	return list1
-}
 ```
 
 코드가 하는 일을 짐작하기 어렵다. 왜일까? 문제는 코드의 함축성이다.
@@ -47,30 +45,26 @@ int* getThem(){
 
 아래처럼 각 개념에 이름만 붙여도 코드가 상당히 나아진다.
 
-```cpp
-int* getFlaggedCells(){
-	list<int> * flaggedcells =new list<[int] >
-	for(int i=0;i<sizeof(gameBoard);i++){
-		if(gameBoard[i][STATUS_VAULE]==FLAGGED)
-			flaggedCells.add(gameBoard[i]);
-	}
-	return flaggedCells;
-}
+```python
+def getFlaggedCells():
+	flaggedcells = list()
+	for i in range(len(gameBoard)):
+		if gameBoard[i][STAUTS_VALUE] == FLAGGED:
+			flaggedCells.append(gameBoard[i])
+	return flaggedCells
 ```
 
 코드의 구조는 똑같지만 이름을 바꾼것만으로 더욱 명확해졌다.
 
 또한 int형이 아닌 간단한 클래스로 리스트를 만들어도 된다.
 
-```cpp
-int* getFlaggedCells(){
-	list<Cell> * flaggedcells =new list<[Cell] >
-	for(int i=0;i<sizeof(gameBoard);i++){
-		if(fameBoard[i].ifFlagged())
-			flaggedCells.add(gameBoard[i]);
-	}
-	return flaggedCells;
-}
+```python
+def getFlaggedCells()->list:
+	flaggedcells = list()
+	for i in range(len(gameBoard)):
+		if gameBoard[i].ifFlagged():
+			flaggedcells.append(gameBoard[i])
+	return flaggedCells
 ```
 
 ### 그릇된 정보를 피하라
@@ -85,8 +79,9 @@ int* getFlaggedCells(){
 
   ex) 계정을 그룹으로 묶을때 accountList라고 명명했을 때 list(배열) 자료형이 아닐 경우 잘못된 정보를 제공하는 것이다. → accountGroup 또는 단순히 Accounts라 명명한다.
 
-  ```cpp
-  class accountList; //-> 이름은 list(배열)이지만 배열이 아니다.
+  ```python
+  class accountList: //-> 이름은 list(배열)이지만 배열이 아니다.
+  	pass
   ```
 
 - 유사한 개념은 유사한 표기법을 사용한다.
@@ -100,12 +95,12 @@ int* getFlaggedCells(){
 
   ex) 숫자 1과 영어 소문자 L, 대문자 O와 숫자 0
 
-  ```cpp
-  int a = 1;
-  if (O==l)
-  a = O1;
-  else
-  l = 01;
+  ```python
+  a = 1
+  if (O==l):
+  	a = 01
+  else:
+  	l = 01
   ```
 
   → 실제 이런코드를 만나면 답이 없다.
@@ -121,11 +116,10 @@ int* getFlaggedCells(){
 
   ex) a1,a2..aN같은 이름은 저자 의도가 전혀 드러나지 않는다.
 
-  ```cpp
-  void copyChars(char a1[], char a2[]{
-  	for(int i=0;i<a1.length;i++)
-  		a2[i]=a1[i];
-  }
+  ```python
+  def copyChars(a1, a2):
+  	for i in range(len(a1)):
+		a2[i] = a1[i]
   ```
 
 - 또한 불용어를 추가한 이름 역시 아무런 정보도 제공 못한다.
@@ -135,10 +129,10 @@ int* getFlaggedCells(){
 
   ex) 코드를 읽다가 Customer라는 클래스와 CustomerObject라는 클래스를 발견했을 때 차이를 알 수 있는가? → 이름만보고는 유추할 수 없다.
 
-  ```cpp
-  getActiveAccount();
-  getActiveAccounts();
-  getActiveAccoutInfo();
+  ```python
+  def getActiveAccount(): pass
+  def getActiveAccounts(): pass
+  def getActiveAccoutInfo(): pass
   ```
 
   이런 코드가 있을 경우 각 함수가 무슨 역할을 하는지 알수가 없다.
@@ -149,16 +143,16 @@ int* getFlaggedCells(){
 - 발음하기 쉬운 이름을 사용해라! 어려운 이름은 토론하기 어렵다
   → 결국 프로그래밍은 사회 활동이기 때문에 원활한 의사소통을 위해선 발음하기 쉬운 이름을 사용하는게 좋다.
 
-```cpp
-class DtaRcrd102 {
-	private Date genymdhms;
-	private Date modymdhms;
-}
+```python
+class DtaRcd102:
+	def __init__(self):
+		self.genymdhms = 0
+		self.modymdhms = 0
 
-class Customer{
-	private Date generationTimestamp;
-	private Date modificationTimestamp;
-}
+class Customer:
+	def __init__(self):
+		self.generationTimestamp = 0
+		self.modificationTimestamp = 0
 ```
 
 둘중에 어느코드가 더 알아보기 쉽나? → 첫번째는 본인들만 아는 규칙으로 작성했기 때문에 알아보기 어렵다. 두번째는 이름을 보고 무슨 변수인지 알아낼 수 있다.
@@ -169,15 +163,14 @@ class Customer{
 - 이름 길이는 범위 크기에 비례해야 한다.
 - 변수나 상수를 코드 여러 곳에서 사용한다면 검색하기 쉬운 이름이 바람직하다.
 
-```cpp
-int realDaysPerIdealDay = 4;
-const int WORK_DAYS_PER_WEEK = 5;
-int sum = 0;
-for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
-	int realTaskDays = taskEstimate[j]*realDaysPerIdealDay;
-	int realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK);
-	sum += realTaskWeeks;
-}
+```python
+realDaysPerIdealDay = 4
+WORK_DAYS_PER_WEEK = 5
+sum = 0
+for j in range(0, NUMBER_OF_TASKS):
+	realTaskDays = taskEstimate[j] * realDaysPerIdealDay
+    realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK)
+    sum += realTaskWeeks
 ```
 
 위 코드에서는 이름을 의미있게 지어서 길어지지만 검색 시 쉽고 빠르게 찾을 수 있다.
@@ -205,22 +198,18 @@ for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
 - 이제는 멤버 변수에 m\_이라는 접두어를 붙일 필요도 없다. 클래스와 함수는 접두어가 필요 없을 정도로 작아야 한다.
 - 멤버 변수를 다른색상으로 표시하거나 눈에 띄게 보여주는 ide를 사용해야 한다.
 
-```cpp
-class Part{
-	private String m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
-	void setName(String name){
-		m_dsc=name;
-	}
-} //예전에는 이렇게 썼음
-```
-
-```cpp
-class Part {
-	string description;
-	void setDescription(string description){
-		this.description = description;
-	}
-} // 이런식으로 쓰는 것을 권장
+```python
+# 1 예전에느 이렇게 썼음
+class Part:
+	__m_dsc = 0
+    def setName(name:String):
+    	__m_dsc = name
+        
+# 2 이렇게 쓰느 것을 권장
+class Part:
+	self.description = ""
+    def setDescription(self, description:String):
+    	self.description = description
 ```
 
 ⇒ 접두어는 옛날에 작성한 코드라는 징표가 되어버림.
@@ -257,10 +246,11 @@ class Part {
 - 점근자(Accessor), 변경자(Mutator), 조건자(Predicate)는 표준에 따라 값 앞에 get, set,is를 붙인다.
 - 생상자를 중복정의할 때는 정적 팩토리 메서드를사용한다.
 
-```cpp
-Complex fulcrumPoint = Complex.FromRealNumber(23.0);
-Complex fulcrumPoint = new Complex(23.0);
-//아래보다 위 코드가 더 좋다.
+```python
+# 좋음
+fulcrumPoint = Complex.FromRealNumber(23.0)
+# 별로
+fulcrumPoint = Complex(23.0)
 ```
 
 ### 기발한 이름은 피하라
@@ -307,68 +297,66 @@ Complex fulcrumPoint = new Complex(23.0);
     ex) state라는 변수 하나만 사용했을때 이것이 주소의 일부라는 사실을 바로 알 수 있을까?
     → 어렵다. 그러므고 addr이라는 접두어를 추가해 addrState라 쓰면 좀 더 쉽게 알 수 있다.
 
-```cpp
-void printGuessStatistics(char candidate, int count){
-	string number;
-	string verb;
-	string pluralModifier;
-	if (count ==0){
-		number="no";
-		verb="are";
-		pluralModifier = "s";
-	} else if (count==1){
-		number="1";
-		verb="is";
-		pluralModifier = "";
-	} else{
-		number=count-'0';
-		verb="are";
-		pluralModifier = "s";
-	}
-	cout<<"There "<<verb<<number<<candidate, pluralModifier<<endl;
-}
+```python
+# 맥락이 불분명한 변수
+def printGuessStatistics(candidate:char, count:int):
+	number = ""
+    verb = ""
+    pluralModifier = ""
+    if count == 0:
+    	number = "no"
+        verb = "are"
+        pluralModifier = "s"
+    elif count == 1:
+    	number = "1"
+        verb = "is"
+        pluralModifier = ""
+    else:
+    	number = str(count)
+        verb = "are"
+        pluralModifier = "s"
+
+guessMessage = print(f"There {verb}, {number}, {candidate}, {pluralModifier}")
+print(guessMessage)
 ```
 
 - 다음 코드를 보면 함수가 길고, 세 변수를 함수 전반에서 사용한다. (맥락이 불분명하다)
   그래서 클래스를 만든 후 세변수를 클래스에 넣어서 사용하고, 함수를 작은 조각으로 쪼개면 이 함수가 무엇을 하는지 더 분명해진다.
 
-```cpp
-class GuessStatisticsMessage{
-	private string number;
-	private string verb;
-	private string pluralModifier;
-
-	public string make(char candidate, int count){
-		createPluralDependentMessageParts(count);
-		string tmp = "There "+verb, number, candidate, pluralModifier;
-		return tmp;
-	}
-
-	private void createPluralDependentMessageParts(int count){
-		if(count ==0){
-			thereAreNoLetters();
-		} else if(count ==1) {
-			thereIsOneLEtter();
-		} else {
-			thereAreManyLetters(count);
-		}
-
-	private void thereAreManyLetters(int count){
-		number = to_string(count);
-		verb = "are";
-		pluralModifier;
-	}
-	private void thereIsOneLetter(){
-		number = "1";
-		verb = "is";
-		pluralModifier="";
-	}
-	private void thereAreNoLetters(){
-		number = "no";
-		verb = "are";
-		pluralModifier = "s";
-	}
-}
+```python
+# 맥락이 분명한 변수
+class GuessStatisticsMessage:
+	def __init__(self, None):
+    	__number = ""
+        __verb = ""
+        __pluralModifier = ""
+        
+    def make(self, candidate:str, count:int) -> str:
+		self.createPluralDependentMessageParts(count)
+        return f"There {verb}, {number}, {candidate}, {pluralModifier}"
+        
+    def createPluralDependentMessageParts(self, count:int):
+    	if count == 0:
+        	self.thereAreNoLetters()
+        elif count == 1:
+        	self.thereIsOneLetter()
+        else:
+        	self.thereAreManyLetters(count)
+            
+	def thereAreManyLetters(self, count:int):
+		self.number = str(count)
+        self.verb = "are"
+        self.pluralModifier = "s"
+        
+    def thereIsOneLetter(self):
+    	self.number = "1"
+        self.verb = "is"
+        self.pluralModifier = ""
+        
+    def thereAreNoLetters():
+    	self.number = "no"
+        self.verb = "are"
+        self.pluralModifier = "s"
 ```
 
 ### 불필요한 맥락을 없애라
