@@ -213,9 +213,8 @@ class EmployeeFactoryImpl(EmployeeFactory):
 
 \- **함수에 인수 1개를 넘기는 이유** 두 가지
 
-  - 1. **인수에 질문을 던지는 경우**. boolean fileExists("MyFile")
-
-  - 2. **인수로 뭔가를 변환해 결과를 반환하는 경우**. InputStream fileopen("MyFile")
+1. **인수에 질문을 던지는 경우**. boolean fileExists("MyFile")
+2. **인수로 뭔가를 변환해 결과를 반환하는 경우**. InputStream fileopen("MyFile")
 
 \- 함수 이름을 지을 때는 **두 경우를 분명히 구분**해야 하고, 언제나 **일관적인 방식으로 두 형식을 사용**해야 한다.
 
