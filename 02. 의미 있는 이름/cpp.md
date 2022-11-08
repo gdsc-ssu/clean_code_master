@@ -10,28 +10,27 @@
 
 → 당연한 말이지만 정말로 중요하다. 좋은 이름을 지으려면 시간이 걸리지만 좋은 이름으로 절약하는 시간이 훨씬 더 많다. (만약 이름을 짓고 넘어가도 더 좋은 이름이 떠오르면 바꿔라)
 
-```java
+```cpp
 int d //경과 시간 (단위: 날짜)
 ```
 
 이런 이름 d는 아무 의미도 없다. 측정하려는 값과 단위를 표현하는 이름이 필요하다.
 
-```java
-int elapsedTimeInDays;
+```cpp
 int daysSinceCreation;
-int daysSinceModification;
 int fileAgeInDays;
 ```
 
 이런식으로 의도가 드러나는 이름은 코드 이해와 변경이 쉬워진다.
 
-```java
-public List<int []> getThem() {
-	List<int []> list1 = new ArrayList<int[]>();
-	for (int [] x : theList)
-		if(x[0] == 4)
-			list1.add(x);
-	return list1;
+```cpp
+int* getThem(){
+	list<int> *list1 =new list<[int] >
+	for(int i=0;i<sizeof(theList);i++){
+		if(theList[0]==4)
+			list1.add(theList[i]);
+	}
+	return list1
 }
 ```
 
@@ -48,12 +47,13 @@ public List<int []> getThem() {
 
 아래처럼 각 개념에 이름만 붙여도 코드가 상당히 나아진다.
 
-```java
-public List<int[]> getFlaggedCells() {
-	List<int[]> flaggedCells = new ArrayList<int[]>();
-	for (int [] cell : gameBoard)
-		if (cell[STATUS_VALUE] == FLAGGED)
-			flageedCells.add(cell);
+```cpp
+int* getFlaggedCells(){
+	list<int> * flaggedcells =new list<[int] >
+	for(int i=0;i<sizeof(gameBoard);i++){
+		if(gameBoard[i][STATUS_VAULE]==FLAGGED)
+			flaggedCells.add(gameBoard[i]);
+	}
 	return flaggedCells;
 }
 ```
@@ -62,12 +62,13 @@ public List<int[]> getFlaggedCells() {
 
 또한 int형이 아닌 간단한 클래스로 리스트를 만들어도 된다.
 
-```java
-public List<Cell> getFlaggedCells() {
-	List<Cell> flaggedCells = new ArrayList<Cell>();
-	for (Cell cell : gameBoard)
-		if (cell.isFlagged())
-			flageedCells.add(cell);
+```cpp
+int* getFlaggedCells(){
+	list<Cell> * flaggedcells =new list<[Cell] >
+	for(int i=0;i<sizeof(gameBoard);i++){
+		if(fameBoard[i].ifFlagged())
+			flaggedCells.add(gameBoard[i]);
+	}
 	return flaggedCells;
 }
 ```
@@ -84,8 +85,8 @@ public List<Cell> getFlaggedCells() {
 
   ex) 계정을 그룹으로 묶을때 accountList라고 명명했을 때 list(배열) 자료형이 아닐 경우 잘못된 정보를 제공하는 것이다. → accountGroup 또는 단순히 Accounts라 명명한다.
 
-  ```java
-  public class accountList; //-> 이름은 list(배열)이지만 배열이 아니다.
+  ```cpp
+  class accountList; //-> 이름은 list(배열)이지만 배열이 아니다.
   ```
 
 - 유사한 개념은 유사한 표기법을 사용한다.
@@ -99,7 +100,7 @@ public List<Cell> getFlaggedCells() {
 
   ex) 숫자 1과 영어 소문자 L, 대문자 O와 숫자 0
 
-  ```java
+  ```cpp
   int a = 1;
   if (O==l)
   a = O1;
@@ -120,11 +121,10 @@ public List<Cell> getFlaggedCells() {
 
   ex) a1,a2..aN같은 이름은 저자 의도가 전혀 드러나지 않는다.
 
-  ```java
-  public static void copyChars(char a1[], char a2[]) {
-  	for (int i = 0; i < a1.length; i++) {
-  		a2[i] = a1[i]
-  	}
+  ```cpp
+  void copyChars(char a1[], char a2[]{
+  	for(int i=0;i<a1.length;i++)
+  		a2[i]=a1[i];
   }
   ```
 
@@ -135,7 +135,7 @@ public List<Cell> getFlaggedCells() {
 
   ex) 코드를 읽다가 Customer라는 클래스와 CustomerObject라는 클래스를 발견했을 때 차이를 알 수 있는가? → 이름만보고는 유추할 수 없다.
 
-  ```java
+  ```cpp
   getActiveAccount();
   getActiveAccounts();
   getActiveAccoutInfo();
@@ -149,17 +149,15 @@ public List<Cell> getFlaggedCells() {
 - 발음하기 쉬운 이름을 사용해라! 어려운 이름은 토론하기 어렵다
   → 결국 프로그래밍은 사회 활동이기 때문에 원활한 의사소통을 위해선 발음하기 쉬운 이름을 사용하는게 좋다.
 
-```java
-class DtaRcrd102{
+```cpp
+class DtaRcrd102 {
 	private Date genymdhms;
 	private Date modymdhms;
-	private final String pszqint = "102";
 }
 
-Class Customer{
+class Customer{
 	private Date generationTimestamp;
 	private Date modificationTimestamp;
-	private final String recordId = "102";
 }
 ```
 
@@ -171,13 +169,12 @@ Class Customer{
 - 이름 길이는 범위 크기에 비례해야 한다.
 - 변수나 상수를 코드 여러 곳에서 사용한다면 검색하기 쉬운 이름이 바람직하다.
 
-```java
+```cpp
 int realDaysPerIdealDay = 4;
 const int WORK_DAYS_PER_WEEK = 5;
 int sum = 0;
-
-for (int j = 0; j < NUMBER_OF_TASKS; j++){
-	int realTaskDays = taskEstimate[j] * realDaysPerIdealDay;
+for (int j=0;j<WORK_DAYS_PER_WEEK; j++){
+	int realTaskDays = taskEstimate[j]*realDaysPerIdealDay;
 	int realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK);
 	sum += realTaskWeeks;
 }
@@ -208,22 +205,22 @@ for (int j = 0; j < NUMBER_OF_TASKS; j++){
 - 이제는 멤버 변수에 m\_이라는 접두어를 붙일 필요도 없다. 클래스와 함수는 접두어가 필요 없을 정도로 작아야 한다.
 - 멤버 변수를 다른색상으로 표시하거나 눈에 띄게 보여주는 ide를 사용해야 한다.
 
-```java
-public class Part{
-	private String m_dsc;
-	void setNmae(String name) {
-		m_dsc = name;
+```cpp
+class Part{
+	private String m_dsc; //설명 문자열, m_은 멤버 변수를 뜻함.
+	void setName(String name){
+		m_dsc=name;
 	}
-}
+} //예전에는 이렇게 썼음
 ```
 
-```java
-public class Part{
-	private String description;
-	void setDescription(String description) {
+```cpp
+class Part {
+	string description;
+	void setDescription(string description){
 		this.description = description;
 	}
-} // 이렇게 쓰는것을 권장
+} // 이런식으로 쓰는 것을 권장
 ```
 
 ⇒ 접두어는 옛날에 작성한 코드라는 징표가 되어버림.
@@ -260,9 +257,9 @@ public class Part{
 - 점근자(Accessor), 변경자(Mutator), 조건자(Predicate)는 표준에 따라 값 앞에 get, set,is를 붙인다.
 - 생상자를 중복정의할 때는 정적 팩토리 메서드를사용한다.
 
-```java
-Complex fulcrumPoint = complex.FromRealNumber(23.0);
-Complex fulcrumPoint = new Complext(23.0);
+```cpp
+Complex fulcrumPoint = Complex.FromRealNumber(23.0);
+Complex fulcrumPoint = new Complex(23.0);
 //아래보다 위 코드가 더 좋다.
 ```
 
@@ -310,8 +307,8 @@ Complex fulcrumPoint = new Complext(23.0);
     ex) state라는 변수 하나만 사용했을때 이것이 주소의 일부라는 사실을 바로 알 수 있을까?
     → 어렵다. 그러므고 addr이라는 접두어를 추가해 addrState라 쓰면 좀 더 쉽게 알 수 있다.
 
-```java
-private void printGuessStatistics(char candidate, int count){
+```cpp
+void printGuessStatistics(char candidate, int count){
 	string number;
 	string verb;
 	string pluralModifier;
@@ -320,36 +317,34 @@ private void printGuessStatistics(char candidate, int count){
 		verb="are";
 		pluralModifier = "s";
 	} else if (count==1){
-		number = "1";
-		verb = "is";
+		number="1";
+		verb="is";
 		pluralModifier = "";
 	} else{
-		number = Integer.toString(count);
+		number=count-'0';
 		verb="are";
 		pluralModifier = "s";
 	}
-	String guessMessage = String.format(
-		"There %s %s %s%s", verb, number, candidate, pluralModifier
-		);
-	System.out.print(guessMessage);
+	cout<<"There "<<verb<<number<<candidate, pluralModifier<<endl;
 }
 ```
 
 - 다음 코드를 보면 함수가 길고, 세 변수를 함수 전반에서 사용한다. (맥락이 불분명하다)
   그래서 클래스를 만든 후 세변수를 클래스에 넣어서 사용하고, 함수를 작은 조각으로 쪼개면 이 함수가 무엇을 하는지 더 분명해진다.
 
-```java
-public class GuessStatistics(){
+```cpp
+class GuessStatisticsMessage{
 	private string number;
 	private string verb;
 	private string pluralModifier;
+
 	public string make(char candidate, int count){
 		createPluralDependentMessageParts(count);
-		return String.format(
-			"There %s %s %s%s, verb, number, candidate, pluraModifier);
+		string tmp = "There "+verb, number, candidate, pluralModifier;
+		return tmp;
 	}
 
-private void createPluralDependentMessageParts(int count){
+	private void createPluralDependentMessageParts(int count){
 		if(count ==0){
 			thereAreNoLetters();
 		} else if(count ==1) {
@@ -359,9 +354,9 @@ private void createPluralDependentMessageParts(int count){
 		}
 
 	private void thereAreManyLetters(int count){
-		number = Integer.toString(count);
+		number = to_string(count);
 		verb = "are";
-		pluralModifier = "s";
+		pluralModifier;
 	}
 	private void thereIsOneLetter(){
 		number = "1";
