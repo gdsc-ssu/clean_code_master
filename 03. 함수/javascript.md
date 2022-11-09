@@ -6,14 +6,14 @@
 
 ```js
 // ❌
-testableHtml(pageData, includeSuiteSetup){
+function testableHtml(pageData, includeSuiteSetup){
     try{
     	const wikiPage = pageData.getWikiPage();
         const buffer = StringBuffer();
         if (pageData.hasAttribute("Test")){
             if (includeSuiteSetup){
             	    const suiteSetup = PageCrawlerImpl.getInheritedPage(SuiteResponder.SUITE_SETUP_NAME, wikiPage);
-                if (suiteSetup != NULL){
+                if (suiteSetup != null){
                     pagePath = suiteSetup.getPageCrawler().getFullPath(suiteSetup);
                     pagePathName = PathParser.render(pagePath);
                     buffer.append("!include -setup .");
@@ -22,7 +22,7 @@ testableHtml(pageData, includeSuiteSetup){
                 }
             }
             const setup = PageCralwerImpl.getInheritedPage("Setup", wikiPage);
-            if (setup != NULL){
+            if (setup != null){
             	const setupPath = wikiPage.getPageCrawler().getFullPath(setup);
                 const setupPathName = PathParser.render(setupPath);
                 buffer.append("!include -setup .");
@@ -32,7 +32,7 @@ testableHtml(pageData, includeSuiteSetup){
         }
         buffer.append(pageData.getContent())
         if (pageData.hasAttribute("Test")){
-            PageData teardown = PageCrawlerImpl.getInheritedPage("TearDown", wikiPage);
+            const teardown = PageCrawlerImpl.getInheritedPage("TearDown", wikiPage);
             if (teardown != NULL){
             	const tearDownPath = wikiPage.getPageCralwer().getFullPath(teardown);
                 const tearDownPathName = PathParser.render(tearDownPath);
@@ -52,7 +52,7 @@ testableHtml(pageData, includeSuiteSetup){
             }
         }
     }
-    pageData.setContent(str(buffer));
+    pageData.setContent(String(buffer));
     return pageData.getHtml();
     }
 ```
@@ -63,12 +63,12 @@ testableHtml(pageData, includeSuiteSetup){
 
 ```js
 // 위 코드 리팩터링 버전
-renderPageWithSetupsAndTeardowns(pageData, isSuite){
+function renderPageWithSetupsAndTeardowns(pageData, isSuite){
     try{
     	const isTestPage = pageData.hasAttribute("Test");
         if (isTestPage){
-            testPage = pageData.getWikiPage();
-            newPageContent = StringBuffer();
+            const testPage = pageData.getWikiPage();
+            const newPageContent = StringBuffer();
             includeSetupPages(testPage, newPageContent, isSuite);
             newPageContent.append(pageData.getContent());
             includeTeardownpages(testPage, newPageContent, isSuite);
@@ -89,7 +89,7 @@ renderPageWithSetupsAndTeardowns(pageData, isSuite){
 
 ```js
 // 리-리팩토링한 코드
-renderPageWithSetupsAndTeardowns(pageData, isSuite) {
+function renderPageWithSetupsAndTeardowns(pageData, isSuite) {
     try{
     	if (isTestPage(pageData))
             includeSetupAndTeardownPages(pageData, isSuite);
@@ -145,8 +145,8 @@ renderPageWithSetupsAndTeardowns(pageData, isSuite) {
 - **다형성(polymorphism)** 을 이용하여 각 switch문을 저차원 클래스에 숨기고 절대로 반복하지 않는 방법이 있다.
 
 ```js
-calculatePay(e){
-    etype = e.type
+function calculatePay(e){
+    const etype = e.type
     switch (etype){
     case "COMMISSIONED":
         return calculateCommissionedPay(e);
@@ -277,10 +277,10 @@ class EmployeeFactoryImpl(EmployeeFactory){
 - **인수가 2~3개 필요하다면 일부를 독자적인 클래스 변수로 선언할 가능성을 짚어봐야 한다.**
 
 ```js
-makeCircle(x, y, radius){
+function makeCircle(x, y, radius){
     // pass
 }
-makeCircle(center, radius){
+function makeCircle(center, radius){
     // pass
 }
 ```
@@ -313,12 +313,14 @@ makeCircle(center, radius){
 
 ```js
 class UserValidator{
-    const cryptographer = "";
+    constructor(cryptographer) {
+        this.cryptographer = "";
+    }
     checkPassword (userName, password){
-    	user = UserGateway.findByName(userName);
+    	const user = UserGateway.findByName(userName);
         if (user != User.NULL){
-            codedPhrase = user.getPhraseEncodedByPassword();
-            phrase = cryptographer.decrypt(codedPhrase, password);
+            const codedPhrase = user.getPhraseEncodedByPassword();
+            const phrase = cryptographer.decrypt(codedPhrase, password);
             if ("Valid Password" == phrase){
             	Session.initialize();
                 return True;
@@ -354,8 +356,8 @@ class UserValidator{
 - 함수는 뭔가를 수행하거나, 뭔가에 답하거나 둘 중 하나만 해야 한다. **객체 상태를 변경하거나, 객체 정보를 반환하거나 둘 중 하나.**
 
 ```js
-set(attribute, value){
-    pass
+function set(attribute, value){
+    // pass
 }
 // ------------------------------------------
 if set("username", "unclebob") ...
@@ -418,7 +420,7 @@ catch (e){
 - 그러므로 **try/catch 블록을 별도 함수로 뽑아내는 편이 좋다.**
 
 ```js
-delete(page){
+function delete(page){
     try{
     	deletePageAndAllReferences(page);
     }
@@ -426,12 +428,12 @@ delete(page){
     	logError(e);
     }
 }
-deletePageAndAllReferences(page){
+function deletePageAndAllReferences(page){
     deletePage(page);
     registry.deleteReference(page.name);
     configKeys.deleteKey(page.name.makeKey());
 }
-logError(e){
+function logError(e){
     connsole.error(e);
 }
 ```
@@ -504,11 +506,11 @@ public enum Error{
 ```js
 class SetUpTeardownIncluder{
     constructor(pageData, isSuite, testPage, newPageContent, pageCrawler) {
-    	this.pageData = 0	// PageData type
-        this.isSuite = 0		// bool type
-        this.testPage = 0	// WikiPage type
-        this.newPageContent = ""
-        this.pageCrawler = 0	// PageCrawler type
+    	this.pageData = 0;	// PageData type
+        this.isSuite = 0;		// bool type
+        this.testPage = 0;	// WikiPage type
+        this.newPageContent = "";
+        this.pageCrawler = 0;	// PageCrawler type
     }
 
     SetUpTearDownIncluder(){
