@@ -155,7 +155,7 @@ calculatePay(e){
     case "SALARIED":
         return calculateSalariedPay(e);
     default:
-        raise(InvalidEmployeeType(e.type));
+        console.log(InvalidEmployeeType(e.type));
     }
 }
 ```
