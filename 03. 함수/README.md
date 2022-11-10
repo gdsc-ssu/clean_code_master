@@ -206,7 +206,6 @@ public class EmployeeFactoryImpl implements EmployeeFactory {
         }
     }
 }
-
 ```
 
 ### **서술적인 이름을 사용하라**
@@ -615,5 +614,4 @@ public class SetUpTeardownIncluder{
     }
 
     }
-
 ```
