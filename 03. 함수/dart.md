@@ -4,81 +4,81 @@
 
 \- 가장 기본적인 단위가 함수.
 
-```java
-# 좋지 않은 코드
-public static String testableHtml(PageData pageData, boolean includeSuiteSetup)
-            throws Exception {
-        Wikipage wikipage = pageData.getWikiPage();
-        StringBuffer buffer = new StringBuffer();
-        if (pageData.hasAttribute("Test")) {
-            if (includeSuiteSetup) {
-                WikiPage suiteSetup = PageCrawlerlmpl.getlnheritedPage(
-                        SuiteResponder.SUITE_SETUP_NAME, wikiPage);
-                if (suiteSetup != null) {
-                    wikiPagePath pagePath =
-                            suiteSetup.getPageCrawler().getFullPath(suiteSetup);
-                    String pagePathName = PathParser.render(pagePath);
-                    buffer.append("include -setup .")
-                            .append(pagePathName)
-                            .append("\n");
-                }
-            }
-            WikiPage setup =
-                    PageCrawlerlmpl.getInheritedPage("SetUp", wikiPage);
-            if (setup != null) {
-                WikiPagePath setupPath =
-                        wikiPage.getPageCrawler().getFullPath(setup);
-                String setupPathName = PathParser.render(setupPath);
-                buffer.append("!include -setup .")
-                        .append(setupPathName)
+```dart
+//좋지 않은 코드
+static String testableHtml(PageData pageData, bool includeSuiteSetup)
+            throw Exception {
+    Wikipage wikipage = pageData.getWikiPage();
+    StringBuffer buffer = StringBuffer();
+    if (pageData.hasAttribute("Test")) {
+        if (includeSuiteSetup) {
+            WikiPage suiteSetup = PageCrawlerlmpl.getlnheritedPage(
+                    SuiteResponder.SUITE_SETUP_NAME, wikiPage);
+            if (suiteSetup != null) {
+                wikiPagePath pagePath =
+                        suiteSetup.getPageCrawler().getFullPath(suiteSetup);
+                String pagePathName = PathParser.render(pagePath);
+                buffer.append("include -setup .")
+                        .append(pagePathName)
                         .append("\n");
             }
         }
-        buffer.append(pageData.getContent());
-        if (pageData.hasAttribute("Test")) {
-            WikiPage teardown =
-                    pageCrawlerlmpl.getInheritedPage("TearDown", wikiPage);
-            if (teardown != null) {
-                WikiPagePath tearDownPath = wikiPage.getPageCrawler().getFullPath(teardown);
-                String tearDownPathName = PathParser.render(tearDownPath);
-                buffer.append("\n")
-                        .append("!include -teardown .")
-                        .append(tearDownPathName)
-                        .append("\n");
-            }
-            if (includeSuiteSetup) {
-                WikiPage suiteTeardown = PageCrawlerlmpl.getlnheritedPage(
-                        SuiteResponder.SUITE_TEARDOWN_NAME,
-                        wikiPage
-                );
-                if (suiteTeardown != null) {
-                    Wikipagepath pagePath =
-                            suiteTeardown.getPageCrawler().getFullPath (suiteTeardown);
-                    String pagePathName = PathParser.render(pagePath);
-                    buffer.append("!include -teardown .")
-                            .append(pagePathName)
-                            .append("\n");
-                }
-            }
+        WikiPage setup =
+                PageCrawlerlmpl.getInheritedPage("SetUp", wikiPage);
+        if (setup != null) {
+            WikiPagePath setupPath =
+                    wikiPage.getPageCrawler().getFullPath(setup);
+            String setupPathName = PathParser.render(setupPath);
+            buffer.append("!include -setup .")
+                    .append(setupPathName)
+                    .append("\n");
         }
-        pageData.setContent(buffer.toString());
-        return pageData.getHtml();
     }
+    buffer.append(pageData.getContent());
+    if (pageData.hasAttribute("Test")) {
+        WikiPage teardown =
+                pageCrawlerlmpl.getInheritedPage("TearDown", wikiPage);
+        if (teardown != null) {
+            WikiPagePath tearDownPath = wikiPage.getPageCrawler().getFullPath(teardown);
+            String tearDownPathName = PathParser.render(tearDownPath);
+            buffer.append("\n")
+                    .append("!include -teardown .")
+                    .append(tearDownPathName)
+                    .append("\n");
+        }
+        if (includeSuiteSetup) {
+            WikiPage suiteTeardown = PageCrawlerlmpl.getlnheritedPage(
+                    SuiteResponder.SUITE_TEARDOWN_NAME,
+                    wikiPage
+            );
+            if (suiteTeardown != null) {
+                Wikipagepath pagePath =
+                        suiteTeardown.getPageCrawler().getFullPath (suiteTeardown);
+                String pagePathName = PathParser.render(pagePath);
+                buffer.append("!include -teardown .")
+                        .append(pagePathName)
+                        .append("\n");
+            }
+        }
+    }
+    pageData.setContent(buffer.toString());
+    return pageData.getHtml();
+}
 ```
 
 \- 위 코드는 추상화 수준도 너무 다양하고, 코드도 너무 길다, ...
 
 \- 아래 코드는 메서드 몇 개를 추출하고, 이름 몇 개를 변경하고, 구조를 조금 변경한 형태
 
-```java
-# 위 코드 리팩터링 버전
-public static String renderPageWithSetupsAndTeardowns(
-    PageData pageData,boolean isSuite
-    ) throws Exception {
-    	Boolean isTestPage = pageData.hasAttribute("Test");
+```dart
+// 위 코드 리팩터링 버전
+static String renderPageWithSetupsAndTeardowns(
+    PageData pageData, bool isSuite
+    ) throw Exception {
+    	bool isTestPage = pageData.hasAttribute("Test");
         if (isTestPage){
             WikiPage testPage = pageData.getWikiPage();
-            StringBuffer newPageContent = new StringBuffer();
+            StringBuffer newPageContent = StringBuffer();
             includeSetupPages(testPage, newPageContent, isSuite);
             newPageContent.append(pageData.getContent());
             includeTeardownpages(testPage, newPageContent, isSuite);
@@ -96,14 +96,15 @@ public static String renderPageWithSetupsAndTeardowns(
 
 \- **각 함수가 이야기 하나를 표현할 수 있도록, 명백하게 구성해야 함.**
 
-```java
-# 리-리팩토링한 코드
-public static String renderPageWithSetupsAndTeardowns(
-    PageData pageData,boolean isSuite) throws Exception {
+```dart
+// 리-리팩토링한 코드
+static String renderPageWithSetupsAndTeardowns(
+    PageData pageData, bool isSuite) throw Exception {
     	if (isTestPage(pageData))
             includeSetupAndTeardownPages(pageData, isSuite);
         return pageData.getHtml();
     }
+);
 ```
 
 #### 블록과 들여쓰기
@@ -152,10 +153,10 @@ public static String renderPageWithSetupsAndTeardowns(
 
 \- **다형성(polymorphism)** 을 이용하여 각 switch문을 저차원 클래스에 숨기고 절대로 반복하지 않는 방법이 있다.
 
-```java
-public Money calculatePay(Employee e)
-throws InvalidEmployeeType {
-    switch (e.type){
+```dart
+Money calculatePay(Employee e)
+throw InvalidEmployeeType {
+    switch (e.type) {
         case "COMMISSIONED":
             return calculateCommissionedPay(e);
         case "HOURLY":
@@ -180,29 +181,29 @@ throws InvalidEmployeeType {
 
 - 위 함수와 **구조가 동일한 함수가 무한정 존재할 수 있음**. (ex. isPayday(e:Employee, date:Date)와 deliverPay(e:Employee, pay:Money)
 
-```java
-# 위 코드의 문제점 해결
-public abstract class Employee {
-    public abstract boolean isPayday();
-    public abstract Money calculatePay();
-    public abstract void deliverPay(Money pay);
+```dart
+// 위 코드의 문제점 해결
+abstract class Employee {
+    abstract bool isPayday();
+    abstract Money calculatePay();
+    abstract void deliverPay(Money pay);
 }
 
-public interface EmployeeFactory {
-    public Employee makeEmployee(EmployeeRecord r) throws InvalidEmployeeType;
+EmployeeFactory {
+    Employee makeEmployee(EmployeeRecord r) throw InvalidEmployeeType;
 }
 
-public class EmployeeFactoryImpl implements EmployeeFactory {
-    public Employee makeEmployee(EmployeeRecord r) throws InavalidEmployeeType {
+class EmployeeFactoryImpl implements EmployeeFactory {
+    Employee makeEmployee(EmployeeRecord r) throw InavalidEmployeeType {
         switch (r.type){
             case COMMISSIONED:
-                return new CommissionedEmployee(r);
+                return CommissionedEmployee(r);
             case HOURLY:
-                return new HourlyEmployee(r);
+                return HourlyEmployee(r);
             case SALARIED:
-                return new SalariedEmployee(r);
+                return SalariedEmployee(r);
             default:
-                throw new InvalidEmployeeType(r.type);
+                throw InvalidEmployeeType(r.type);
         }
     }
 }
@@ -238,7 +239,7 @@ public class EmployeeFactoryImpl implements EmployeeFactory {
 
 \- **함수에 인수 1개를 넘기는 이유** 두 가지
 
-1.  **인수에 질문을 던지는 경우**. boolean fileExists("MyFile")
+1.  **인수에 질문을 던지는 경우**. bool fileExists("MyFile")
 
 2.  **인수로 뭔가를 변환해 결과를 반환하는 경우**. InputStream fileopen("MyFile")
 
@@ -278,7 +279,7 @@ public class EmployeeFactoryImpl implements EmployeeFactory {
 
 \- **인수가 2~3개 필요하다면 일부를 독자적인 클래스 변수로 선언할 가능성을 짚어봐야 한다.**
 
-```java
+```dart
 Circle makeCircle(double x, double y,double radius);
 Circle makeCircle(Point center,double radius);
 ```
@@ -309,21 +310,21 @@ Circle makeCircle(Point center,double radius);
 
 \- 많은 경우 **시간적인 결합(temporal coupling)** 이나 **순서 종속성(order dependency)을 초래**한다.
 
-```java
-public class UserValidator{
-    private Cryptographer cryptographer;
+```dart
+class UserValidator{
+    Cryptographer cryptographer;
 
-    public boolean checkPassword (string userName,string password){
+    bool checkPassword (String userName,String password){
     	User user = UserGateway.findByName(userName);
-        if (user != User.NULL){
+        if (user != User.null){
             String codedPhrase = user.getPhraseEncodedByPassword();
             String phrase = cryptographer.decrypt(codedPhrase, password);
             if ("Valid Password" == phrase){
             	Session.initialize();
-                return True;
+                return true;
             }
         }
-        return False;
+        return false;
     }
 }
 ```
@@ -352,12 +353,12 @@ public class UserValidator{
 
 \- 함수는 뭔가를 수행하거나, 뭔가에 답하거나 둘 중 하나만 해야 한다. **객체 상태를 변경하거나, 객체 정보를 반환하거나 둘 중 하나.**
 
-```java
-boolean set(String attribute,String value);
+```dart
+bool Set(String attribute,String value);
 
-# ------------------------------------------
+// ------------------------------------------
 
-if set("username", "unclebob")) ...
+if Set("username", "unclebob")) ...
 ```
 
 \- 위의 함수는 이름이 attribute인 속성을 찾아 값을 value로 설정한 후 성공하면 true, 실패하면 false 반환.
@@ -368,7 +369,7 @@ if set("username", "unclebob")) ...
 
 \- 진짜 해결책은 **명령과 조회를 분리**해 혼란을 애초에 뿌리뽑는 방법이다.
 
-```java
+```dart
 if (attributeExists("username"))
     setAttribute("username", "unclebob");
 ```
@@ -377,7 +378,7 @@ if (attributeExists("username"))
 
 \- **명령 함수에서 오류 코드를 반환하는 방식은 명령/조회 분리 규칙을 미묘하게 위반**한다.
 
-```java
+```dart
 if (deletePage(page) == E_OK)
 ```
 
@@ -385,7 +386,7 @@ if (deletePage(page) == E_OK)
 
 \- 오류 코드를 반환하면 호출자는 오류 코드를 곧바로 처리해야 한다는 문제에 부딪힌다.
 
-```java
+```dart
 if (deletePage(page) == E_OK){
     if (registry.deleteReference(page.name) == E_OK){
     	if (configKeys.deleteKey(page.name.makeKey()) == E_OK){
@@ -400,19 +401,18 @@ if (deletePage(page) == E_OK){
         logger.info("delete failed");
         return E_ERROR;
     }
-
 ```
 
 \- **오류 코드 대신 예외를 사용하면 오류 처리 코드가 원래 코드에서 분리되므로 코드가 깔끔해진다.**
 
-```java
+```dart
 try{
     deletePage(page);
     registry.deleteReference(page.name);
     configKeys.deleteKey(page.name.makeKey());
 }
-catch (Exception as e){
-    logger.log(e.getMessage());
+catch (Exception){
+    logger.log(Exception.getMessage());
 }
 ```
 
@@ -422,23 +422,23 @@ catch (Exception as e){
 
 \- 그러므로 **try/catch 블록을 별도 함수로 뽑아내는 편이 좋다.**
 
-```java
-public void delete(Page page){
+```dart
+void delete(Page page){
     try{
     	deletePageAndAllReferences(page);
     }
-    catch (Exception e){
-    	logError(e);
+    catch {
+    	logError(Exception);
     }
 }
 
-private void deletePageAndAllReferences(Page page) throws Exception{
+void deletePageAndAllReferences(Page page) throw Exception{
     deletePage(page);
     registry.deleteReference(page.name);
     configKeys.deleteKey(page.name.makeKey());
 }
 
-private void logError(Exception e){
+void logError(Exception e){
     logger.log(e.getMessage());
 }
 ```
@@ -457,8 +457,8 @@ private void logError(Exception e){
 
 \- 오류 코드를 반환한다는 이야기는, 클래스든 열거형 변수든, 어디선가 오류 코드를 정의한다는 뜻이다.
 
-```java
-public enum Error{
+```dart
+enum Error{
     OK,
     INVALID,
     NO_SUCH,
@@ -508,86 +508,85 @@ public enum Error{
 
 \- **작성하는 함수가 분명하고 정확한 언어로 깔끔하게 같이 맞아떨어져야 이야기를 풀어가기가 쉬워진다는 사실을 기억하길 바란다!**
 
-```java
-# 위에 import 부분 생략;
+```dart
+// 위에 import 부분 생략;
+class SetUpTeardownIncluder{
+    	PageData pageData;
+        bool isSuite;
+        WikiPage testPage;
+        StringBuffer newPageContent;
+        PageCrawler pageCralwer;
 
-public class SetUpTeardownIncluder{
-    	private PageData pageData;
-        private boolean isSuite;
-        private WikiPage testPage;
-        private StringBuffer newPageContent;
-        private PageCrawler pageCralwer;
-
-    public static String render(PageData pageData) throws Exception{
+    static String render(PageData pageData) throw Exception{
     	return render(pageData, false);
     }
 
-    public static String render(PageData pageData,boolean isSuite) throws Exception{
+    static String render(PageData pageData, bool isSuite) throw Exception{
     	return new SetupTeardownIncluder(pageData).render(isSuite);
     }
 
-    private SetupTeardownIncluder(PageData pageData){
+    SetupTeardownIncluder(PageData pageData){
     	this.pageData = pageData;
         testPage = pageData.getWikiPage();
         pageCrawler = testPage.getPageCrawler();
-        newPageContent = new StringBuffer();
+        newPageContent = StringBuffer();
     }
 
-    private string render(boolean isSuite) throws Exception{
+    String render(bool isSuite) throws Exception{
         this.isSuite = isSuite;
         if (isTestPage())
         includeSetupAndTeardownPages();
         return pageData.getHtml();
     }
 
-    private boolean isTestPage() throws Exception {
+    bool isTestPage() throw Exception {
     	return pageData.hasAttribute("Test");
     }
 
-    private void includeSetupAndTeardownPages() throws Exception {
+    void includeSetupAndTeardownPages() throw Exception {
     	includeSetupPages();
         includePageContent();
         includeTeardownPages();
         updatPageContent();
     }
 
-    private void includeSetupPages() throws Exception {
+    void includeSetupPages() throw Exception {
     	if (isSuite)
 	        includeSuiteSetupPage();
         includeSetupPage();
     }
 
-    private void includeSuiteSetupPage() throws Exception {
+    void includeSuiteSetupPage() throw Exception {
     	include(SuiteResponder.SUITE_SETUP_NAME, "-setup");
     }
 
-    private void includeSetupPage() throws Exception {
+    void includeSetupPage() throw Exception {
     	include("SetUp", "-setup");
     }
 
-    private void includePageContent() throws Exception {
+    void includePageContent() throw Exception {
     	newPageContent.append(pageData.getContent())
     }
 
-    private void includeTeardownPages() throws Exception {
+    void includeTeardownPages() throw Exception {
     	includeTearDownPage();
         if (isSuite)
             includeSuiteTeardownPage();
     }
 
-    private void includeTeardownPage(this) throws Exception {
+    void includeTeardownPage(this) throw Exception {
     	include("TearDown", "-teardown");
     }
 
-    private void includeSuiteTeardownPage() throws Exception {
+    void includeSuiteTeardownPage() throw Exception {
     	include(SuiteResponder.SUITE_TEARDOWN_NAME, "-teardown");
     }
 
-    private void updatePageContent() throws Exception {
+    void updatePageContent() throw Exception {
     	pageData.setContent(newPageContent.toString());
     }
 
-    private void include(string pageName,string arg) throws Exception {
+    void include(String pageName, String arg) throw Exception {
     	WikiPage inheritedPage = findInheritedPage(pageName);
         if (inheritedPage != NULL){
 	        String pagePathName = getPathNameForPage(inheritedPage);
@@ -595,16 +594,16 @@ public class SetUpTeardownIncluder{
         }
     }
 
-    private WikiPage findInheritedPage(String pageName) throws Exception {
+    WikiPage findInheritedPage(String pageName) throw Exception {
     	return PageCrawlerImpl.getInheritedPage(pageName, testPage);
     }
 
-    private String getPathNameForPage(WikiPage page) throws Exception {
+    String getPathNameForPage(WikiPage page) throw Exception {
     	WikiPagePath pagePath = pageCrawler.getFullPath(page);
         return PathParser.render(pagePath);
     }
 
-    private void buildIncludeDirective(String pagePathName, String arg){
+    void buildIncludeDirective(String pagePathName, String arg){
     	newPageContent
             .append("\n!include ");
             .append(arg);
@@ -612,6 +611,5 @@ public class SetUpTeardownIncluder{
             .append(pagePathName);
             .append("\n");
     }
-
-    }
+}
 ```
