@@ -1,3 +1,5 @@
+## 4장 주석
+
 \- 잘 달린 주석은 그 어떤 정보보다 유용하다.
 
 \- 그러나 경솔하고 근거 없는 주석은 코드를 이해하기 어렵게 만든다.
@@ -14,7 +16,7 @@
 
 \- 주석을 무시하는 이유 → 거짓말을 한다. 주석은 오래 될 수록 코드에서 멀어진다.
 
-\- 그 이유는 프로그래머들이 주석을 유지하고 보수하기란 현실적으로 불가능 하기 대문이다.
+\- 그 이유는 프로그래머들이 주석을 유지하고 보수하기란 현실적으로 불가능 하기 때문이다.
 
 \- 코드는 변화하고 진화한다. 불행하게도 주석이 언제나 코드를 따라가지 않는다.
 
@@ -69,7 +71,8 @@ if (employee.isEligibleForFullBenefits())
 ## 좋은 주석
 
 \- 어떤 주석은 필요하거나 유익하다. 지금부터 글자 값 한다고 생각하는 주석 몇가지를 소개한다.
-\- 하지만 명심해야 할 점은 좋은 주석은 주석을 달지 않는 방법을 찾아낸 주석이다.
+
+\- 하지만 명심해야 할 점은 좋은 주석은 주석을 달지 않는 방법을 찾아낸 주석이라는 것이다.
 
 ### 법적인 주석
 
@@ -81,7 +84,7 @@ if (employee.isEligibleForFullBenefits())
 
 ```java
 // Copyright (C) 2003,2004,2005 by Object Mentor, Inc. All rights reserved.
-// GNUGeneralPublicLicense버전2이상을따르는조건으로배포한다
+// GNU General Public License 버전 2 이상을 따르는 조건으로 배포한다.
 ```
 
 \- 소스파일 첫 머리에 들어가는 주석이 반드시 계약 조건이나 법적인 정보일 필요는 없다. 모든 조항과 조건을 열거하는 대신에 가능하다면, 표준 라이선스나 외부 문서를 참조해도 된다.
@@ -109,7 +112,9 @@ Pattern timeMatcher = Pattern. compile(
 
 \- 이는 좀더 나은 예시이다. 위에 제시한 주석은 사용한 정규표현식이 시각과 날짜를 뜻한다고 설명한다.
 
-\- 구체적으로는 주어진 형식 문자열을 사용해 SimpleDateFormat.format 함수가 반환하는 시각과 날짜를 뜻한다. \- \- 이왕이면 시각과 날짜를 변환하는 클래스를 만들어 코드를 옮겨주면 더 좋고 깔끔하다. 그러면 주석이 필요 없어지기 때문이다.
+\- 구체적으로는 주어진 형식 문자열을 사용해 SimpleDateFormat.format 함수가 반환하는 시각과 날짜를 뜻한다.
+
+\- 이왕이면 시각과 날짜를 변환하는 클래스를 만들어 코드를 옮겨주면 더 좋고 깔끔하다. 그러면 주석이 필요 없어지기 때문이다.
 
 ### 의도를 설명하는 주석
 
@@ -123,9 +128,9 @@ public int compareTo(Objcet o)
 	if(o instanceof WikiPagePath)
 	{
 		WikiPagePath p = (WikiPagePath) o;
-		String compressedName = StringUtil.join (names, "");
-		String compressedArgumentName = StringUtil.join(p. names, "");
-		return compressedName.compareTo(compressedArgumentName) ;
+		String compressedName = StringUtil.join(names, "");
+		String compressedArgumentName = StringUtil.join(p.names, "");
+		return compressedName.compareTo(compressedArgumentName);
 	}
 	return 1; // 옳은 유형이므로 정렬 순위가 더 높다.
 }
@@ -134,7 +139,7 @@ public int compareTo(Objcet o)
 \- 조금 더 나은 예제다 저자의 문제 해결 방식에 동의하지 않을지라도 저자의 의도는 분명히 드러난다.
 
 ```java
-public void testConcurrentAddWidgets () throws Exception {
+public void testConcurrentAddWidgets() throws Exception {
 	WidgetBuilder widgetBuilder =
 		new WidgetBuilder (new Class[]{BoldWidget.class});
 	String text = "'''bold text'''";
@@ -142,17 +147,16 @@ public void testConcurrentAddWidgets () throws Exception {
 		new Boldwidget (new MockwidgetRoot(), "''bold text''");
 	AtomicBoolean failFlag = new AtomicBoolean();
 
-failFlag. set (false);
+	failFlag. set (false);
 // 스레드를 대량 생성하는 방법으로 어떻게든 경쟁 조건을 만들려 시도한다.
 
-for (int i=0; i<25000; i++) {
-	WidgetBuilderThread widgetBuilderThread =
-		new WidgetBuilderThread (widgetBuilder, text, parent, failFlag);
-	Thread thread = new Thread(widgetBuilderThread);
-	thread.start();
+	for (int i=0; i<25000; i++) {
+		WidgetBuilderThread widgetBuilderThread = new WidgetBuilderThread (widgetBuilder, text, parent, failFlag);
+		Thread thread = new Thread(widgetBuilderThread);
+		thread.start();
+		}
+		assertEquals (false, failflag.get())
 	}
-	assertEquals (false, failflag.get())
-}
 ```
 
 ### 의미를 명료하게 밝히는 주석
@@ -229,6 +233,7 @@ protected VersionInfo makeVersion() throws Exception
 \- 하지만 어떤 용도로 사용하더라도 시스템에 나쁜 코드를 남겨 놓는 핑계가 되서는 안된다.
 
 \- 요즘 나오는 대다수의 IDE는 TODO주석 전부를 찾아 보여줌으로 잊을 염려는 없다.
+
 \- 그래도 주기적으로 TODO 주석을 점검해 없애도 괜찮은 주석은 없애라 권고한다.
 
 ### 중요성을 강조하는 주석
@@ -239,7 +244,7 @@ protected VersionInfo makeVersion() throws Exception
 String listItemContent = match.group(3).trim() ;
 // 여기서 trim은 정말 중요하다. trim 함수는 문자열에서 시작 공백을제거한다.
 // 문자열에 시작 공백이 있으면 다른 문자열로 인식되기 때문이다.
-new ListitemWidget(this, listItemContent, this. level + 1);
+new ListitemWidget(this, listItemContent, this.level + 1);
 return buildList(text.substring(match.end()));
 ```
 
@@ -660,7 +665,9 @@ response.setBody(formatter.getResultStream(),formatter.getByteCount());
 ```
 
 \- 주석으로 처리된 코드는 다른 사람들이 지우기를 주저한다. -> 이유가 있어서 남겨 놓았을거라 생각한다.
+
 \- 그래서 질 나쁜 와인병 바닥에 앙금이 쌓이듯 쓸모 없는 코드가 점차 쌓여간다.
+
 \- 다음은 아파치 commons에서 가져온 코드다.
 
 ```java
@@ -752,6 +759,7 @@ base64 인코딩으로 비트스트림을 인코딩할때, 비트스트림은
 MSB(Most Significant Bit) 우선으로 정렬되어 있다고 가정한다. 따라서,스트림에서
 첫번째 비트는 첫 8비트 바이트에서 최상위 비트가되며, 여덟번째 비트는 첫 8비트
 바이트에서 최하위 비트가 된다.
+*/
 ```
 
 ### 모호한 관계
@@ -777,12 +785,15 @@ this.pngBytes = new byte[((this.width + 1) * this.height * 3) + 200];
 ### 비공개 코드에서 Javadocs
 
 \- 공개 API는 Javadocs가 유용하지만 공개하지 않을 코드라면 쓸모 없다.
+
 \- 시스템 내부에 속한 클래스와 함수에 Javadocs를 생성할 필요 없다.
+
 \- 오히려 코드만 보기 싫고 산만해진다.
 
 ### 예제
 
 \- 4-7 예제는 나쁜 코드와 주석을 보여주는 코드다.
+
 \- 아래 모듈은 상당수가 이런 코드를 보면 '주석을 잘 달았다'고 생각하는 시절이 있기에 매력적이다.
 
 ```java
@@ -860,6 +871,7 @@ public static int[] generatePrimes (int maxValue)
 ```
 
 \- 아래 코드는 4-7을 리팩터링한 결과다.
+
 \- 전체 주석양이 상당히 줄었다.
 
 ```java
@@ -939,5 +951,7 @@ public class PrimeGenerator{
 ```
 
 \- 첫번째 주석은 중복이라 하기 쉽다. 하지만 해당 주석을 통해 알고리즘의 이해가 쉬워진다 생각해서 남겼다.
+
 \- 두번째 주석은 거의 확실히 필요하다. 루프 한계값으로 제곱근을 사용한 이유를 설명하기 때문이다.
+
 \- 저자는 변수 이름을 바꾸거나 코드 구조를 조정해 이유를 명확하게 설명할 방법을 찾지 못했다.
