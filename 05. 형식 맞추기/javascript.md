@@ -253,13 +253,13 @@ class WikiPageResponder implements SecureResponder {
   }
   
   makeResponse(context, request)
- 	throw exception {
-      const pageName = getPageNameOrDefault(request, "FrontPage");
-      loadPage(pageName, context);
-      if (page == null)
-        return notFountResponse(context, request);
-      else
-        return makePageResponse(context);
+  throw exception {
+    const pageName = getPageNameOrDefault(request, "FrontPage");
+    loadPage(pageName, context);
+    if (page == null)
+      return notFountResponse(context, request);
+    else
+      return makePageResponse(context);
   }
    
   getPageNameOrDefault(request, defaultPageName) {
