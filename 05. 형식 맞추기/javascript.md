@@ -85,6 +85,7 @@ public String render() throws Exception {
    <br />
 - 의미 없는 주석으로 두 인스턴스 변수를 떨어뜨려 놓은 예시 (5-3)
 ```js
+// 예시 5-3
 class ReporterConfig {
   /**
   * 리포터 리스너의 클래스 이름
@@ -106,6 +107,7 @@ class ReporterConfig {
    - 코드가 **한눈**에 들어옴
    - 변수 2개에 메서드가 1개인 클래스라는 사실이 드러남
 ```js
+// 예시 5-3 리팩토링
 class ReporterConfig {
   constructor(m_className, m_properties) {
     this.m_className = m_className;
@@ -252,8 +254,7 @@ class WikiPageResponder implements SecureResponder {
    	this.crawler = crawler;
   }
   
-  makeResponse(context, request)
-  throw exception {
+  makeResponse(context, request) {
     const pageName = getPageNameOrDefault(request, "FrontPage");
     loadPage(pageName, context);
     if (page == null)
@@ -270,22 +271,19 @@ class WikiPageResponder implements SecureResponder {
     return pageName;
    }
 
-  loadPage(resuorce, context)
-  throw exception {
-    const path = PathParser.paser(resource);
+  loadPage(resuorce, context) {
+    const path = PathParser.parser(resource);
     this.crawler = context.root.getPageCrawler();
     this.page = crawler.getPage(context.root, path);
     if (page != null)
       this.pageData = this.page.getData();
   }
 
-  notFoundResponse(context, request) 
-  throw exception {
+  notFoundResponse(context, request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
-  makePageResponse(context)
-  throw exception {
+  makePageResponse(context) {
     this.pageTitle = PathParser.render(this.crawler.getFullPath(this.page));
     const html = makeHtml(context);
 
