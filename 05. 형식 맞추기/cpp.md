@@ -1,5 +1,3 @@
-## chap 05. 형식 맞추기
-
 5장. 형식 맞추기
 프로그래머는 형식을 깔끔하게 맞춰 코드를 작성해야 한다.  
  코드 형식을 맞추기 위해 **간단한 규칙**을 정하고 모두가 그 규칙을 따라야 한다.
@@ -55,22 +53,15 @@ package fitnesse.wikitext.widgets;
 import java.util.regex.*;
 
 public class BoldWidget extends ParentWidget {
-    public static final String REGEXP = "'''.+?'''";
-    private static final Pattern pattern = Pattern.compile("'''(.+?)'''",Pattern.MULTILINE + Pattern.DOTALL);
+ // pass
 };
 
 public BoldWidget(Parent parent, String text) throws Exception {
-    super(parent);
-    Matcher match = pattern.matcher(text);
-    match.find();
-    addChildWidgets(match.group(1));
-    }
+ // pass
+};
 
 public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<b>");
-    html.append(childHtml()).append("</b>");
-    return html.toString();
-    }
+ // pass
 }
 ```
 
@@ -83,19 +74,13 @@ public String render() throws Exception {
 package fitnesse.wikitext.widgets;
 import java.util.regex.*;
 public class BoldWidget extends ParentWidget {
-    public static final String REGEXP = "'''.+?'''";
-    private static final Pattern pattern = Pattern.compile("'''(.+?)'''",Pattern.MULTILINE + Pattern.DOTALL);
+ // pass
+};
 public BoldWidget(Parent parent, String text) throws Exception {
-    super(parent);
-    Matcher match = pattern.matcher(text);
-    match.find();
-    addChildWidgets(match.group(1));}
-
+ // pass
+};
 public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<b>");
-    html.append(childHtml()).append("</b>");
-    return html.toString();
-    }
+ // pass
 }
 ```
 
@@ -111,19 +96,21 @@ public String render() throws Exception {
   <br />
 - 의미 없는 주석으로 두 인스턴스 변수를 떨어뜨려 놓은 예시 (5-3)
 
-```java
-public class ReporterConfig {
+```c++
+class ReporterConfig {
   /**
    * 리포터 리스너의 클래스 이름
    */
-  private String m_className;
+  ReporterConfig(m_className, m_properties) {
+    this.m_className = m_className;
+    this.m_properties = [];
+  }
 
   /**
    * 리포터 리스너의 속성
    */
-  private List<Property> m_properties = new ArrayList<Property>();
-  public void addProperty(Property property) {
-    m_properties.add(property);
+  void addProperty(property) {
+    m_properties.append(property);
   }
 }
 ```
@@ -132,13 +119,15 @@ public class ReporterConfig {
   - 코드가 **한눈**에 들어옴
   - 변수 2개에 메서드가 1개인 클래스라는 사실이 드러남
 
-```java
-public class ReporterConfig {
-  private String m_className;
-  private List<Property> m_properties = new ArrayList<Property>();
+```c++
+class ReporterConfig {
+  ReporterConfig(m_className, m_properties) {
+    this.m_className = m_className;
+    this.m_properties = [];
+  }
 
-  public void addProperty(Property property) {
-    m_properties.add(property);
+  void addProperty(property) {
+    m_properties.append(property);
   }
 }
 ```
@@ -164,28 +153,25 @@ public class ReporterConfig {
   - 변수는 사용하는 위치에 **최대한 가까이** 선언
   - 아래 예제의 함수는 매우 짧으므로 **지역 변수는 각 함수 맨 처음에 선언**
 
-```java
-private static void readPreferences() {
-  InputStream is= null;
+```c++
+void readPreferences() {
+  FILE* is = fopen("test.txt", "r");;
   try {
-    is= new FileInputStream(getPreferencesFile());
-    setPreferences(new Properties(getPreferences()));
-    getPreferences().load(is);
-  } catch (IOException e) {
+    //pass
+  } catch (e) {
     try {
-      if (is != null) is.close();
-    } catch (IOException e1) {
-    }
+      if (is != null) fclose(is);
+    } catch (e1) {}
   }
 }
 ```
 
 - **루프를 제어하는 변수** : 루프 문 내부에 선언
 
-```java
-public int countTestCases() {
+```c++
+void countTestCases() {
   int count = 0;
-  for(Test each : tests)
+  for(int i=0;i<each.length;i++){
     count+=each.countTestCases();
   }
   return count;
@@ -227,38 +213,35 @@ for (XmlTest test : m_suite.getTests()) {
 
 - 코드를 읽다가 우연히 변수를 발견하게 되는 상황
 
-```java
-public class TestSuite implements Test {
-  static public Test createTest(class<? extends TestCase> theClass, String name){
-    ///
-  }
-  public static Constructor<? extends TestCase>
-  getTestConstructor(Class<? extends TestCase> theClass)
-  throws NoSuchMethodException {
-    ///
+```c++
+class TestSuite implements Test {
+  TestSuite(int theClass,string name) {
+  	this.theClass = theClass;
+    this.name = name;
   }
 
-  public static Test warning(final String message) {
+  void createTest(theClass, name) {
     // ...
   }
 
-  public static String exceptionToString(Throwable t) {
+  void warning(message) {
+    // ...
+  }
+
+  void exceptionToString(t) {
    // ...
   }
 
-  private String fName;
-  private Vector<Test> fTests= new Vector<Test>(10);
+  string fName;
+  string fTests;
 
-  public TestSuite() {
+  TestSuite() {
+  }
+
+  TestSuite(theClass) {
     // ...
   }
-  public TestSuite(final Class<? extends TestCase> theClass){
-    ///
-  }
-  public TestSuite(final Class<? extends TestCase> theClass, String name){
-    ///
-  }
-    ///////
+
 }
 ```
 
@@ -276,16 +259,18 @@ public class TestSuite implements Test {
   - 호출되는 함수를 찾기 쉬워짐
   - 모듈 전체의 가독성이 높아짐
 
-```java
-public class WikiPageResponder implements SecureResponder {
-  protected WikiPage page;
-  protected PageData pageData;
-  protected String pageTitle;
-  protected Request request;
-  protected PageCrawler crawler;
+```c++
+class WikiPageResponder : private SecureResponder {
+  WikiPageResponder(string page,string pageData,string pageTitle,string request,string crawler) {
+   	this.page = page;
+   	this.pageData = pageData;
+   	this.pageTitle = pageTitle;
+   	this.request = request;
+   	this.crawler = crawler;
+  }
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
+  void makeResponse(string context,string request)
+  throw exception {
     string pageName = getPageNameOrDefault(request, "FrontPage");
     loadPage(pageName, context);
     if (page == null)
@@ -294,34 +279,34 @@ public class WikiPageResponder implements SecureResponder {
       return makePageResponse(context);
   }
 
-  private Stirng getPageNameOrDefault(Request request,String defaultPageName) {
-    String pageName = request.getResource();
-    if (StringUtil.isBlank(pageNAme))
+  void getPageNameOrDefault(string request,string defaultPageName) {
+    const pageName = request.getResource();
+    if (pageName == null)
       pageName = defaultPageName;
 
     return pageName;
    }
 
-  protected void loadPage(String resuorce,FitNesseContext context)
-  throws Exception {
-    WikiPagePath path = PathParser.paser(resource);
-    crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path);
+  void loadPage(string resuorce,string context)
+  throw exception {
+    string path = PathParser.paser(resource);
+    this.crawler = context.root.getPageCrawler();
+    this.page = crawler.getPage(context.root, path);
     if (page != null)
-      pageData = page.getData();
+      this.pageData = this.page.getData();
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request)
-  throws Exception {
+  void notFoundResponse(string context,string request)
+  throw exception {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context)
-  throws Exception {
-    pageTitle = PathParser.render(crawler.getFullPath(page));
-    String html = makeHtml(context);
+  void makePageResponse(string context)
+  throw exception {
+    this.pageTitle = PathParser.render(this.crawler.getFullPath(this.page));
+    string html = makeHtml(context);
 
-    SimpleResponse response = new SimpleResponse();
+    string response = new SimpleResponse();
     response.setMaxAge(0);
     response.setContent(html);
     return response;
@@ -348,21 +333,21 @@ public class WikiPageResponder implements SecureResponder {
 
 - 개념적 유사성의 좋은 예시 코드
 
-```java
-public class Assert {
-  static public void assertTrue(String message,boolean condition) {
+```c++
+class Assert {
+  void assertTrue(string message,string condition) {
     if (!condition) fail(message);
   }
 
-  static public void assertTrue(boolean condition) {
+  void assertTrue(string condition) {
     assertTrue(null, condition);
   }
 
-  static public void asertFalse(String message,boolean condition) {
+  void asertFalse(string message,string condition) {
     assertTrue(message, !condition);
   }
 
-  static public void assetFalse(boolean condition) {
+  void assetFalse(string condition) {
     assertFalse(null, condition);
   }
 }
@@ -401,11 +386,11 @@ public class Assert {
 
 가로로는 **공백**을 사용해 **밀접한 개념과 느슨한 개념을 표현**함
 
-```java
-private void measureLine(String line) {
+```c++
+void measureLine(string line) {
     lineCount++;
     int lineSize = line.length();
-    totalChars += lineSize;
+    int totalChars += lineSize;
     lineWidthHistogram.addLine(lineSize, lineCount);
     recordWidestLine(lineSize);
 }
@@ -424,19 +409,19 @@ private void measureLine(String line) {
     <br/>
 - **연산자 우선순위 강조**를 위해서도 공백 사용
 
-```java
-public class Quadatic {
-  public static double root1(double a,double b,double c) {
-    double determinant = determinant(a, b, c);
+```c++
+class Quadatic {
+  int root1(int a,int b,int c) {
+    int determinant = determinant(a, b, c);
     return (-b + Math.sqrt(determinant)) / (2 * a);
   }
 
-  public static double root2(int a,int b,int c) {
-    double determinant = determinant(a, b, c);
+  int root2(int a,int b,int c) {
+    int determinant = determinant(a, b, c);
     return (-b + Math.sqrt(determinant)) / (2 * a);
   }
 
-  public static double determinant(double a,double b,double c) {
+  int determinant(int a,int b,int c) {
     return b * b - 4 * a * c;
   }
 }
@@ -491,21 +476,22 @@ public class FitNesseExpediter implements ResponseSender {
     <br/>
 - 아래 코드와 같이 선언부가 길 경우 클래스를 쪼개야 함
 
-```java
-public class FitNesseExpediter implements ResponseSender
-{
-    private Socket socket;
-    private InputStream input;
-    private OutputStream output;
-    private Request request;
-    private Response response;
-    private FitNesseContext context;
-    protected long requestParsingTimeLimit;
-    private long requestProgress;
-    private long requestParsingDeadline;
-    private boolean hasError;
-
-    public FitNesseExpeditor(Socket s, FitNesseContext context) throws Exception
+```c++
+class FitNesseExpediter : private ResponseSender {
+private:
+    Socket socket;
+    InputStream input;
+    OutputStream output;
+    Request request;
+    Response response;
+    FitNesseContext context;
+    long requestProgress;
+    long requestParsingDeadline;
+    boolean hasError;
+protected:
+    long requestParsingTimeLimit;
+public:
+    FitNesseExpeditor(Socket s, FitNesseContext context) throws Exception
     {
       this.context = context;
       socket = s;
@@ -537,31 +523,46 @@ public class FitNesseExpediter implements ResponseSender
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; → 현재 상황과 무관한 `if문`/`while문` 코드를 일일이 살펴볼 필요가 없음  
   소스파일 왼쪽을 훑으며 `새 메서드`, `새 변수`, `새 클래스`를 찾음
 
-```java
-public class FitNesseServer implements SocketServer { private FitNesseContext context; public FitNessServer(FitNesseContext context) { this.context = context; } public void serve(Socket s) { serve(s,10000); } public void serve(Socket s, long requsetTimeout) { try { FitNesseExcepediter sender = new FitNesseEpediter(s, context); sender.setRequestParsingTimeLimit(requestTimeout); sender.start();} catch(Exception e){e.printStackTrace(); } } }
+```c++
+class FitNesseServer : public SocketServer {
+  FitNesseServer(context) {
+    this.context = context;
+  }
+  void serve(s) {
+    serve(s, 10000);
+  }
+  void serve(s, requestTimeout) {
+    try {
+      string sender = new FitNesseExpediter(s, context);
+      sender.setRequestParsingTimeLimit(requestTimeout);
+      sender.start();
+    } catch (e) {
+      e.printStackTrace();
+    }
+  }
+}
 ```
 
 vs
 
-```java
-public class FitNesseServer implements SocketServer { private FitNesseContext context;
-public FitNessServer(FitNesseContext context) {
+```c++
+class FitNesseServer : public SocketServer {
+  FitNesseServer(context) {
     this.context = context;
-    }
-public void serve(Socket s) {
-    serve(s,10000);
-    }
-public void serve(Socket s, long requsetTimeout) {
+  }
+  void serve(s) {
+    serve(s, 10000);
+  }
+  void serve(s, requestTimeout) {
     try {
-        FitNesseExcepediter sender = new FitNesseEpediter(s, context);
-        sender.setRequestParsingTimeLimi(requestTimeout);
-        sender.start();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            }
-        }
+      string sender = new FitNesseExpediter(s, context);
+      sender.setRequestParsingTimeLimit(requestTimeout);
+      sender.start();
+    } catch (e) {
+      e.printStackTrace();
     }
+  }
+}
 ```
 
 - 들여쓰기를 한 파일의 구조는 **한 눈에 들어옴**
@@ -573,27 +574,34 @@ public void serve(Socket s, long requsetTimeout) {
   - 간단한 `if문`, `짧은 while문`, `짧은 함수`에서의 들여쓰기 규칙을 무시하고자 하는 유혹이 생김
   - 한 행에 범위를 뭉뚱그린 코드를 피할 것
 
-```java
-public class CommentWidget extends TextWidget {
-    public static final String REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
-
-  public CommentWidget(ParentWidget parent,String text) {super(parent, text);
+```c++
+class CommentWidget : public TextWidget {
+  CommentWidget(REGEXP) {
+    this.REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
   }
-  public String render() throws Exception{return "";}
+  CommentWidget(parent, text) {
+    super(parent, text);
+  }
+  void render() {
+    throw "";
+  }
 }
 ```
 
 - 들여쓰기로 범위를 제대로 표현한 코드 (위 코드 리팩터링 버전)
 
-```java
-public class CommentWidget extends TextWidget {
-    public static final String REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
+```c++
+class CommentWidget : public TextWidget {
+  CommentWidget(REGEXP) {
+    this.REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
+  }
 
-  public CommentWidget(ParentWidget parent,String text) {
+  CommentWidget(parent, text) {
     super(parent, text);
   }
-  public String render() throws Exception{
-    return "";
+
+  void render() {
+    throw "";
   }
 }
 ```
@@ -602,7 +610,7 @@ public class CommentWidget extends TextWidget {
 
 빈 블록을 올바로 들여쓰고 괄호로 감쌀 것
 
-```java
+```c++
 // 좋지 않은 코드
 while (dis.read(buf, 0, readBufferSize) != -1);
 ```
@@ -627,26 +635,29 @@ while (dis.read(buf, 0, readBufferSize) != -1);
 
 - 코드 자체가 최고의 구현 표준 문서가 되는 예시
 
-```java
-public class CodeAnalyzer implements JavaFileAnalysis {
-    private int lineCount;
-    private int maxLineWidth;
-    private int widestLineNumber;
-    private LineWidthHistogram lineWidthHistogram;
-    private int totalChars;
-
-    public CodeAnalyzer() {
-        LineWidthHistogram = new LineWidthHistogram();
+```c++
+class CodeAnalyzer : public JavaFileAnalysis {
+    CodeAnalyzer(int lineCount,int maxLineWidth,ubt widestLineNumber,string lineWidthHistogram,int totalChars) {
+        this.lineCount = lineCount;
+        this.maxLineWidth = maxLineWidth;
+        this.widestLineNumber = widestLineNumber;
+        this.lineWidthHistogram = lineWidthHistogram;
+        this.totalChars = totalChars;
     }
 
-    public static List<File> findJavaFiles(File parentDirectory) {
-        List<File> files = new ArrayList<File>();
+    CodeAnalyzer() {
+        this.lineWidthHistogram = new LineWidthHistogram();
+    }
+
+    string findJavaFiles(string parentDirectory) {
+        const files = [];
         findJavailes(parentDirectory, files);
         return files;
     }
 
-    private static findJavaFiles(File parentDirectory, List<file> files) {
-        for (File file : parentDirectory.listFiles()){
+    void findJavaFiles(string parentDirectory,string files) {
+        for (int i=0;i<parentDirectory.listFiles().length;i++){
+            file = parentDirectory.listFiles()[i];
             if (file.getName().endsWith(".java"))
                 files.add(file);
             else if (file.isDirectory())
@@ -654,67 +665,68 @@ public class CodeAnalyzer implements JavaFileAnalysis {
         }
     }
 
-    public void analyzeFile(File javaFile) throws Exception{
-        BufferdReader br = new BufferReader(new FileReader(javaFiles));
-        String line;
+    void analyzeFile(string javaFile) {
+        string br = new BufferReader(new FileReader(javaFiles));
+        int line;
         while((line =  br.readLine()) != null)
-            measureLine(line);
+            neasureLine(line);
     }
 
-    private void measureLine(String line) {
-        lineCount++;
-        int lineSize = line.length();
-        totalChars += lineSize;
-        lineWidthHistogram.addLine(lineSize, lineCount);
+    void measureLine(int line) {
+        this.lineCount++;
+        const lineSize = line.length();
+        this.totalChars += lineSize;
+        this.lineWidthHistogram.addLine(lineSize, this.lineCount);
         recordWidestLine(lineSize);
     }
 
-    private void recordWidestLine(int lineSize) {
+    void recordWidestLine(int lineSize) {
         if (lineSize > maxLineWidth) {
-            maxLineWidth = lineSize;
-            widestLineNumber = lineCount;
+            this.maxLineWidth = lineSize;
+            this.widestLineNumber = this.lineCount;
         }
     }
 
-    public int getLineCount() {
-        return lineCount;
+    int getLineCount() {
+        return this.lineCount;
     }
 
-   public int getMatLineWidth() {
-        return maxLineWidth;
+    int getMatLineWidth() {
+        return this.maxLineWidth;
     }
 
-    public int getWidestLineNumber() {
-        return WidestLineNumber;
+    int getWidestLineNumber() {
+        return this.getWidestLineNumber;
     }
 
-    public LineWidthHistogram getLineWidthHistogram() {
-        return lineWidthHistogram;
+    int getLineWidthHistogram() {
+        return this.lineWidthHistogram;
     }
 
-    public double getMeanLineWidth() {
-        return (double)totalChars / lineCount;
+    int getMeanLineWidth() {
+        return this.totalChars / this.lineCount;
     }
 
-    public int getMedianLineWidth() {
-        Integer[] sortedWidths = getSortedWidths();
+    int getMedianLineWidth() {
+        int sortedWidths = getSortedWidths();
         int cumulativeLineCount = 0;
-        for (int width : sortedWidths){
+        for (int i=0;i<sortedWidths.length;i++){
+            int width=sortedWidths[i];
             cumulativeLineCount += lineCountForWidth(width);
-            if (cumulatuveLineCount > lineCount/2)
+            if (cumulatuveLineCount > this.lineCount/2)
                 return width;
         }
         throw new Error("Cannot get here");
     }
 
-    private int lineCountForWidth(int width) {
-        return lineWidthHistogram.getLineforWidth(width).size();
+    int lineCountForWidth(int width) {
+        return this.lineWidthHistogram.getLineforWidth(width).size();
     }
 
-    private Integer[] getSortedWidths() {
-        Set<Integer> widths = lineWidthHistogram.getWidths();
-        Integer[] sortedWidths = widths.toArray(new Integer[0]);
-        Arrays.sort(sortedWidths);
+    int getSortedWidths() {
+        int widths = this.lineWidthHistogram.getWidths();
+        int sortedWidths = Array.from(width);
+        sortedWidths.sort();
         return sortedWidths;
     }
 }
