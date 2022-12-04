@@ -49,29 +49,24 @@
 - **일련의 행 묶음** : 완결된 생각 하나를 표현
   - 생각 사이는 빈 행을 넣어 분리
 
-```java
-package fitnesse.wikitext.widgets;
+```python
+import *
 
-import java.util.regex.*;
-
-public class BoldWidget extends ParentWidget {
-    public static final String REGEXP = "'''.+?'''";
-    private static final Pattern pattern = Pattern.compile("'''(.+?)'''",Pattern.MULTILINE + Pattern.DOTALL);
-};
-
-public BoldWidget(Parent parent, String text) throws Exception {
-    super(parent);
-    Matcher match = pattern.matcher(text);
-    match.find();
-    addChildWidgets(match.group(1));
-    }
-
-public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<b>");
-    html.append(childHtml()).append("</b>");
-    return html.toString();
-    }
-}
+class BoldWidget(ParentWidget):
+	def __init__(self):
+    	self.REGEXP = "'''.+?'''"
+    	self.pattern = Pattern.compile("'''(.+?)'''", Pattern.MULTILINE + Pattern.DOTALL)
+    
+    def BoldWidget(self, parent:ParentWidget, text:str):
+    	super().__init__()
+        self.match = pattern.matcher(text)
+        self.match.find()
+        self.addChildWidgets(self.match.group(1))
+        
+    def render(self):
+    	self.html = StringBuffer("<b>")
+        self.html.append(childHtml()).append("</b>")
+        return str(self.html)
 ```
 
 - 위 코드의 문제점
@@ -79,24 +74,21 @@ public String render() throws Exception {
   - 간단한 규칙이나 코드의 세로 레이아웃에 심오한 영향을 미침
   - ✓ **빈 행** : 새로운 개념을 시작한다는 시각적 단서
 
-```java
-package fitnesse.wikitext.widgets;
-import java.util.regex.*;
-public class BoldWidget extends ParentWidget {
-    public static final String REGEXP = "'''.+?'''";
-    private static final Pattern pattern = Pattern.compile("'''(.+?)'''",Pattern.MULTILINE + Pattern.DOTALL);
-public BoldWidget(Parent parent, String text) throws Exception {
-    super(parent);
-    Matcher match = pattern.matcher(text);
-    match.find();
-    addChildWidgets(match.group(1));}
-
-public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<b>");
-    html.append(childHtml()).append("</b>");
-    return html.toString();
-    }
-}
+```python
+import *
+class BoldWidget(ParentWidget):
+	def __init__(self):
+    	self.REGEXP = "'''.+?'''"
+    	self.pattern = Pattern.compile("'''(.+?)'''", Pattern.MULTILINE + Pattern.DOTALL)
+    def BoldWidget(self, parent:ParentWidget, text:str):
+    	super().__init__()
+        self.match = pattern.matcher(text)
+        self.match.find()
+        self.addChildWidgets(self.match.group(1))
+    def render(self):
+    	self.html = StringBuffer("<b>")
+        self.html.append(childHtml()).append("</b>")
+        return str(self.html)
 ```
 
 빈 행을 뺄 경우 코드의 가독성이 떨어져 암호처럼 보인다.  
@@ -111,36 +103,35 @@ public String render() throws Exception {
   <br />
 - 의미 없는 주석으로 두 인스턴스 변수를 떨어뜨려 놓은 예시 (5-3)
 
-```java
-public class ReporterConfig {
-  /**
-   * 리포터 리스너의 클래스 이름
-   */
-  private String m_className;
-
-  /**
-   * 리포터 리스너의 속성
-   */
-  private List<Property> m_properties = new ArrayList<Property>();
-  public void addProperty(Property property) {
-    m_properties.add(property);
-  }
-}
+```python
+class ReporterConfig():
+	def __init__(self):
+    	### 
+        # 리포터 리스너의 클래스 이름
+        ###
+    	self.m_className = ""
+              
+        ###
+        # 리포터 리스너의 속성
+        ###
+        self.m_propertiees = []
+        
+    def addProperty(self, property):
+        self.m_properties.add(property)
 ```
 
 - 5-3 예시 리팩토링 코드
   - 코드가 **한눈**에 들어옴
   - 변수 2개에 메서드가 1개인 클래스라는 사실이 드러남
 
-```java
-public class ReporterConfig {
-  private String m_className;
-  private List<Property> m_properties = new ArrayList<Property>();
-
-  public void addProperty(Property property) {
-    m_properties.add(property);
-  }
-}
+```python
+class ReporterConfig():
+	def __init__(self):
+    	self.m_className = ""
+        self.m_propertiees = []
+        
+    def addProperty(self, property):
+        self.m_properties.add(property)
 ```
 
 ### ▶️ 수직 거리
@@ -164,53 +155,47 @@ public class ReporterConfig {
   - 변수는 사용하는 위치에 **최대한 가까이** 선언
   - 아래 예제의 함수는 매우 짧으므로 **지역 변수는 각 함수 맨 처음에 선언**
 
-```java
-private static void readPreferences() {
-  InputStream is= null;
-  try {
-    is= new FileInputStream(getPreferencesFile());
-    setPreferences(new Properties(getPreferences()));
-    getPreferences().load(is);
-  } catch (IOException e) {
-    try {
-      if (is != null) is.close();
-    } catch (IOException e1) {
-    }
-  }
-}
+```python
+def readPreferences():
+	is = NULL
+    try:
+    	is = FileInputStream(getPreferencesFile())
+        setPreferences(Properties(getPreferences())
+        getPreferences().load(is)
+    except IOException e:
+    	try:
+        	if is != NULL:
+            	is.close()
+        except IOException e1:
+        	pass
 ```
 
 - **루프를 제어하는 변수** : 루프 문 내부에 선언
 
-```java
-public int countTestCases() {
-  int count = 0;
-  for(Test each : tests)
-    count+=each.countTestCases();
-  }
-  return count;
-}
+```python
+def countTestCases():
+	count = 0
+    for each in tests:
+    	count += each.countTestCases()
+    return count
 ```
 
 - 긴 함수에서 블록 상단이나 루프 직전에 변수를 선언하는 사례
 
-```java
-for (XmlTest test : m_suite.getTests()) {
-	TestRunner tr = m_runnerFactory.newTestRunner(this.test);
-	tr.addListener(m_textReporter);
-	m_testRunners.add(tr);
-
-	invoker = tr.getInvoker();
-
-    for (ITestNGMethod m : tr.getBeforeSuiteMethods()) {
-    	beforeSuiteMethods.put(m.getMethod(), m);
-    }
-
-    for (ITestNGMethod m : tr.getAfterSuiteMethods()) {
-    	afterSuiteMethods.put(m.getMethod(), m);
-    }
-}
-// ...
+```python
+for test in m_suite.getTests():
+	tr = m_runnerFactory.newTestRunner(self, test)
+    tr.addListener(m_testReporter)
+    m_testRunners.add(tr)
+    
+    invoker = tr.getInvoker()
+    
+    for m in tr.getBeforeSuiteMethods():
+    	beforeSuiteMethodds.put(m.getMethod(), m)
+        
+    for m in tr.getAfterSuiteMethods():
+    	afterSuiteMethods.put(m.getMethod(), m)
+# ...
 ```
 
 - **인스턴스 변수**
@@ -227,39 +212,32 @@ for (XmlTest test : m_suite.getTests()) {
 
 - 코드를 읽다가 우연히 변수를 발견하게 되는 상황
 
-```java
-public class TestSuite implements Test {
-  static public Test createTest(class<? extends TestCase> theClass, String name){
-    ///
-  }
-  public static Constructor<? extends TestCase>
-  getTestConstructor(Class<? extends TestCase> theClass)
-  throws NoSuchMethodException {
-    ///
-  }
-
-  public static Test warning(final String message) {
-    // ...
-  }
-
-  public static String exceptionToString(Throwable t) {
-   // ...
-  }
-
-  private String fName;
-  private Vector<Test> fTests= new Vector<Test>(10);
-
-  public TestSuite() {
-    // ...
-  }
-  public TestSuite(final Class<? extends TestCase> theClass){
-    ///
-  }
-  public TestSuite(final Class<? extends TestCase> theClass, String name){
-    ///
-  }
-    ///////
-}
+```python
+class TestSuite(Test):
+	def createTest(self, theClass, name):
+    	pass
+        
+    def getTestConstructor(self, theClass):
+    	pass
+        
+    def warning(self, message):
+    	pass
+        
+    def exceptionToString(self, t):
+    	pass
+        
+    def __init__(self):
+    	self.fName = ""
+        self.fTests = []
+        
+    def TestSuite(self):
+    	pass
+        
+    def TestSuite(self, theClass):
+    	pass
+        
+    def TestSuite(self, theClass, name):
+    	pass
 ```
 
 - **종속 함수**
@@ -276,57 +254,49 @@ public class TestSuite implements Test {
   - 호출되는 함수를 찾기 쉬워짐
   - 모듈 전체의 가독성이 높아짐
 
-```java
-public class WikiPageResponder implements SecureResponder {
-  protected WikiPage page;
-  protected PageData pageData;
-  protected String pageTitle;
-  protected Request request;
-  protected PageCrawler crawler;
+```python
+class WikiPageResponder(SecureResponder):
+	def __init__(self):
+    	page = ""
+        pageData = ""
+        pageTitle = ""
+        request = ""
+        crawler = ""
+        
+    def makeResponse(self, context, request):
+		self.pageName = self.getPageNameOrDefault(request, "FrontPage")
+        self.loadPage(self.pageName, context)
+        if self.page == NULL:
+        	return notFoundResponse(context, request)
+        else:
+        	return makePageResponse(context)
+            
+	def getPageNameOrDefault(self, request, defaultPageName):
+    	self.pageName = request.getResouce()
+        if StringUtil.isBlank(self.pageName):
+        	self.pageName = defaultPageName
+        
+        return pageName
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
-    string pageName = getPageNameOrDefault(request, "FrontPage");
-    loadPage(pageName, context);
-    if (page == null)
-      return notFountResponse(context, request);
-    else
-      return makePageResponse(context);
-  }
-
-  private Stirng getPageNameOrDefault(Request request,String defaultPageName) {
-    String pageName = request.getResource();
-    if (StringUtil.isBlank(pageNAme))
-      pageName = defaultPageName;
-
-    return pageName;
-   }
-
-  protected void loadPage(String resuorce,FitNesseContext context)
-  throws Exception {
-    WikiPagePath path = PathParser.paser(resource);
-    crawler = context.root.getPageCrawler();
-    page = crawler.getPage(context.root, path);
-    if (page != null)
-      pageData = page.getData();
-  }
-
-  private Response notFoundResponse(FitNesseContext context, Request request)
-  throws Exception {
-    return new NotFoundResponder().makeResponse(context, request);
-  }
-
-  private SimpleResponse makePageResponse(FitNesseContext context)
-  throws Exception {
-    pageTitle = PathParser.render(crawler.getFullPath(page));
-    String html = makeHtml(context);
-
-    SimpleResponse response = new SimpleResponse();
-    response.setMaxAge(0);
-    response.setContent(html);
-    return response;
-  }
-}
+	def loadPage(self, resource, context):
+    	self.path = PathParser.parse(resource)
+        self.crawler = context.root.getPageCrawler()
+        self.crawler.setDeadEndStrategy(VirtualEnabledPageCrawler())
+        self.page = self.crawler.getPage(context.root, path)
+        if self.page != NULL:
+        	self.pageData = self.page.getData()
+            
+	def notFoundResponse(self, context, request):
+    	return NotFoundResponder().makeResponse(context, request)
+        
+	def makePageResponse(self, context):
+    	self.pageTitle = PathParser.render(self.crawler.getFullPath(page))
+        self.html = makeHtml(context)
+        
+        self.response = SimpleResponse()
+        self.response.setMaxAge(0)
+        self.response.setContent(html)
+        return response
 ```
 
 - 위 코드는 상수를 적절한 수준에 두는 좋은 예제이다.
@@ -348,24 +318,20 @@ public class WikiPageResponder implements SecureResponder {
 
 - 개념적 유사성의 좋은 예시 코드
 
-```java
-public class Assert {
-  static public void assertTrue(String message,boolean condition) {
-    if (!condition) fail(message);
-  }
-
-  static public void assertTrue(boolean condition) {
-    assertTrue(null, condition);
-  }
-
-  static public void asertFalse(String message,boolean condition) {
-    assertTrue(message, !condition);
-  }
-
-  static public void assetFalse(boolean condition) {
-    assertFalse(null, condition);
-  }
-}
+```python
+class Assert():
+	def assertTrue(self, message, condition):
+    	if not condition:
+        	fail(message)
+            
+	def assertTrue(self, condition):
+    	assertTrue(NULL, condition)
+        
+	def assertFalse(self, message, condition):
+    	assertTrue(message, !condition)
+        
+	def assertFalse(self, condition):
+    	assertFalse(NULL, condition)
 ```
 
 - 위 예제는 개념적인 친화도가 매우 높음
@@ -385,7 +351,7 @@ public class Assert {
 
 ## ✅ 가로 형식 맞추기
 
- <img width="466" alt="스크린샷 2022-11-21 오후 5 25 06" src="https://user-images.githubusercontent.com/66112716/203001189-eca76a2d-18fc-491e-94c4-6c94a82d1c1c.png">
+ <img width="466" alt="스크린샷 2022-11-21 오후 5 25 06" src="https://user-images.githubusercontent.com/66112716/203001189-eca76a2d-18fc-491e-94c4-6c94a82d1c1c.png">
 
 - 프로젝트 7개에서 조사한 행 길이 분포 그래프  
   → 프로그래머는 명백하게 **짧은 행을 선호**함
@@ -401,14 +367,13 @@ public class Assert {
 
 가로로는 **공백**을 사용해 **밀접한 개념과 느슨한 개념을 표현**함
 
-```java
-private void measureLine(String line) {
-    lineCount++;
-    int lineSize = line.length();
-    totalChars += lineSize;
-    lineWidthHistogram.addLine(lineSize, lineCount);
-    recordWidestLine(lineSize);
-}
+```python
+def measureLine(line):
+	lineCount += 1
+    lineSize = len(line)
+    totalChars += lineSize
+    lineWidthHistogram.addLine(lineSize, lineCount)
+    recordWidestLine(lineSize)
 ```
 
 - 할당 연산자의 강조를 위해 앞뒤에 공백을 준 예시 코드
@@ -424,22 +389,20 @@ private void measureLine(String line) {
     <br/>
 - **연산자 우선순위 강조**를 위해서도 공백 사용
 
-```java
-public class Quadatic {
-  public static double root1(double a,double b,double c) {
-    double determinant = determinant(a, b, c);
-    return (-b + Math.sqrt(determinant)) / (2 * a);
-  }
+```python
+import math
 
-  public static double root2(int a,int b,int c) {
-    double determinant = determinant(a, b, c);
-    return (-b + Math.sqrt(determinant)) / (2 * a);
-  }
-
-  public static double determinant(double a,double b,double c) {
-    return b * b - 4 * a * c;
-  }
-}
+class Quadratic():
+	def root1(self, a, b, c):
+    	self.determinant = self.determinant(a, b, c)
+        return (-b + math.sqrt(self.determinant)) / (2*a)
+	
+    def root2(self, a, b, c):
+    	self.determinant = self.determinant(a, b, c)
+        return (-b - math.sqrt(self.determinant)) / (2*a)
+        
+	def determinant(self, a, b, c):
+    	return b*b - 4*a*c
 ```
 
 - 수식을 읽기에 아주 편한 예제
@@ -454,29 +417,26 @@ public class Quadatic {
 
 ### ▶️ 가로 정렬
 
-```java
-public class FitNesseExpediter implements ResponseSender {
-    private   Socket          socket;
-    private   InputStream     input;
-    private   OutputStream    output;
-    private   Request         request;
-    private   Response        response;
-    private   FitNesseContext context;
-    protected long            requestParsingTimeLimit;
-    private   long            requestProgress;
-    private   long            requestParsingDeadline;
-    private   boolean         hasError;
-
-    public FitNesseExpeditor(Socket s,
-                             FitNesseContext context) throws Exception
-    {
-      this.context =            context;
-      socket =                  s;
-      input =                   s.getInputStream();
-      output =                  s.getOutputStream();
-      requestParsingTileLimit = 10000;
-    }
-}
+```python
+class FitNesseExpediter(ResponseSender):
+	def __init__(self):
+        self.socket		=	""
+        self.input		=	""
+        self.output 		= 	""
+        self.request		=	""
+        self.response	=	""
+        self.context		= 	""
+        self.requestParsingTimeLimit	=	""
+        self.requestProgress	=	""
+        self.requestParsingDeadline	=	""
+        self.hasError	=	""
+        
+    def FitNesseExpediter(self, s, context):
+    	self.context	=	context
+        self.socket		=	s
+        self.input		=	s.getInputStream()
+        self.output		=	s.getOutputStream()
+        self.requestParsingTimeLimit	=	10000
 ```
 
 - 위 코드 : 유용하지 않음
@@ -491,29 +451,26 @@ public class FitNesseExpediter implements ResponseSender {
     <br/>
 - 아래 코드와 같이 선언부가 길 경우 클래스를 쪼개야 함
 
-```java
-public class FitNesseExpediter implements ResponseSender
-{
-    private Socket socket;
-    private InputStream input;
-    private OutputStream output;
-    private Request request;
-    private Response response;
-    private FitNesseContext context;
-    protected long requestParsingTimeLimit;
-    private long requestProgress;
-    private long requestParsingDeadline;
-    private boolean hasError;
-
-    public FitNesseExpeditor(Socket s, FitNesseContext context) throws Exception
-    {
-      this.context = context;
-      socket = s;
-      input = s.getInputStream();
-      output = s.getOutputStream();
-      requestParsingTileLimit = 10000;
-    }
-}
+```python
+class FitNesseExpediter(ResponseSender):
+	def __init__(self):
+        self.socket	= ""
+        self.input	= ""
+        self.output = ""
+        self.request = ""
+        self.response =	""
+        self.context = ""
+        self.requestParsingTimeLimit = ""
+        self.requestProgress = ""
+        self.requestParsingDeadline = ""
+        self.hasError = ""
+        
+    def FitNesseExpediter(self, s, context):
+    	self.context = context
+        self.socket	= s
+        self.input = s.getInputStream()
+        self.output = s.getOutputStream()
+        self.requestParsingTimeLimit = 10000
 ```
 
 ### ▶️ 들여쓰기
@@ -537,31 +494,32 @@ public class FitNesseExpediter implements ResponseSender
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; → 현재 상황과 무관한 `if문`/`while문` 코드를 일일이 살펴볼 필요가 없음  
   소스파일 왼쪽을 훑으며 `새 메서드`, `새 변수`, `새 클래스`를 찾음
 
-```java
-public class FitNesseServer implements SocketServer { private FitNesseContext context; public FitNessServer(FitNesseContext context) { this.context = context; } public void serve(Socket s) { serve(s,10000); } public void serve(Socket s, long requsetTimeout) { try { FitNesseExcepediter sender = new FitNesseEpediter(s, context); sender.setRequestParsingTimeLimit(requestTimeout); sender.start();} catch(Exception e){e.printStackTrace(); } } }
-```
+```python
+# 1
+class FitnesseServer(SocketServer): def __init__(self): self.context = ""
+def FitNesseServer(self, context): self.context = context def server(self, s):
+self.serve(s, 10000) def server(self, s, requestTimeout): try : self.sender = 
+FitNesseExpediter(s, context) self.sender.setRequestParsingTimeLimit(requestTimeout)
+sender.start() except Exception e: e.printStackTrace()
 
-vs
-
-```java
-public class FitNesseServer implements SocketServer { private FitNesseContext context;
-public FitNessServer(FitNesseContext context) {
-    this.context = context;
-    }
-public void serve(Socket s) {
-    serve(s,10000);
-    }
-public void serve(Socket s, long requsetTimeout) {
-    try {
-        FitNesseExcepediter sender = new FitNesseEpediter(s, context);
-        sender.setRequestParsingTimeLimi(requestTimeout);
-        sender.start();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            }
-        }
-    }
+# 2
+class FitnesseServer(SocketServer):
+	def __init__(self):
+    	self.context = ""
+        
+	def FitNesseServer(self, context):
+    	self.context = context
+        
+    def server(self, s):
+		self.serve(s, 10000)
+        
+    def server(self, s, requestTimeout):
+    	try :
+        	self.sender = FitNesseExpediter(s, context)
+            self.sender.setRequestParsingTimeLimit(requestTimeout)
+            sender.start() 
+        except Exception e:
+        	e.printStackTrace()
 ```
 
 - 들여쓰기를 한 파일의 구조는 **한 눈에 들어옴**
@@ -572,39 +530,38 @@ public void serve(Socket s, long requsetTimeout) {
 - **들여쓰기 무시하기**
   - 간단한 `if문`, `짧은 while문`, `짧은 함수`에서의 들여쓰기 규칙을 무시하고자 하는 유혹이 생김
   - 한 행에 범위를 뭉뚱그린 코드를 피할 것
+  - 두 번째는 들여쓰기로 범위를 제대로 표현한 코드 (위 코드 리팩터링 버전)
 
-```java
-public class CommentWidget extends TextWidget {
-    public static final String REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
+```python
+# 1
+class CommentWidget(TextWidget):
+	def __init__(self):
+    	self.REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?"
 
-  public CommentWidget(ParentWidget parent,String text) {super(parent, text);
-  }
-  public String render() throws Exception{return "";}
-}
+	def CommentWidget(self, parent, text): super.__init__(parent, text)
+    def render(self): return ""
+    
+# 2
+class CommentWidget(TextWidget):
+	def __init__(self):
+    	self.REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?"
+
+	def CommentWidget(self, parent, text):
+    	super.__init__(parent, text)
+        
+    def render(self):
+    	return ""
 ```
 
-- 들여쓰기로 범위를 제대로 표현한 코드 (위 코드 리팩터링 버전)
-
-```java
-public class CommentWidget extends TextWidget {
-    public static final String REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
-
-  public CommentWidget(ParentWidget parent,String text) {
-    super(parent, text);
-  }
-  public String render() throws Exception{
-    return "";
-  }
-}
-```
 
 ### ▶️ 가짜 범위
 
 빈 블록을 올바로 들여쓰고 괄호로 감쌀 것
 
-```java
-// 좋지 않은 코드
-while (dis.read(buf, 0, readBufferSize) != -1);
+```python
+# 좋지 않은 코드
+while (dis.read(buf, 0, readBufferSize) != -1):
+	pass
 ```
 
 ## ✅ 팀 규칙
@@ -627,95 +584,72 @@ while (dis.read(buf, 0, readBufferSize) != -1);
 
 - 코드 자체가 최고의 구현 표준 문서가 되는 예시
 
-```java
-public class CodeAnalyzer implements JavaFileAnalysis {
-    private int lineCount;
-    private int maxLineWidth;
-    private int widestLineNumber;
-    private LineWidthHistogram lineWidthHistogram;
-    private int totalChars;
+```python
+class CodeAnalyzer(JavaFileAnalysis):
+	def __init__(self):
+    	self.lineCount = 0
+        self.maxlineWidth = 0
+        self.widestLineNumber = 0
+        self.lineWidthHistogram = ""
+        self.totalChars = 0
+        
+    def CodeAnalyzer(self):
+    	self.lineWidthHistogram = LineWidthHistogram()
+        
+	def findJavaFiles(self, parentDirectory, files):
+    	for file in parentDirectory.listFiles():
+        	if file.getName().endsWith(".java"):
+            	files.add(file)
+            elif file.isDirectory():
+            	self.findJavaFiles(file, files)
+                
+	def analyzeFile(self, javaFile):
+    	self.br = BufferedReader(FileReader(javaFile))
+        self.line = ""
+        while (self.line = br.readLine()) != NULL:
+        	self.measureLine(self.line)
+            
+	def measureLine(self, line):
+    	self.lineCount += 1
+        self.lineSize = len(line)
+        self.totalChars += self.lineSize
+        self.lineWidthHistogram.addLine(self.linesize, self.lineCount)
+        self.recordWidestLine(self.linesize)
+        
+	def recordWidestLine(self, lineSize):
+    	if (lineSize > self.maxLineWidth):
+        	self.maxLineWidth = lineSize
+            self.widestLineNumber = self.lineCount
+            
+	def getLineCount(self):
+    	return self.lineCount
+        
+	def getMaxLineWidth(self):
+    	return self.maxLineWidth
+        
+	def getWidestLineNumber(self):
+    	return self.widestLineNumber
+        
+	def getLineWidthHistogram(self):
+    	return self.lineWidthHistogram
+        
+	def getMeanLineWidth(self):
+    	return float(self.totalChars/self.lineCount)
+        
+	def getMedianLineWidth(self):
+    	self.sortedWidths = self.getSortedWidths()
+        self.cumulativeLineCount = 0
+        for width in sortedWidths:
+        	self.cumulativeLinecount += self.lineCountForWidth(self.width)
+            if self.cumulativeLineCount > self.lineCount/2:
+            	return width
 
-    public CodeAnalyzer() {
-        LineWidthHistogram = new LineWidthHistogram();
-    }
-
-    public static List<File> findJavaFiles(File parentDirectory) {
-        List<File> files = new ArrayList<File>();
-        findJavailes(parentDirectory, files);
-        return files;
-    }
-
-    private static findJavaFiles(File parentDirectory, List<file> files) {
-        for (File file : parentDirectory.listFiles()){
-            if (file.getName().endsWith(".java"))
-                files.add(file);
-            else if (file.isDirectory())
-                findJavaFiles(file, files);
-        }
-    }
-
-    public void analyzeFile(File javaFile) throws Exception{
-        BufferdReader br = new BufferReader(new FileReader(javaFiles));
-        String line;
-        while((line =  br.readLine()) != null)
-            measureLine(line);
-    }
-
-    private void measureLine(String line) {
-        lineCount++;
-        int lineSize = line.length();
-        totalChars += lineSize;
-        lineWidthHistogram.addLine(lineSize, lineCount);
-        recordWidestLine(lineSize);
-    }
-
-    private void recordWidestLine(int lineSize) {
-        if (lineSize > maxLineWidth) {
-            maxLineWidth = lineSize;
-            widestLineNumber = lineCount;
-        }
-    }
-
-    public int getLineCount() {
-        return lineCount;
-    }
-
-   public int getMatLineWidth() {
-        return maxLineWidth;
-    }
-
-    public int getWidestLineNumber() {
-        return WidestLineNumber;
-    }
-
-    public LineWidthHistogram getLineWidthHistogram() {
-        return lineWidthHistogram;
-    }
-
-    public double getMeanLineWidth() {
-        return (double)totalChars / lineCount;
-    }
-
-    public int getMedianLineWidth() {
-        Integer[] sortedWidths = getSortedWidths();
-        int cumulativeLineCount = 0;
-        for (int width : sortedWidths){
-            cumulativeLineCount += lineCountForWidth(width);
-            if (cumulatuveLineCount > lineCount/2)
-                return width;
-        }
-        throw new Error("Cannot get here");
-    }
-
-    private int lineCountForWidth(int width) {
-        return lineWidthHistogram.getLineforWidth(width).size();
-    }
-
-    private Integer[] getSortedWidths() {
-        Set<Integer> widths = lineWidthHistogram.getWidths();
-        Integer[] sortedWidths = widths.toArray(new Integer[0]);
-        Arrays.sort(sortedWidths);
-        return sortedWidths;
-    }
-}
+	def lineCountForWidth(self, width):
+    	return self.lineWidthHistogram.getLinesforWidth(width).size()
+        
+	def getSortedWidths(self):
+    	self.widths = self.lineWidthHistogram.getWidths()
+        self.sortedWidths = self.widths.toArray([0])
+		self.sortedWidths.sort()
+        return self.sortedWidths
 ```
