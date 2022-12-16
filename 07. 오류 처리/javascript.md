@@ -374,7 +374,7 @@ class MetricsCalculator {
     }
 }
 ```
-위 코드는 `InvaludArgumentException`을 잡아내는 처리기가 필요    
+위 코드는 `InvalidArgumentException`을 잡아내는 처리기가 필요    
 → `assert` 문을 사용하는 방법    
 ```js
 class MetricsCalculator {
