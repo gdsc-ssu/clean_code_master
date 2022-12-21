@@ -4,22 +4,26 @@
 
 ## 자료 추상화
 
-```java
+```c++
 //6-1 코드 (구체적인 Point 클래스)
-public class Point {
-public double x;
-public double y;
+class Point {
+public:
+    double _x;
+    double _y;
 }
 ```
 
-```java
+```c++
 //6-2코드 (추상적인 Point 클래스)
-public interface Point{
+abstract class Point {
+public:
+    double _x;
+    double _y;
+private:
     double getX();
     double getY();
-
     void setCartesian(double x, double y);
-    double getR()
+    double getR();
     double getTheta();
     void setPolar(double r, double theta);
 }
@@ -47,18 +51,18 @@ public interface Point{
 
 최소한 추상 인터페이스를 제공하여 사용자가 구현을 모른채 자료의 핵심을 조작할 수 있어야하는 것이 클래스이다.
 
-```java
+```c++
 //6-3 코드 (구체적인 Vehicle 클래스)
-public interface Vehicle {
-    double getFuelTankCapacityInGallons();
-    double getGallonsOfGasoline();
+class Vehicle {
+    virtual double getFuelTankCapacityInGallons();
+    virtual double getGallonsOfGasoline();
 }
 ```
 
-```java
+```c++
 //6-4 코드 (추상적인 Vehicle 클래스)
-public interface Vehicle {
-    double getPercentFuelRemaining();
+class Vehicle {
+    virtual double getPercentFuelRemaining();
 }
 ```
 
@@ -80,39 +84,40 @@ _무지성으로 getter/setter 함수를 추가하는 것이 가장 별로다._
 
 자료를 그대로 공개하고 별다른 함수는 제공하지 않는다.
 
-```java
+```c++
 //6-5 코드 (절차적인 도형)
-public class Square {
-    public Point topLeft;
-    public double side;
+class Square {
+    Point topLeft;
+    double side;
 }
 
-public class Rectangle {
-    public Point topLeft;
-    public double height;
-    public double width;
+class Rectangle {
+    Point topLeft;
+    double height;
+    double width;
 }
 
-public class Circle {
-    public Point center;
-    public double radius;
+class Circle {
+    Point center;
+    double radius;
 }
 
-public class Geometry {
-    public final double PI = 3.141592653589793;
+class Geometry {
+    const double PI = 3.141592653589793;
 
-    public double area(Object shape) throws NoSuchShapeException{
-        if(shape instanceof Square) {
-            Square s = (Square)shape;
+    double area(Object shape) {
+        if(instanceof(shape, Square)) {
+            Square s = shape as Square;
             return s.side * s.side;
-        } else if (shape instanceof Rectangle) {
-            Rectangle r = (Rectangle)shape;
+        } else if (instanceof(shape, Rectangle)) {
+            Rectangle r = shape as Rectangle;
             return r.height * r.width;
-        } else if (shape instanceof Circle) {
-            Circle c = (Circle)shape;
+        } else if (instanceof(shape, Circle)) {
+            Circle c = shape as Circle;
             return PI * c.radius * c.radius;
+        } else {
+            throw NoSuchShapeException();
         }
-        throw new NoSuchShapeException();
     }
 }
 ```
@@ -123,33 +128,33 @@ public class Geometry {
 
 하지만 새로운 도형을 추가하고 싶다면 Geometry 클래스에 속한 함수를 모두 고쳐야 한다!
 
-```java
+```c++
 //6-6 코드 (다형적인 도형)
-public class Square implements Shape {
-    private Point topLeft;
-    private double side;
+class Square : public Shape {
+    Point _topLeft;
+    double _side;
 
-    public double area() {
-        return side * side;
+    double area() {
+        return _side * _side;
     }
 }
-public class Retangle implements Shape {
-    private Point topLeft;
-    private double height;
-    private double width;
+class Rectangle : public Shape {
+    Point _topLeft;
+    double _height;
+    double _width;
 
-    public double area() {
-        return height * width;
+    double area() {
+        return _height * _width;
     }
 }
 
-public class Circle implements Shape {
-    private Point center;
-    private double radius;
-    public final double PI = 3.141592653589793;
+class Circle : public Shape {
+    Point _center;
+    double _radius;
+    final double PI = 3.141592653589793;
 
-    public double area() {
-        return PI * radius * radius;
+    double area() {
+        return PI * _radius * _radius;
     }
 }
 ```
@@ -189,9 +194,9 @@ public class Circle implements Shape {
 
 즉, 낯선 사람은 경계하고 친구만 놀라는 의미로 해석할 수 있다!
 
-```java
+```c++
 //6-7 코드
-final string outputDir = ctxt.getOptions().getStrachDir().getAbsolutePath();
+const string outputDir = ctxt.getOptions().getStrachDir().getAbsolutePath();
 ```
 
 6-7과 같은 코드는 getOptions()함수가 반환하는 객체의 getScratchDir() 함수를 호출한 후 getScratchDir() 함수가 반환하는 객체의 getAbsolutePath() 함수를 호출하기 때문에 디미터 법칙을 어긴다.
@@ -200,11 +205,11 @@ final string outputDir = ctxt.getOptions().getStrachDir().getAbsolutePath();
 
 6-7 코드 같은 경우에는 **기차 충돌**이라 하는데, 여러 객차가 한 줄로 이어진 기차처럼 보이기 때문이고, 일반적으로 조잡하다 보이기 때문에 피하는게 좋다.
 
-```java
+```c++
 //6-7 코드를 아래와 같이 리팩터링 하는 것이 좋다.
 Options opts = ctxt.getOptions();
 File scratchDir = opts.getScratchDir();
-final string outputDir = scratchDir.getAbsolutePath();
+const string outputDir = scratchDir.getAbsolutePath();
 ```
 
 ## 잡종 구조
@@ -217,7 +222,7 @@ final string outputDir = scratchDir.getAbsolutePath();
 
 만약 위의 ctxt, options, scratchDir이 진짜 객체라면 위와 같이 줄줄이 묶어놓으면 안된다. _객체는 내부 구조를 감춰야 함으로._ 그렇다면 임시 디렉터리의 절대 경로는 어떻게 찾을 수 있을까?
 
-```java
+```c++
 //1번
 ctxt.getAbsolutePathOfScratchDirectoryOption();
 //2번
@@ -230,7 +235,7 @@ ctx.getScratchDirectoryOption().getAbsolutePath();
 _따라서 둘다 별로이다..._
 해답은 ctxt 객체에게 임시 파일을 생성하라고 시키면 된다!
 
-```java
+```c++
 //올바른 예시
 BufferedOutputStream bos = ctxt.createScratchFileStream(classFileName);
 ```
@@ -243,41 +248,43 @@ BufferedOutputStream bos = ctxt.createScratchFileStream(classFileName);
 
 DTO는 데이터베이스에서 저장된 가공되지 않은 정보를 어플리케이션 코드에서 사용할 객체로 변환하는 과정에서 가장 처음으로 사용하는 구조체이다.
 
-```java
+```c++
 //주소를 담는 Address DTO 예시
-public class Address {
-    private String street;
-    private String streetExtra;
-    private String city;
-    private String state;
-    private String zip;
+class Address {
+private:
+    string _street;
+    string _streetExtra;
+    string _city;
+    string _state;
+    string _zip;
 
-public Address(String street, String streetExtra, String city, String state, String zip) {
-        this.street = street;
-        this.streetExtra = streetExtra;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
+public:
+    Address(string street, string streetExtra, string city, string state, string zip) {
+        this._street = street;
+        this._streetExtra = streetExtra;
+        this._city = city;
+        this._state = state;
+        this._zip = zip;
     }
 
-    public String getStreet() {
-        return street;
+    string getStreet() {
+        return _street;
     }
 
-    public String getStreetExtra() {
-        return streetExtra;
+    string getStreetExtra() {
+        return _streetExtra;
     }
 
-    public String getCity() {
-        return city;
+    string getCity() {
+        return _city;
     }
 
-    public String getState() {
-        return state;
+    string getState() {
+        return _state;
     }
 
-    public String getZip() {
-        return zip;
+    string getZip() {
+        return _zip;
     }
 }
 ```

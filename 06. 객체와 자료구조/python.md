@@ -4,25 +4,35 @@
 
 ## 자료 추상화
 
-```java
-//6-1 코드 (구체적인 Point 클래스)
-public class Point {
-public double x;
-public double y;
-}
-```
-
-```java
-//6-2코드 (추상적인 Point 클래스)
-public interface Point{
-    double getX();
-    double getY();
-
-    void setCartesian(double x, double y);
-    double getR()
-    double getTheta();
-    void setPolar(double r, double theta);
-}
+```python
+# 6-1
+class Point():
+	def __init__(self):
+    	self.x = 0.0
+        self.y = 0.0
+        
+# 6-2
+class Point():
+	def __init__(self):
+    	pass
+    
+    def getX(self):
+    	pass
+    
+    def getY(self):
+    	pass
+        
+    def setCartesian(self, x:double, y:double):
+    	pass
+        
+    def getR(self):
+    	pass
+        
+    def getTheta(self):
+    	pass
+        
+    def setPolar(r:double, theta:double):
+    	pass
 ```
 
 위의 6-1 코드와 6-2 코드의 차이를 보면, 두 클래스 모두 2차원 점을 표현한다.
@@ -47,19 +57,19 @@ public interface Point{
 
 최소한 추상 인터페이스를 제공하여 사용자가 구현을 모른채 자료의 핵심을 조작할 수 있어야하는 것이 클래스이다.
 
-```java
-//6-3 코드 (구체적인 Vehicle 클래스)
-public interface Vehicle {
-    double getFuelTankCapacityInGallons();
-    double getGallonsOfGasoline();
-}
-```
-
-```java
-//6-4 코드 (추상적인 Vehicle 클래스)
-public interface Vehicle {
-    double getPercentFuelRemaining();
-}
+```python
+# 6-3
+class Vehicle():
+	def getFuelTankCapacityInGallons(self):
+   		pass
+    def getGallonsOfGasoline(self):
+    	pass
+        
+        
+# 6-4
+class Vehicle():
+	def getPercentFuelRemaining(self):
+    	pass
 ```
 
 6-1과 6-2를 비교하면 6-2가, 6-3과 6-4를 비교하면 6-4가 더 좋다!
@@ -80,41 +90,46 @@ _무지성으로 getter/setter 함수를 추가하는 것이 가장 별로다._
 
 자료를 그대로 공개하고 별다른 함수는 제공하지 않는다.
 
-```java
-//6-5 코드 (절차적인 도형)
-public class Square {
-    public Point topLeft;
-    public double side;
-}
+```python
+class Square():
+	def topLeft(self):
+    	pass
+    def side(self):
+    	pass
+        
+class Rectangle():
+	def topLeft(self):
+    	pass
+        
+    def height(self):
+    	pass
+    
+    def width(self):
+    	pass
+        
+class Circle():
+	def center(self):
+    	pass
+        
+    def radius(self):
+    	pass
+        
+class Geometry():
+	def __init__(self):
+    	PI = 3.141592653589793
+        
+    def area(self, shape:Object):
+    	if shape in Square:
+        	s = (Square)shape
+            return s.side ** 2
 
-public class Rectangle {
-    public Point topLeft;
-    public double height;
-    public double width;
-}
-
-public class Circle {
-    public Point center;
-    public double radius;
-}
-
-public class Geometry {
-    public final double PI = 3.141592653589793;
-
-    public double area(Object shape) throws NoSuchShapeException{
-        if(shape instanceof Square) {
-            Square s = (Square)shape;
-            return s.side * s.side;
-        } else if (shape instanceof Rectangle) {
-            Rectangle r = (Rectangle)shape;
-            return r.height * r.width;
-        } else if (shape instanceof Circle) {
-            Circle c = (Circle)shape;
-            return PI * c.radius * c.radius;
-        }
-        throw new NoSuchShapeException();
-    }
-}
+		elif shape in Rectangle:
+        	r = (Rectangel)shape
+            return r.height * r.width
+            
+        elif shape in Circle:
+        	c = (Circle)shape
+            return PI * c.radius ** 2
 ```
 
 객체 지향 프로그래머가 위 6-5 코드를 보면 경악을 할지도 모르겠다. 클래스가 절차적이라고 비판하면 맞는 말이지만, 이것 비판이 100% 옳다고 할 수 있을까?
@@ -123,35 +138,32 @@ public class Geometry {
 
 하지만 새로운 도형을 추가하고 싶다면 Geometry 클래스에 속한 함수를 모두 고쳐야 한다!
 
-```java
-//6-6 코드 (다형적인 도형)
-public class Square implements Shape {
-    private Point topLeft;
-    private double side;
-
-    public double area() {
-        return side * side;
-    }
-}
-public class Retangle implements Shape {
-    private Point topLeft;
-    private double height;
-    private double width;
-
-    public double area() {
-        return height * width;
-    }
-}
-
-public class Circle implements Shape {
-    private Point center;
-    private double radius;
-    public final double PI = 3.141592653589793;
-
-    public double area() {
-        return PI * radius * radius;
-    }
-}
+```python
+class Square():
+	def __init__(self):
+    	topLeft = 0
+        side = 0.0
+        
+    def area(self):
+    	return side**2
+        
+class Rectangle(Shape):
+	def __init__(self):
+    	topLeft = 0
+        self.height = 0.0
+        self.width = 0.0
+        
+    def area(self):
+    	return self.height * self.width
+        
+class Circle(Shape):
+	def __init__(self):
+    	self.center = 0
+        self.radius = 0
+        self.PI = 3.141592653589793
+        
+    def area(self):
+    	return self.PI * self.radius * radius
 ```
 
 코드 6-6을 보면 객체 지향적인 도형 클래스이고, area는 다형 메서드임으로 Geometry 클래스는 필요 없다.
@@ -189,9 +201,9 @@ public class Circle implements Shape {
 
 즉, 낯선 사람은 경계하고 친구만 놀라는 의미로 해석할 수 있다!
 
-```java
-//6-7 코드
-final string outputDir = ctxt.getOptions().getStrachDir().getAbsolutePath();
+```python
+# 6-7 코드
+outputDir = ctxt.getOptions().getScratchDir().getAbsolutePath()
 ```
 
 6-7과 같은 코드는 getOptions()함수가 반환하는 객체의 getScratchDir() 함수를 호출한 후 getScratchDir() 함수가 반환하는 객체의 getAbsolutePath() 함수를 호출하기 때문에 디미터 법칙을 어긴다.
@@ -200,11 +212,11 @@ final string outputDir = ctxt.getOptions().getStrachDir().getAbsolutePath();
 
 6-7 코드 같은 경우에는 **기차 충돌**이라 하는데, 여러 객차가 한 줄로 이어진 기차처럼 보이기 때문이고, 일반적으로 조잡하다 보이기 때문에 피하는게 좋다.
 
-```java
-//6-7 코드를 아래와 같이 리팩터링 하는 것이 좋다.
-Options opts = ctxt.getOptions();
-File scratchDir = opts.getScratchDir();
-final string outputDir = scratchDir.getAbsolutePath();
+```python
+# 6-7 코드를 아래와 같이 리팩터링 하는 것이 좋다.
+opts = ctxt.getOptions()
+scratchDir = opts.getScratchDir()
+outputDir = scratchDir.getAbsolutePath()
 ```
 
 ## 잡종 구조
@@ -217,11 +229,12 @@ final string outputDir = scratchDir.getAbsolutePath();
 
 만약 위의 ctxt, options, scratchDir이 진짜 객체라면 위와 같이 줄줄이 묶어놓으면 안된다. _객체는 내부 구조를 감춰야 함으로._ 그렇다면 임시 디렉터리의 절대 경로는 어떻게 찾을 수 있을까?
 
-```java
-//1번
-ctxt.getAbsolutePathOfScratchDirectoryOption();
-//2번
-ctx.getScratchDirectoryOption().getAbsolutePath();
+```python
+# 1
+ctxt.getAbsolutePathOfScratchDirectoryOption()
+
+# 2
+ctxt.getScratchDirectoryOption().getAbsolutePath()
 ```
 
 1. 첫 번째는 ctxt 객체에서 공개해야 하는 메서드가 많다.
@@ -230,9 +243,9 @@ ctx.getScratchDirectoryOption().getAbsolutePath();
 _따라서 둘다 별로이다..._
 해답은 ctxt 객체에게 임시 파일을 생성하라고 시키면 된다!
 
-```java
-//올바른 예시
-BufferedOutputStream bos = ctxt.createScratchFileStream(classFileName);
+```python
+# 올바른 예시
+bos = ctxt.createScratchFileStream(classFileName)
 ```
 
 위의 예시는 ctxt 내부 구조를 드러내지 않고, 모듈에서 해당 함수는 자신이 **몰라야 하는** 여러 객체를 탐색하지 않음으로 디미터 법칙을 위반하지 않는다.
@@ -243,43 +256,37 @@ BufferedOutputStream bos = ctxt.createScratchFileStream(classFileName);
 
 DTO는 데이터베이스에서 저장된 가공되지 않은 정보를 어플리케이션 코드에서 사용할 객체로 변환하는 과정에서 가장 처음으로 사용하는 구조체이다.
 
-```java
-//주소를 담는 Address DTO 예시
-public class Address {
-    private String street;
-    private String streetExtra;
-    private String city;
-    private String state;
-    private String zip;
-
-public Address(String street, String streetExtra, String city, String state, String zip) {
-        this.street = street;
-        this.streetExtra = streetExtra;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getStreetExtra() {
-        return streetExtra;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-}
+```python
+# 주소를 담는 Address DTO 예시
+class Address():
+	def __init__(self):
+    	self.street = ""
+        self.streetExtra = ""
+        self.city = ""
+        self.state = ""
+        self.zip = ""
+        
+	def Address(self, street, streetExtra, city, state, zip):
+    	self.street = street
+        self.streetExtra = streetExtra
+        self.city = city
+        self.state = state
+        self.zip = zip
+        
+	def getStreet(self):
+    	return self.street
+        
+    def getStreetExtra(self):
+    	return self.streetExtra
+        
+    def getCity(self):
+    	return self.city
+        
+    def getState(self):
+    	return self.state
+        
+    def getZip(self):
+    	return self.zip
 ```
 
 ## 활성 레코드
