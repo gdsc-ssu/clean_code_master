@@ -18,18 +18,18 @@
 
 \- 예를 들어, Map 사용자라면 누구나 clear()로 Map 내용을 지울 권한이 있고, Map의 객체 유형을 제한하지 않음으로써 사용자는 어떤 객체 유형도 추가할 수 있게 된다.
 
-```java
+```c++
 // Sensor라는 객체를 담는 Map을 만드려면 다음과 같이 Map 생성
 Map sensors = new HashMap();
 
 // Sensor 객체가 필요한 코드는 다음과 같이 Sensor 객체를 가져옴
-Sensor s = (Sensor)sensors.get(sensorId);
+Sensor s = sensors.get(sensorId);
 ```
 
 \- 위와 같은 코드에서 **의도를 분명하게 표현하기 위해 제네릭스(Generics)를 사용**하게 된다. ~타입스크립트로 표현하기 어렵네...~
 
-```java
-Map<string,Sensor> sensors = new HashMap<Sensor>();
+```c++
+Map<string,Sensor> sensors = new HashMap();
 ...
 Sensor s = sensors.get(sensorId);
 ```
@@ -40,13 +40,17 @@ Sensor s = sensors.get(sensorId);
 
 \- 아래는 Map을 좀 더 깔끔하게 사용한 코드이다. **제네릭스의 사용 여부를 Sensors 안에서 결정**하기 때문에 Sensors 사용자는 제네릭스가 사용되었는지 여부에 신경 쓸 필요가 없다.
 
-```java
-public class Sensors {
-    private Map sensors = new HashMap();
+```c++
+class Sensors {
+    Map sensors;
+public:
+  Sensors() {
+		this.sensors: Map = new HashMap();
+	}
 
-public Sensors getById(String id) {
-    return (Sensor) sensors.get(id);
-    }
+  getById(string id) {
+    return this.sensors.get(id);
+  }
 }
 ```
 

@@ -1,5 +1,4 @@
 ## 8. 경계
-
 시스템에 들어가는 모든 소프트웨어를 직접 개발하는 경우는 드물다.
 어떤 식이로든 이 외부 코드를 우리 코드에 깔끔하게 통합해야만 한다.
 이 장에서는 소프트웨어 경계를 깔끔하게 처리하는 기법과 기교를 살펴본다.
@@ -18,20 +17,20 @@
 
 \- 예를 들어, Map 사용자라면 누구나 clear()로 Map 내용을 지울 권한이 있고, Map의 객체 유형을 제한하지 않음으로써 사용자는 어떤 객체 유형도 추가할 수 있게 된다.
 
-```java
+```typescript
 // Sensor라는 객체를 담는 Map을 만드려면 다음과 같이 Map 생성
-Map sensors = new HashMap();
+const sensors: Map = new HashMap();
 
 // Sensor 객체가 필요한 코드는 다음과 같이 Sensor 객체를 가져옴
-Sensor s = (Sensor)sensors.get(sensorId);
+const s: Sensor = sensors.get(sensorId);
 ```
 
 \- 위와 같은 코드에서 **의도를 분명하게 표현하기 위해 제네릭스(Generics)를 사용**하게 된다. ~타입스크립트로 표현하기 어렵네...~
 
-```java
-Map<string,Sensor> sensors = new HashMap<Sensor>();
+```typescript
+const sensors: Map<string, Sensor> = new HashMap();
 ...
-Sensor s = sensors.get(sensorId);
+const s: Sensor = sensors.get(sensorId);
 ```
 
 \- 하지만 위 방법도 "Map<String, Sensor>가 사용자에게 필요하지 않은 기능까지 제공한다"는 문제는 해결하지 못한다.
@@ -40,13 +39,15 @@ Sensor s = sensors.get(sensorId);
 
 \- 아래는 Map을 좀 더 깔끔하게 사용한 코드이다. **제네릭스의 사용 여부를 Sensors 안에서 결정**하기 때문에 Sensors 사용자는 제네릭스가 사용되었는지 여부에 신경 쓸 필요가 없다.
 
-```java
-public class Sensors {
-    private Map sensors = new HashMap();
-
-public Sensors getById(String id) {
-    return (Sensor) sensors.get(id);
-    }
+```typescript
+class Sensors() {
+  constructor() {	
+		this.sensors: Map = new HashMap();
+	}
+  
+  getById(id: string) {
+    return this.sensors.get(id);
+  }
 }
 ```
 
@@ -75,23 +76,22 @@ public Sensors getById(String id) {
 \- 로깅 기능을 직접 구현하는 대신 아파치의 log4j 패키지를 사용하려 한다고 가정하자.
 
 ```java
-//자바 코드
 public class LogTest {
   private Logger logger;
-
+  
   @Before
   public void initialize() {
     logger = Logger.getLogger("logger");
     logger.removeAllAppenders();
     Logger.getRootLogger().removeAllAppenders();
   }
-
+  
   @Test
   public void basicLogger() {
     BasicConfiguurator.configure();
     logger.info("basicLogger");
   }
-
+  
   @Test
   public void addAppenderWithStream() {
     logger.addAppender(
@@ -101,7 +101,7 @@ public class LogTest {
     );
     logger.info("addAppenderWithStream");
   }
-
+ 
   @Test
   public void addAppenderWithoutStream() {
     logger.addAppender(
