@@ -14,11 +14,11 @@
 - 오류 플래그의 설정
 - 호출자에게 오류 코드를 반환하는 방법
 
-```java
+```c++
 // 7-1 예제 : 오류 코드 반환
-public class DeviceController {
+class DeviceController {
     // ...
-    public void sendShutDown() {
+    void sendShutDown() {
         DeviceHandle handle = getHandle(DEV1);
         // 디바이스 상태를 점검한다.
         if (handle != DeviceHandle.INVALID) {
@@ -30,10 +30,10 @@ public class DeviceController {
                 clearDeviceWorkQueue(handle);
                 closeDevice(handle);
             } else {
-                logger.log("Device suspended. Unable to shut down");
+                printf("Device suspended. Unable to shut down");
             }
         } else {
-            logger.log("Invalid handle for " + DEV1.toString());
+            printf("Invalid handle for %s" ,DEV1.toString());
         }
     }
     // ...
@@ -45,19 +45,19 @@ public class DeviceController {
 **오류가 발생하면 예외를 던지는 편이 낫다.**  
  → 호출자 코드가 더 깔끔해진다.
 
-```java
+```c++
 // 7-2 예제 : 예외 사용
-public class DeviceController {
+class DeviceController {
     // ...
-    public void sendShutDown() {
+    void sendShutDown() {
         try {
             tryToShutDown();
         } catch(DeviceShutDownError e) {
-            logger.log(e);
+            printf(e);
         }
     }
 
-    public void tryToShutDown() throws DeviceShutDownError {
+    void tryToShutDown() throws DeviceShutDownError {
         DeviceHandle handle = getHandle(DEV1);
         DeviceRecord record = retrieveDeviceRecord(handle);
 
@@ -66,8 +66,8 @@ public class DeviceController {
         closeDevice(handle);
     }
 
-    private DeviceHandle getHandle(DeviceID id) {
-        throw new DeviceShutDownError("Invalid handle for: " +  id.toString());
+    DeviceHandle getHandle(DeviceID id) {
+        throw new DeviceShutDownError("Invalid handle for: %s" , id.toString());
         // ...
     }
     // ...
@@ -86,17 +86,16 @@ public class DeviceController {
   - `try` 블록에서 무슨 일이 생기든 `catch`블록은 **프로그램 상태를 일관성 있게 유지해야 한다.**
 - 예외가 발생할 코드를 짤 경우 `try-catch-finally`문으로 시작하는 편이 낫다.
 
-```java
-@Test(expected = StorageExceptrion.class)
-public void retrieveSectionShouldThrowOnInvalidFileName() {
+```c++
+void retrieveSectionShouldThrowOnInvalidFileName() {
     sectionStore.retrieveSection("invalid - file");
 }
 ```
 
 - 단위 테스트에 맞춰 구현한 코드
 
-```java
-public List<RecordedGrip> retrieveSection(String sectionName) {
+```c++
+List<RecordedGrip> retrieveSection(String sectionName) {
     // 실제로 구현할 때까지 비어있는 더미를 반환한다.
     return new ArrayList<RecordedGrip>();
 }
@@ -105,9 +104,9 @@ public List<RecordedGrip> retrieveSection(String sectionName) {
 코드가 예외를 던지지 않아 단위 테스트는 실패한다.  
 예외를 던지는 코드로 변경해 잘못된 파일 접근을 시도하도록 하자.
 
-```java
+```c++
 // 7-3 예제 : 예외를 던지는 코드
-public List<RecordedGrip> retriveSection(String sectionName) {
+List<RecordedGrip> retriveSection(String sectionName) {
     try {
         FileInputStream stream = new FileInputStream(sectionName)
     } catch (FileNotFoundException e) {
@@ -119,9 +118,9 @@ public List<RecordedGrip> retriveSection(String sectionName) {
 
 - `catch` 블록에서 예외 유형을 좁힌 리팩토링 버전
 
-```java
+```c++
 // 7-3 리팩토링 코드
-public List<RecordedGrip> retriveSection(String sectionName) {
+List<RecordedGrip> retriveSection(String sectionName) {
     try {
         FileInputStream stream = new FileInputStream(sectionName)
         stream.close()
@@ -187,7 +186,7 @@ public List<RecordedGrip> retriveSection(String sectionName) {
   - 외부 라이브러리를 호출하는 `try-catch-finally`문을 포함한 코드
   - 외부 라이브러리가 던질 예외를 모두 잡아내는 코드.
 
-```java
+```c++
 // 7-4 예제
 ACMEPort port = new ACMEPort(12);
 
@@ -195,15 +194,13 @@ try {
     port.open();
 } catch (DeviceResponseException e) {
     reportPortError(e);
-    logger.log("Device response exception", e);
+    printf("Device response exception %s", e);
 } catch (ATM1212UnlockedException e) {
     reportPortError(e);
-    logger.log("Unlock exception", e);
+    printf("Unlock exception %s", e);
 } catch (GMXError e) {
     reportPortError(e);
-    logger.log("Device response exception", e);
-} finally {
-    // ...
+    printf("Device response exception %s", e);
 }
 ```
 
@@ -213,7 +210,7 @@ try {
   2. 프로그램을 계속 수행해도 좋은지 확인한다.
 - 위의 경우 예외에 대응하는 방식이 예외 유형과 무관하게 거의 동일하다.
 
-```java
+```c++
 // 7-4 예제 리팩토링 코드
 // 호출하는 라이브러리 API를 감싸 예외 유형 하나를 반환하는 방식
 ACMEPort port = new ACMEPort(12);
@@ -221,7 +218,7 @@ try {
     port.open();
 } catch (PortDeviceFailure e) {
     reportError(e);
-    logger.log(e.getMessage(), e);
+    printf(e.getMessage(), e);
 } finally {
     // ...
 }
@@ -229,16 +226,16 @@ try {
 
 - 위 `LocalPort` 클래스는 단순히 `ACMEPort` 클래스가 던지는 예외를 잡아 변환하는 감싸기(wrapper)클래스의 역할만을 수행한다.
 
-```java
+```c++
 // 7-4 예제 확장 ver.
-public class LocalPort {
-    private ACMEPort innerPort;
-
-    public LocalPort(int portNumber) {
+class LocalPort {
+    ACMEPort innerPort;
+public:
+    LocalPort(int portNumber) {
         innerPort = new ACMEPort(portNumber);
     }
 
-    public void open() {
+    void open() {
         try {
             innerPort.open();
         } catch (DeviceResponseException e) {
@@ -273,7 +270,7 @@ public class LocalPort {
 
 다음은 비용 청구 애플리케이션에서 총계를 계산하는 허술한 코드이다.
 
-```java
+```c++
 // 7-5 예제
 // 식비를 비용으로 청구했다면 직원이 청구한 식비를 총계에 더한다.
 // 식비를 비용으로 청구하지 않았다면 일일 기본 식비를 총계에 더한다.
@@ -288,7 +285,7 @@ try {
 예외가 논리를 따라가기 어렵게 만든다.  
 → 특수 상황을 처리할 필요가 없도록 리팩토링해보자.
 
-```java
+```c++
 // 7-5 예제 : 리팩토링한 코드
 MealExpenses expenses = expenseReportDAO.getMeals(employee.getID());
 m_total += expenses.getTotal();
@@ -297,9 +294,10 @@ m_total += expenses.getTotal();
 `ExpenseReportDAO`를 고쳐 언제나 `MealExpense` 객체를 반환하도록 한다.  
 청구한 식비가 없다면 일일 기본 식비를 반환하는 `MealExpense` 객체를 반환한다.
 
-```java
-public class PerDiemMealExpenses implements MealExpenses {
-    public int getTotal() {
+```c++
+class PerDiemMealExpenses : public MealExpenses {
+public:
+    int getTotal() {
         // 기본 값으로 일일 기본 식비를 반환한다.
     }
 }
@@ -315,9 +313,9 @@ public class PerDiemMealExpenses implements MealExpenses {
 우리가 흔히 저지르는 바람에 오류를 유발하는 행위도 언급해야 한다.  
 ex) null을 반환하는 습관
 
-```java
+```c++
 // 7-6 예제
-public void registerItm(Item item) {
+void registerItm(Item item) {
     if (item != null) {
         ItemRegistry registry = persistentStore.getItemRegistry();
         if (registry != null) {
@@ -344,7 +342,7 @@ public void registerItm(Item item) {
 
 많은 경우에 특수 사례 객체가 손쉬운 해결책
 
-```java
+```c++
 // 7-7 예제
 List<Employee> employees = getEmployees();
 if (employees != null) {
@@ -366,7 +364,7 @@ if (/*..직원이 없다면..*/) {
 
 - java의 경우 : `Collections.emptyList()`로 미리 정의된 읽기 전용 리스트 반환 가능
 
-```java
+```c++
 // 7-7 예제 : 리팩토링 코드
 // dart는 const []로 immutable list 객체 구현 가능
 List<Employee> getEmployees() {
@@ -382,10 +380,11 @@ List<Employee> getEmployees() {
 메서드에서 null을 반환하는 방식도 나쁘나, 메서드로 null을 전달하는 방식은 더 나쁘다.  
 정상적인 인수로 null을 기대하는 API가 아닐 경우 메서드로 null을 전달하는 코드를 최대한 피할 것.
 
-```java
+```c++
 // 7-8 예제
-public class MetricsCalculator {
-    public double xProjection(Point p1,Point p2) {
+class MetricsCalculator {
+public:
+    double xProjection(Point p1,Point p2) {
         return (p2.x - p1.x) * 1.5;
     }
     ...
@@ -397,10 +396,10 @@ public class MetricsCalculator {
 
 - 새로운 예외 유형을 만들어 던지는 방법
 
-```java
+```c++
 // 7-8 예제 : 리팩토링 코드
-public class MetricsCalculator {
-    public double xProjection(Point p1, Point p2) {
+class MetricsCalculator {
+    double xProjection(Point p1, Point p2) {
         if (p1 == null || p2 == null) {
             throw InvalidArgumentException ("Invalid argument for MetricsCalculator.xProjection");
         }
@@ -412,9 +411,9 @@ public class MetricsCalculator {
 위 코드는 `InvalidArgumentException`을 잡아내는 처리기가 필요  
 → `assert` 문을 사용하는 방법
 
-```java
-public class MetricsCalculator {
-    public double xProjection(Point p1, Point p2) {
+```c++
+class MetricsCalculator {
+    double xProjection(Point p1, Point p2) {
         assert p1 != null : "p1 should not be null";
         assert p2 != null : "p2 should not be null";
         return (p2.x - p1.x) * 1.5;

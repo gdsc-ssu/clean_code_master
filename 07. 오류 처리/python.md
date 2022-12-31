@@ -14,30 +14,25 @@
 - 오류 플래그의 설정
 - 호출자에게 오류 코드를 반환하는 방법
 
-```java
-// 7-1 예제 : 오류 코드 반환
-public class DeviceController {
-    // ...
-    public void sendShutDown() {
-        DeviceHandle handle = getHandle(DEV1);
-        // 디바이스 상태를 점검한다.
-        if (handle != DeviceHandle.INVALID) {
-            // 레코드 필드에 디바이스 상태를 저장한다.
-            retrieveDeviceRecord(handle);
-            // 디바이스가 일시정지 상태가 아니라면 종료한다.
-            if (record.getStatus() != DEVICE_SUSPENDED) {
-                pauseDevice(handle);
-                clearDeviceWorkQueue(handle);
-                closeDevice(handle);
-            } else {
-                logger.log("Device suspended. Unable to shut down");
-            }
-        } else {
-            logger.log("Invalid handle for " + DEV1.toString());
-        }
-    }
-    // ...
-}
+```python
+# 7-1 예제 : 오류 코드 반환
+class DeviceController():
+	...
+    def sendShutDown(self):
+    	self.handle = self.getHandle(self.DEV1)
+        # 디바이스 상태 점검
+        if self.handle != DeviceHandle.INVALID:
+            # 레코드 필드에 디바이스 상태를 저장한다.
+            self.retrieveDeviceRecord(self.handle)
+            # 디바이스가 일시정지 상태가 아니라면 종료한다.
+            if self.record.getStatus() != DEVICE_SUSPENDED:
+            	self.pauseDevice(self.handle)
+                self.clearDeviceWorkQueue(self.handle)
+                self.closeDevice(self.handle)
+            else:
+            	logging.warn("Device suspended. Unable to shut down")
+        else:
+        	logging.warn("Invalid handle for : " + str(DEV1))
 ```
 
 7-1 예제 코드의 문제 : 호출자 코드가 복잡해진다.  
@@ -45,33 +40,25 @@ public class DeviceController {
 **오류가 발생하면 예외를 던지는 편이 낫다.**  
  → 호출자 코드가 더 깔끔해진다.
 
-```java
+```python
 // 7-2 예제 : 예외 사용
-public class DeviceController {
-    // ...
-    public void sendShutDown() {
-        try {
-            tryToShutDown();
-        } catch(DeviceShutDownError e) {
-            logger.log(e);
-        }
-    }
-
-    public void tryToShutDown() throws DeviceShutDownError {
-        DeviceHandle handle = getHandle(DEV1);
-        DeviceRecord record = retrieveDeviceRecord(handle);
-
-        pauseDevice(handle);
-        clearDeviceWorkQueue(handle);
-        closeDevice(handle);
-    }
-
-    private DeviceHandle getHandle(DeviceID id) {
-        throw new DeviceShutDownError("Invalid handle for: " +  id.toString());
-        // ...
-    }
-    // ...
-}
+class DeviceController():
+    def sendShutDown(self):
+        try:
+            self.tryToShutDown()
+        except DeviceShutDownError e:
+            logging.warn(e)
+	
+    def tryToShutDown(self):
+    	self.handle = self.getHandle(DEV1)
+        self.record = self.retrieveDeviceRecord(self.handle)
+        
+        self.pauseDevice(self.handle)
+        self.clearDeviceWorkQueue(self.handle)
+        self.closeDevice(self.handle)
+        
+    def getHandle(self, id):
+        raise DeviceShutDownError("Invalid handle for : " + str(id))
 ```
 
 코드가 깔끔해진 동시에 코드의 품질이 향상되었다.  
@@ -86,50 +73,32 @@ public class DeviceController {
   - `try` 블록에서 무슨 일이 생기든 `catch`블록은 **프로그램 상태를 일관성 있게 유지해야 한다.**
 - 예외가 발생할 코드를 짤 경우 `try-catch-finally`문으로 시작하는 편이 낫다.
 
-```java
-@Test(expected = StorageExceptrion.class)
-public void retrieveSectionShouldThrowOnInvalidFileName() {
-    sectionStore.retrieveSection("invalid - file");
-}
+```python
+def retrieveSectionShouldThrowOnInvalidFileName():
+    sectionStore.retrieveSection("invald - file")
 ```
 
 - 단위 테스트에 맞춰 구현한 코드
 
-```java
-public List<RecordedGrip> retrieveSection(String sectionName) {
-    // 실제로 구현할 때까지 비어있는 더미를 반환한다.
-    return new ArrayList<RecordedGrip>();
-}
+```python
+def retrieveSection(sectionName : str)-> List[RecordedGrip]:
+    return List[RecordedGrip]
 ```
 
 코드가 예외를 던지지 않아 단위 테스트는 실패한다.  
 예외를 던지는 코드로 변경해 잘못된 파일 접근을 시도하도록 하자.
 
-```java
-// 7-3 예제 : 예외를 던지는 코드
-public List<RecordedGrip> retriveSection(String sectionName) {
-    try {
-        FileInputStream stream = new FileInputStream(sectionName)
-    } catch (FileNotFoundException e) {
-        throw new StorageException("retrieval error", e);
-    }
-    return new ArrayList<RecordedGrip>();
-}
-```
-
 - `catch` 블록에서 예외 유형을 좁힌 리팩토링 버전
 
-```java
-// 7-3 리팩토링 코드
-public List<RecordedGrip> retriveSection(String sectionName) {
-    try {
-        FileInputStream stream = new FileInputStream(sectionName)
+```python
+# 7-3 리팩토링 코드
+def retrieveSection(sectionName):
+    try:
+        stream = FileInputStream(sectionName)
         stream.close()
-    } catch (FileNotFoundException e) {
-        throw new StorageException("retrieval error", e);
-    }
-    return new ArrayList<RecordedGrip>();
-}
+    except FileNotFoundException e:
+        raise StorageException("retrieval error", e)
+    return list(RecordedGrip)
 ```
 
 - `try-catch` 구조로 범위를 정했으므로 TDD를 사용해 **나머지 논리**를 추가한다.
@@ -187,24 +156,23 @@ public List<RecordedGrip> retriveSection(String sectionName) {
   - 외부 라이브러리를 호출하는 `try-catch-finally`문을 포함한 코드
   - 외부 라이브러리가 던질 예외를 모두 잡아내는 코드.
 
-```java
-// 7-4 예제
-ACMEPort port = new ACMEPort(12);
+```python
+# 7-4 예제
+port = ACMEPort(12)
 
-try {
-    port.open();
-} catch (DeviceResponseException e) {
-    reportPortError(e);
-    logger.log("Device response exception", e);
-} catch (ATM1212UnlockedException e) {
-    reportPortError(e);
-    logger.log("Unlock exception", e);
-} catch (GMXError e) {
-    reportPortError(e);
-    logger.log("Device response exception", e);
-} finally {
-    // ...
-}
+try:
+    port.open()
+except DeviceResponseException e:
+    reportPortError(e)
+    logging.warn("Device response exception", e)
+except ATM1212UnlockedException e:
+    reportPortError(e)
+    logging.warn("Unlock exception", e)
+except GMXError e:
+    reportPortError(e)
+    logging.warn("Device response exception")
+finally:
+    pass
 ```
 
 - 위 코드 : 중복이 심하지만 그리 놀랍지 않다.
@@ -213,43 +181,39 @@ try {
   2. 프로그램을 계속 수행해도 좋은지 확인한다.
 - 위의 경우 예외에 대응하는 방식이 예외 유형과 무관하게 거의 동일하다.
 
-```java
-// 7-4 예제 리팩토링 코드
-// 호출하는 라이브러리 API를 감싸 예외 유형 하나를 반환하는 방식
-ACMEPort port = new ACMEPort(12);
-try {
-    port.open();
-} catch (PortDeviceFailure e) {
-    reportError(e);
-    logger.log(e.getMessage(), e);
-} finally {
-    // ...
-}
+```python
+# 7-4 예제 리팩토링 코드
+# 호출하는 라이브러리 API를 감싸 예외 유형 하나를 반환하는 방식
+ACMEPort port = new ACMEPort(12)
+try: 
+    port.open()
+except PortDeviceFailure e:
+    reportError(e)
+    logging.warn(e.getMessage(), e)
+finally:
+    # ...
 ```
 
 - 위 `LocalPort` 클래스는 단순히 `ACMEPort` 클래스가 던지는 예외를 잡아 변환하는 감싸기(wrapper)클래스의 역할만을 수행한다.
 
-```java
-// 7-4 예제 확장 ver.
-public class LocalPort {
-    private ACMEPort innerPort;
+```python
+class LocalPort():
+    def __init__(self):
+    	self.innerPort = ""
+        
+    def LocalPort(self, portNumber):
+    	self.innerPort = ACMEPort(portNumber)
+        
+    def open(self):
+    	try:
+            self.innerPort.open()
+        except DeviceResponseException e:
+            raise PortDeviceFailure(e)
+		except ATM1212UnlockedException e:
+            raise PortDeviceFailure(e)
+		except GMXError e:
+            raise PortDeviceFailure(e)
 
-    public LocalPort(int portNumber) {
-        innerPort = new ACMEPort(portNumber);
-    }
-
-    public void open() {
-        try {
-            innerPort.open();
-        } catch (DeviceResponseException e) {
-            throw PortDeviceFailure(e);
-        } catch (ATM1212UnlickedException e) {
-            throw PortDeviceFailure(e);
-        } catch (GMXError e) {
-            throw PortDeviceFailure(e);
-        }
-    }
-}
 ```
 
 - `LocalPort` 클래스와 같이 `ACMEPort`를 감싸는 클래스는 유용하다.
@@ -273,36 +237,29 @@ public class LocalPort {
 
 다음은 비용 청구 애플리케이션에서 총계를 계산하는 허술한 코드이다.
 
-```java
-// 7-5 예제
-// 식비를 비용으로 청구했다면 직원이 청구한 식비를 총계에 더한다.
-// 식비를 비용으로 청구하지 않았다면 일일 기본 식비를 총계에 더한다.
-try {
-    MealExpenses expenses = expenseReportDAO.getMeals(employee.getID());
-    m_total += expenses.getTotal();
-} catch (MealExpensesNotFound e) {
-    m_total += getMealPerDiem();
-}
+```python
+try:
+    expenses = expenseReportDA0.getMeals(employee.getID())
+    m_total += expenses.getTotal()
+except MealExpensesNotFound e:
+    m_total += getMealPerDiem()
 ```
 
 예외가 논리를 따라가기 어렵게 만든다.  
 → 특수 상황을 처리할 필요가 없도록 리팩토링해보자.
 
-```java
-// 7-5 예제 : 리팩토링한 코드
-MealExpenses expenses = expenseReportDAO.getMeals(employee.getID());
-m_total += expenses.getTotal();
+```python
+expenses = expenseReportDA0getMeals(employee.getID())
+m_total += expenses.getTotal()
 ```
 
 `ExpenseReportDAO`를 고쳐 언제나 `MealExpense` 객체를 반환하도록 한다.  
 청구한 식비가 없다면 일일 기본 식비를 반환하는 `MealExpense` 객체를 반환한다.
 
-```java
-public class PerDiemMealExpenses implements MealExpenses {
-    public int getTotal() {
-        // 기본 값으로 일일 기본 식비를 반환한다.
-    }
-}
+```python
+class PerDiemMealExpenses(MealExpenses):
+    def getTotal():
+        # 기본값으로 일일 기본 식비를 반환한다.
 ```
 
 - **특수 사례 패턴**(special case pattern)
@@ -315,19 +272,14 @@ public class PerDiemMealExpenses implements MealExpenses {
 우리가 흔히 저지르는 바람에 오류를 유발하는 행위도 언급해야 한다.  
 ex) null을 반환하는 습관
 
-```java
-// 7-6 예제
-public void registerItm(Item item) {
-    if (item != null) {
-        ItemRegistry registry = persistentStore.getItemRegistry();
-        if (registry != null) {
-            Item existing = registry.getItem(item.getID());
-            if (existing.getBillingPeriod().hasRetailOwner()) {
-                existing.register(item);
-            }
-        }
-    }
-}
+```python
+def registerItem(item:Item):
+    if item != NULL:
+        registry = persistentStore.getItemRegistry()
+        if registry != NULL:
+            existing = registry.getItem(item.getId())
+            if existing.getBillingPeriod().hasRetailOwner():
+                existing.register(item)
 ```
 
 위 코드는 나쁘다.  
@@ -344,24 +296,19 @@ public void registerItm(Item item) {
 
 많은 경우에 특수 사례 객체가 손쉬운 해결책
 
-```java
-// 7-7 예제
-List<Employee> employees = getEmployees();
-if (employees != null) {
-    for(Employee e : employees){
-        totalPay += e.getPay();
-    }
-}
+```python
+employees = getEmployees()
+if employees != NULL:
+    for e in employees:
+        totalPay += e.getPay()
 ```
 
 `getEmployees`를 변경해 빈 리스트를 반환해 코드를 더욱 깔끔하게 해보자.
 
-```java
-// 7-7 예제 : 리팩토링 코드
-List<Employee> employees = getEmployees();
-if (/*..직원이 없다면..*/) {
-    return Collection.emptyList();
-}
+```python
+employees = getEmployees()
+if (#직원이 없다면):
+    return []
 ```
 
 - java의 경우 : `Collections.emptyList()`로 미리 정의된 읽기 전용 리스트 반환 가능
@@ -382,14 +329,10 @@ List<Employee> getEmployees() {
 메서드에서 null을 반환하는 방식도 나쁘나, 메서드로 null을 전달하는 방식은 더 나쁘다.  
 정상적인 인수로 null을 기대하는 API가 아닐 경우 메서드로 null을 전달하는 코드를 최대한 피할 것.
 
-```java
-// 7-8 예제
-public class MetricsCalculator {
-    public double xProjection(Point p1,Point p2) {
-        return (p2.x - p1.x) * 1.5;
-    }
-    ...
-}
+```python
+class MetricsCalculator:
+	def xProjection(self, p1, p2):
+    	return (p2.x - p1.x) * 1.5
 ```
 
 인수로 null을 전달할 경우 어떤 일이 벌어질까?  
@@ -397,29 +340,23 @@ public class MetricsCalculator {
 
 - 새로운 예외 유형을 만들어 던지는 방법
 
-```java
-// 7-8 예제 : 리팩토링 코드
-public class MetricsCalculator {
-    public double xProjection(Point p1, Point p2) {
-        if (p1 == null || p2 == null) {
-            throw InvalidArgumentException ("Invalid argument for MetricsCalculator.xProjection");
-        }
-        return (p2.x - p1.x) * 1.5;
-    }
-}
+```python
+class MetricsCalculator:
+    def xProjection(self, p1, p2):
+        if p1 == NULL or p2 == NULL:
+            raise InvalidArgumentException("Invalid argument for MetricsCalculator.xProjection")
+        return (p2.x - p1.x) * 1.5
 ```
 
 위 코드는 `InvalidArgumentException`을 잡아내는 처리기가 필요  
 → `assert` 문을 사용하는 방법
 
-```java
-public class MetricsCalculator {
-    public double xProjection(Point p1, Point p2) {
-        assert p1 != null : "p1 should not be null";
-        assert p2 != null : "p2 should not be null";
-        return (p2.x - p1.x) * 1.5;
-    }
-}
+```python
+class MetricsCalculator:
+    def xProjection(self, p1, p2):
+        assert p1 != NULL, "p1 should not be NULL"
+        assert p2 != NULL, "p2 should not be NULL"
+        return (p2.x - p1.x) * 1.5
 ```
 
 문서화가 잘 되어 코드 읽기는 편하나, 문제를 해결하지는 못한다.  
