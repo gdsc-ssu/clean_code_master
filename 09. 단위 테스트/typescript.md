@@ -197,7 +197,7 @@ test('turnOnLoTempAlarmAtThreashold', () => {
   expect(hw.heaterState()).toBeTruthy();
   expect(hw.blowerState()).toBeTruthy();
   expect(hw.coolerState()).toBeFalsy();
-	expect(hw.hiTempAlarm()).toBeFalsy();
+  expect(hw.hiTempAlarm()).toBeFalsy();
   expect(hw.loTempAlarm()).toBeTruthy();
 })
 ```
@@ -289,7 +289,7 @@ describe('testGetPageHieratchy', () => {
 
 ### 테스트 당 개념 하나
 
-**"테스트 함수마다 한 개념만 테스트하라"**는 규칙이 더 좋다.
+**"테스트 함수마다 한 개념만 테스트하라"** 는 규칙이 더 좋다.
 
 여러 개념을 한 함수로 몰아 넣으면 독자가 각 절이 거기에 존재하는 이유와 각 절이 테스트하는 개념을 모두 이해해야 한다.
 
@@ -309,21 +309,21 @@ describe('testAddMonths', () => {
   test('add 1 month & finish with 30', () => {
     const d2 = SerialDate.addMonths(1, d1);
     expect(d2.getDayOfMonth()).toBe(30);
-		expect(d2.getMonth()).toBe(6);
+    expect(d2.getMonth()).toBe(6);
     expect(d2.getYYYY()).toBe(2004);
   });
   
   test('add 2 months & finish with 31', () => {
     const d3 = SerialDate.addMonths(2, d1);
     expect(d3.getDayOfMonth()).toBe(31);
-		expect(d3.getMonth()).toBe(7);
+    expect(d3.getMonth()).toBe(7);
     expect(d3.getYYYY()).toBe(2004);
   });
   
   test('add 1 months & finish with 30', () => {
     const d4= SerialDate.addMonths(2, SerialDate.addMonths(1, d1));
     expect(d4.getDayOfMonth()).toBe(30);
-		expect(d4.getMonth()).toBe(7);
+    expect(d4.getMonth()).toBe(7);
     expect(d4.getYYYY()).toBe(2004);
   });
 })
@@ -360,6 +360,3 @@ describe('testAddMonths', () => {
 
 테스트 코드는 실제 코드의 유연성, 유지보수성, 재사용성을 보존하고 강화하기 때문에 실제 코드만큼 중요하다.
 **그러므로 테스트 코드를 지속적으로 깨끗하게 관리해야 한다.**
-
-
-
