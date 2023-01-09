@@ -2,7 +2,7 @@
 
 애자일과 TDD 덕택에 단위 테스트를 자동화하는 프로그래머들이 많아졌지만, **제대로 된 테스트 케이스를 작성**해야 한다는 중요한 사실을 놓치고 있다.
 
-<br>
+ <br>
 
 ## TDD 법칙 세 가지
 
@@ -14,7 +14,7 @@
 
 ​ → 이렇게 일하면 실제 코드를 사실상 전부 테스트하는 테스트 케이스가 나오게 되는데, 방대한 테스트 코드는 심각한 관리 문제를 유발하기도 한다.
 
-<br>
+ <br>
 
 ## 깨끗한 테스트 코드 유지하기
 
@@ -22,7 +22,7 @@
 
 → **테스트 코드는 실제 코드 못지 않게 중요하므로 깨끗하게 작성해야 한다.**
 
-<br>
+ <br>
 
 ### 테스트는 유연성, 유지보수성, 재사용성을 제공한다
 
@@ -31,7 +31,7 @@
 
 → 테스트 코드가 지저분하면 코드를 변경하는 능력과 코드 구조를 개선하는 능력이 떨어진다. 결국 테스트 코드를 잃어버리고, 실제 코드도 망가진다.
 
-<br>
+ <br>
 
 ## 깨끗한 테스트 코드
 
@@ -41,12 +41,12 @@
 
 - 테스트 코드는 최소의 표현으로 많은 것을 나타내야 한다.
 
-<br>
+ <br>
 
 9-1 테스트 케이스는 addPage와 assertSubString을 부르느라 중복되는 코드가 매우 많으며, 자질구레한 사항이 너무 많아 테스트 코드의 표현력이 떨어져 읽는 사람을 고려하지 않는다.
 
-```java
-public void testGetPageHierarchyAsXml() throws Exception {
+```c++
+void testGetPageHierarchyAsXml() throw Exception {
     crawler.addPage(root, PathParser.parse("PageOne"));
     crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
     crawler.addPage(root, PathParser.parse("PageTwo"));
@@ -58,7 +58,7 @@ public void testGetPageHierarchyAsXml() throws Exception {
 
     SimpleResponse response =
     (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
-    String xml = response.getContent()
+    string xml = response.getContent()
 
 
     assertEquals("text/xml", response.getContentType());
@@ -68,7 +68,7 @@ public void testGetPageHierarchyAsXml() throws Exception {
 }
 
 
-public void testGetPageHierarchyAsXmlDoesntContainSymbolicLinks() throws Exception{
+void testGetPageHierarchyAsXmlDoesntContainSymbolicLinks() throw Exception{
     WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
     crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
     crawler.addPage(root, PathParser.parse("PageTwo"));
@@ -88,7 +88,7 @@ public void testGetPageHierarchyAsXmlDoesntContainSymbolicLinks() throws Excepti
     (SimpleResponse)responder.makeResponse(
         new FitNesseContext(root), request);
 
-    String xml = response.getContent();
+    string xml = response.getContent();
 
     assertEquals("text/xml", response.getContentType());
     assertSubString("<name>PageOne</name>", xml);
@@ -98,7 +98,7 @@ public void testGetPageHierarchyAsXmlDoesntContainSymbolicLinks() throws Excepti
 
 }
 
-public void testGetDataAsHtml() throws Exception
+void testGetDataAsHtml() throw Exception
 {
     crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
 
@@ -109,7 +109,7 @@ public void testGetDataAsHtml() throws Exception
     SimpleResponse response =
     (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
 
-    String xml = response.getContent();
+    string xml = response.getContent();
 
     assertEquals("text/xml", response.getContentType());
     assertSubString("test page", xml);
@@ -122,12 +122,12 @@ public void testGetDataAsHtml() throws Exception
 - PathParser는 문자열을 pagePath 인스턴스로 변환하고, 이는 웹 로봇(crawler)이 사용하는 객체이므로 필요 없다.
 - responder 객체를 생성하는 코드와 response를 수집해 변환하는 코드 또한 필요 없다.
 
-<br>
+ <br>
 
 9-2는 개선한 코드로, 좀 더 깨끗하고 이해하기 쉽다.
 
-```java
-public void testGetPateHierarchyAsXml() throws Exception{
+```c++
+void testGetPateHierarchyAsXml() throw Exception{
     makePages("PageOne", "PageOne.ChildOne", "PageTwo");
 
     submitRequest("root", "type:pages");
@@ -138,7 +138,7 @@ public void testGetPateHierarchyAsXml() throws Exception{
         );
 }
 
-public void testSymbolicLinksAreNotInXmlPageHierarchy() throws Exception{
+void testSymbolicLinksAreNotInXmlPageHierarchy() throw Exception{
     WikiPage page = makePage("PageOne");
     makePages("PageOne.ChildOne", "PageTwo");
 
@@ -152,7 +152,7 @@ public void testSymbolicLinksAreNotInXmlPageHierarchy() throws Exception{
     assertReponseDoesNotContain("SymPage");
 }
 
-public void testGetDataAsXml() throws Exception{
+void testGetDataAsXml() throw Exception{
     makePageWithContent("TestPageOne", "test page");
     submitRequest("TestPageOne", "type:data");
 
@@ -165,11 +165,11 @@ BUILD-OPERATE-CHECK 패턴이 위와 같은 테스트 구조에 적합하다.
 
 각 테스트는 명확히 세 부분으로 나눠진다.
 
-1. 테스트 자료를 만든다.
-2. 테스트 자료를 조작한다.
-3. 조작한 결과가 올바른지 확인한다.
+1.  테스트 자료를 만든다.
+2.  테스트 자료를 조작한다.
+3.  조작한 결과가 올바른지 확인한다.
 
-<br>
+ <br>
 
 ### 도메인에 특화된 테스트 언어
 
@@ -177,7 +177,7 @@ BUILD-OPERATE-CHECK 패턴이 위와 같은 테스트 구조에 적합하다.
 
 이렇게 구현한 함수와 유틸리티는 테스트 코드에서 사용하는 특수 API가 되어 테스틀르 구현하는 당사자와 나중에 테스트를 읽어볼 독자를 도와주는 테스트 언어다.
 
-<br>
+ <br>
 
 ### 이중 표준
 
@@ -185,13 +185,12 @@ BUILD-OPERATE-CHECK 패턴이 위와 같은 테스트 구조에 적합하다.
 
 단순하고, 간결하고, 표현력이 풍부해야 하지만, **실제 코드만큼 효율적일 필요는 없다.**
 
-<br>
+ <br>
 
 9-3 코드는 세세한 사항이 아주 많아 테스트 코드를 읽기 어렵다.
 
-```java
-@Test
-public void turnOnLowTempAlarmAtThreashold() throws Exception{
+```c++
+void turnOnLowTempAlarmAtThreashold() throws Exception{
     hw.setTemp(WAY_TOO_COLD);
     controller.tic();
     assertTrue(hw.heaterState());
@@ -202,53 +201,48 @@ public void turnOnLowTempAlarmAtThreashold() throws Exception{
 }
 ```
 
-<br>
+ <br>
 
 아래는 불필요한 코드를 숨겨 가독성을 크게 높인 코드다.
 
-```java
-@Test
-public void turnOnLowTempAlarmAtThreshold() throws Exception{
+```c++
+void turnOnLowTempAlarmAtThreshold() throw Exception{
     wayTooCold();
     assertEquals("HBchL", hw.getState());
 }
 ```
 
-<br>
+ <br>
 
 물론 때때로 "그릇된 정보를 피하라"라는 규칙의 위반에 가까운 테스트 코드를 작성하여, 테스트 코드를 이해하기 쉽게 만들어줄 수 있다.
 
-```java
-@Test
-public void turnOnCollerAndBlowerIfTooHot() throws Exception {
+```c++
+void turnOnCollerAndBlowerIfTooHot() throw Exception {
     tooHot();
     assertEquals("hBChl", hw.getState());
 }
 
-@Test
-public void turnOnHeaterAndBlowerIfTooCold() throws Exception {
+void turnOnHeaterAndBlowerIfTooCold() throw Exception {
     tooCold();
     assertEquals("HBchl", hw.getState());
 }
 
-@Test
-public void turnOnHiTempAlarmAtThreshold() throws Exception {
+void turnOnHiTempAlarmAtThreshold() throw Exception {
     wayTooHot();
     assertEquals("hBCHl", hw.getState());
 }
 
-@Test
-public void turnOnLowTempAlarmAtThreshold() throws Exception {
+void turnOnLowTempAlarmAtThreshold() throw Exception {
     wayTooCold();
     assertEquals("HBchL", hw.getState());
 }
 ```
 
-<br>
+ <br>
 
 실제 환경에서는 절대로 안되지만, 테스트 환경에서는 전혀 문제 없는 방식이 있다. 대개 메모리나 CPU 효율과 관련이 있는 경우다. 코드의 깨끗함과는 **철저히** 무관하다.
 
-<br>
+ <br>
 
 ## 테스트 당 assert 하나
 
@@ -256,8 +250,8 @@ assert 문이 단 하나인 함수는 결론이 하나라서 코드를 이해하
 
 하지만 9-2코드에서 "출력이 XML이다"와 "특정 문자열을 포함한다"는 assert 문 두 개를 하나로 병합하는 방식은 불합리해 보인다. 하지만 9-7처럼 테스트를 두 개로 쪼개 각자가 assert를 수행하면 된다.
 
-```java
-public void testGetPageHierarchyAsXml() throws Exception{
+```c++
+void testGetPageHierarchyAsXml() throw Exception{
     givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
     whenRequestIsIssued("root", "type:pages");
     thenResponseShouldBeXML();
@@ -265,7 +259,7 @@ public void testGetPageHierarchyAsXml() throws Exception{
 
 }
 
-public void testGetPageHierarchyHasRightTags() throws Exception{
+void testGetPageHierarchyHasRightTags() throw Exception{
     givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
 
     whenRequestIsIssued("root", "type:pages");
@@ -276,11 +270,11 @@ public void testGetPageHierarchyHasRightTags() throws Exception{
 
 하지만 위처럼 테스트를 분리하면 중복되는 코드가 많아진다.
 
-<br>
+ <br>
 
 물론 중복을 제거하는 방법이 여러가지가 있겠지만, 이것저것 감안해보면 9-2처럼 여러 assert 문을 넣어주는게 좋기도 하다. 단지 assert 문 개수는 최대한 줄이는게 좋다는 생각이다.
 
-<br>
+ <br>
 
 ### 테스트 당 개념 하나
 
@@ -288,16 +282,16 @@ public void testGetPageHierarchyHasRightTags() throws Exception{
 
 여러 개념을 한 함수로 몰아 넣으면 독자가 각 절이 거기에 존재하는 이유와 각 절이 테스트하는 개념을 모두 이해해야 한다.
 
-<br>
+ <br>
 
 9-8은 독자적인 개념 세 개를 테스트하므로 독자적인 테스트 세 개로 쪼개야 마땅하다.
 
-```java
+```c++
 /**
 * addMonths() 메서드를 테스트하는 장황한 코드
 */
 
-public void testAddMonths(){
+void testAddMonths(){
     SerialDate d1 = SerialDate.createInstance(31, 5, 2004);
 
     SerialDate d2 = SerialDate.addMonths(1, d1);
@@ -320,14 +314,14 @@ public void testAddMonths(){
 
 목록 9-8은 각 절에 assert 문이 여럿이라는 사실이 문제가 아니다. 한 테스트 함수에서 여러 개념을 테스트한다는 사실이 문제다.
 
-<br>
+ <br>
 
 ### 규칙
 
 - **개념 당 assert 문 수를 최소로 줄여라**
 - **테스트 함수 하나는 개념 하나만 테스트하라**
 
-<br>
+ <br>
 
 ## F.I.R.S.T
 
@@ -343,7 +337,7 @@ public void testAddMonths(){
 
 - **Timely**: 단위 테스트는 실제 코드를 구현하기 직전에 구현한다.
 
-<br>
+ <br>
 
 ## 결론
 
