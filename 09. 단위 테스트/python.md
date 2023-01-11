@@ -7,12 +7,13 @@
 ## TDD 법칙 세 가지
 
 > TDD 기본 규칙) 실제 코드를 작성하기 전에 단위 테스트부터 작성한다.
+>
 
 - **첫째 법칙**: 실패하는 단위 테스트를 작성할 때까지 실제 코드를 작성하지 않는다.
 - **둘째 법칙**: 컴파일은 실패하지 않으면서 실행이 실패하는 정도로만 단위 테스트를 작성한다.
 - **셋째 법칙**: 현재 실패하는 테스트를 통과할 정도로만 실제 코드를 작성한다.
 
-​ → 이렇게 일하면 실제 코드를 사실상 전부 테스트하는 테스트 케이스가 나오게 되는데, 방대한 테스트 코드는 심각한 관리 문제를 유발하기도 한다.
+​	→ 이렇게 일하면 실제 코드를 사실상 전부 테스트하는 테스트 케이스가 나오게 되는데, 방대한 테스트 코드는 심각한 관리 문제를 유발하기도 한다.
 
 <br>
 
@@ -26,7 +27,7 @@
 
 ### 테스트는 유연성, 유지보수성, 재사용성을 제공한다
 
-테스트 케이스가 있으면 **변경**이 쉬워지기 때문이다.
+테스트 케이스가 있으면 **변경**이 쉬워지기 때문이다. 
 테스트 커버리지가 높아질수록 변경에 대한 공포는 줄어든다.
 
 → 테스트 코드가 지저분하면 코드를 변경하는 능력과 코드 구조를 개선하는 능력이 떨어진다. 결국 테스트 코드를 잃어버리고, 실제 코드도 망가진다.
@@ -45,76 +46,58 @@
 
 9-1 테스트 케이스는 addPage와 assertSubString을 부르느라 중복되는 코드가 매우 많으며, 자질구레한 사항이 너무 많아 테스트 코드의 표현력이 떨어져 읽는 사람을 고려하지 않는다.
 
-```java
-public void testGetPageHierarchyAsXml() throws Exception {
-    crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
-
-    request.setResource("root");
-    request.addInput("type", "pages");
-
-    Responder responder = new SerializedPageResponder();
-
-    SimpleResponse response =
-    (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
-    String xml = response.getContent()
-
-
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("<name>PageOne</name>", xml);
-    assertSubString("<name>PageTwo</name>", xml);
-    assertSubString("<name>ChildOne</name>", xml);
-}
-
-
-public void testGetPageHierarchyAsXmlDoesntContainSymbolicLinks() throws Exception{
-    WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
-
-    PageData data = pageOne.getData();
-    WikiPageProperties properties = data.getProperties();
-    WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
-
-    symLinks.set("SymPage", "PageTwo");
-    pageone.commit(data);
-
-    request.setResource("root");
-    request.addInput("type", "pages");
-
-    Responder responder = SerializedPageResponder();
-    SimpleResponse response =
-    (SimpleResponse)responder.makeResponse(
-        new FitNesseContext(root), request);
-
-    String xml = response.getContent();
-
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("<name>PageOne</name>", xml);
-    assertSubString("<name>PageTwo</name>", xml);
-    assertSubString("<name>ChildOne</name>", xml);
-    assertNotSubString("SymPage", xml);s
-
-}
-
-public void testGetDataAsHtml() throws Exception
-{
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
-
-    request.setResource("TestPageOne");
-    request.addInput("type", "data");
-
-    Responder responder = new SerializedPageResponder();
-    SimpleResponse response =
-    (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
-
-    String xml = response.getContent();
-
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("test page", xml);
-    assertSubString("<Test", xml);
-}
+```python
+def testGetPageHierarchyAsXml():
+    crawler.addPage(root, PathParser.parse("PageOne"))
+    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"))
+    crawler.addPage(root, PathParser.parse("PageTwo"))
+    
+    request.setResource("root")
+    request.addInput("type", "pages")
+    responder = SerializedPageResponder()
+    response = (SimpleResponse)responder.makeResponse(FitNesseContext(root), request)
+    xml = response.getContent()
+    
+    assertEqual("text/xml", response.getContentType())
+    assertIn("<name>PageOne</name>", xml)
+    assertIn("<name>PageTwo</name>", xml)
+    assertIn("<name>ChildOne</name>", xml)
+    
+def testGetPageHierarchyAsXmlDoesntContainSymbolicLinks():
+	  pageOne = crawler.addPage(root, PathParser.parse("PageOne"))
+    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"))
+    crawler.addPage(root, PathParser.parse("PageTwo"))
+    
+    data = pageOne.getData()
+    properties = data.getProperties()
+    symLinks = properties.set(SymbolicPage.PROPERTY_NAME)
+    symLinks.set("SymPage", "PageTwo")
+    pageone.commit(data)
+    
+    request.setResource("root")
+    request.addInput("type", "pages")
+    responder = SerializedPageResponder()
+    response = (SimpleResponse)responder.makeResponse(FitNesseContext(root), request)
+    xml = response.getContent()
+    
+    assertEqual("text/xml", response.getContentType())
+    assertIn("<name>PageOne</name>", xml)
+    assertIn("<name>PageTwo</name>", xml)
+    assertIn("<name>ChildOne</name>", xml)
+    assertNotIn("SymPage", xml)
+    
+def testGetDataAsHtml():
+	  crawler.addPage(root, PathParser.parse("TestPageOne"), "test page")
+    
+    request.setResource("TestPageOne")
+    request.addInput("type", "data")
+    responder = SerializedPageResponder()
+    response = (SimpleResponse)responder.makeResponse(FitNesseContext(root), request)
+    xml = response.getContent()
+    
+    assertEqual("text/xml", response.getContentType())
+    assertIn("test page", xml)
+    assertIn("<Test", xml)
 ```
 
 테스트와 무관하여 테스트 코드의 의도를 흐리는 코드도 보인다.
@@ -126,39 +109,33 @@ public void testGetDataAsHtml() throws Exception
 
 9-2는 개선한 코드로, 좀 더 깨끗하고 이해하기 쉽다.
 
-```java
-public void testGetPateHierarchyAsXml() throws Exception{
-    makePages("PageOne", "PageOne.ChildOne", "PageTwo");
-
-    submitRequest("root", "type:pages");
-
-    assertResponseIsXML();
-    assertResponseContains(
-        "<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>"
-        );
-}
-
-public void testSymbolicLinksAreNotInXmlPageHierarchy() throws Exception{
-    WikiPage page = makePage("PageOne");
-    makePages("PageOne.ChildOne", "PageTwo");
-
-    addLinkTo(page, "PageTwo", "SymPage");
-
-    submitRequest("root", "type:pages");
-
-    assertReponseIsXML();
-
-    assertResponseContains("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>");
-    assertReponseDoesNotContain("SymPage");
-}
-
-public void testGetDataAsXml() throws Exception{
-    makePageWithContent("TestPageOne", "test page");
-    submitRequest("TestPageOne", "type:data");
-
-    assertResponseIsXML();
-    assertResponseContains("test page", "<Test");
-}
+```python
+def testGetPateHierarchyAsXml():
+	  makePages("PageOne", "PageOne.ChildOne", "PageTwo")
+    
+    submitRequest("root", "type:pages")
+    
+    assertIs()
+    assertIn("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>")
+    
+def testSymbolicLinksAreNotInXmlPageHierarchy():
+	  page = makePage("PageOne")
+    makePages("PageOne.ChildOne", "PageTwo")
+    
+    addLinkTo(page, "PageTwo", "SymPage")
+    
+    submitRequest("root", "type:pages")
+    
+    assertIs()
+    assertIn("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>")
+    assertNotIn("SymPage")
+    
+def testGetDataAsXml():
+	  makePageWithContent("TestPageOne", "test page")
+    submitRequest("TestPageOne", "type:data")
+    
+    assertIs()
+    assertIn("test page", "<Test")
 ```
 
 BUILD-OPERATE-CHECK 패턴이 위와 같은 테스트 구조에 적합하다.
@@ -189,59 +166,47 @@ BUILD-OPERATE-CHECK 패턴이 위와 같은 테스트 구조에 적합하다.
 
 9-3 코드는 세세한 사항이 아주 많아 테스트 코드를 읽기 어렵다.
 
-```java
-@Test
-public void turnOnLowTempAlarmAtThreashold() throws Exception{
-    hw.setTemp(WAY_TOO_COLD);
-    controller.tic();
-    assertTrue(hw.heaterState());
-    assertTrue(hw.blowerState());
-    assertFalse(hw.collerState());
-    assertFalse(hw.hiTempAlarm());
-    assertTrue(hw.lowTempAlarm());
-}
+```python
+def turnOnLowTempAlarmAtThreashold():
+	  hw.setTemp(WAY_TOO_COLD)
+    controller.tic()
+    assertTrue(hw.heaterState())
+    assertTrue(hw.blowerState())
+    assertFalse(hw.collerState())
+    assertFalse(hw.hiTempAlarm())
+    assertTrue(hw.lowTempAlarm())
 ```
 
 <br>
 
 아래는 불필요한 코드를 숨겨 가독성을 크게 높인 코드다.
 
-```java
-@Test
-public void turnOnLowTempAlarmAtThreshold() throws Exception{
-    wayTooCold();
-    assertEquals("HBchL", hw.getState());
-}
+```python
+def turnOnLowTempAlarmAtThreshold():
+	  wayTooCold()
+    assertEqual("HBchL", hw.getState())
 ```
 
 <br>
 
 물론 때때로 "그릇된 정보를 피하라"라는 규칙의 위반에 가까운 테스트 코드를 작성하여, 테스트 코드를 이해하기 쉽게 만들어줄 수 있다.
 
-```java
-@Test
-public void turnOnCollerAndBlowerIfTooHot() throws Exception {
-    tooHot();
-    assertEquals("hBChl", hw.getState());
-}
-
-@Test
-public void turnOnHeaterAndBlowerIfTooCold() throws Exception {
-    tooCold();
-    assertEquals("HBchl", hw.getState());
-}
-
-@Test
-public void turnOnHiTempAlarmAtThreshold() throws Exception {
-    wayTooHot();
-    assertEquals("hBCHl", hw.getState());
-}
-
-@Test
-public void turnOnLowTempAlarmAtThreshold() throws Exception {
-    wayTooCold();
-    assertEquals("HBchL", hw.getState());
-}
+```python
+def turnOnCollerAndBlowerIfTooHot():
+	  tooHot()
+    assertEqual("hBChl", hw.getState())
+    
+def turnOnHeaterAndBlowerIfTooCold():
+  	tooCold()
+    assertEqual("HBchl", hw.getState())
+    
+def turnOnHiTempAlarmAtThreshold():
+  	wayTooHot()
+    assertEqual("hBCHl", hw.getState())
+    
+def turnOnLowTempAlarmAtThreshold():
+	  wayTooCold()
+    assertEqual("HBchL", hw.getState())
 ```
 
 <br>
@@ -256,22 +221,20 @@ assert 문이 단 하나인 함수는 결론이 하나라서 코드를 이해하
 
 하지만 9-2코드에서 "출력이 XML이다"와 "특정 문자열을 포함한다"는 assert 문 두 개를 하나로 병합하는 방식은 불합리해 보인다. 하지만 9-7처럼 테스트를 두 개로 쪼개 각자가 assert를 수행하면 된다.
 
-```java
-public void testGetPageHierarchyAsXml() throws Exception{
-    givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
-    whenRequestIsIssued("root", "type:pages");
-    thenResponseShouldBeXML();
-
-
-}
-
-public void testGetPageHierarchyHasRightTags() throws Exception{
-    givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
-
-    whenRequestIsIssued("root", "type:pages");
-
-    thenResponseShouldContain("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>");
-}
+```python
+def testGetPageHierarchyAsXml():
+  	givenPages("PageOne", "PageOne.ChildOne", "PageTwo")
+    
+    whenRequestIsIssued("root", "type:pages")
+    
+    thenResponseShouldBeXML()
+    
+def testGetPageHierarchyHasRightTags():
+	  givenPages("PageOne", "PageOne.ChildOne", "PageTwo")
+    
+    whenRequestIsIssued("root", "type:pages")
+    
+    thenResponseShouldContain("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>")
 ```
 
 하지만 위처럼 테스트를 분리하면 중복되는 코드가 많아진다.
@@ -292,30 +255,28 @@ public void testGetPageHierarchyHasRightTags() throws Exception{
 
 9-8은 독자적인 개념 세 개를 테스트하므로 독자적인 테스트 세 개로 쪼개야 마땅하다.
 
-```java
-/**
-* addMonths() 메서드를 테스트하는 장황한 코드
-*/
+```python
+###
+# addMonths() 메서드를 테스트하는 장황한 코드
+###
 
-public void testAddMonths(){
-    SerialDate d1 = SerialDate.createInstance(31, 5, 2004);
-
-    SerialDate d2 = SerialDate.addMonths(1, d1);
-
-    assertEquals(30, d2.getDayOfMonth());
-    assertEquals(6, d2.getMonth());
-    assertEquals(2004, d2.getYYYY());
-
-    SerialDate d3 = SerialDate.addMonths(2, d1);
-    assertEquals(31, d3.getDayOfMonth());
-    assertEquals(7, d3.getMonth());
-    assertEquals(2004, d3.getYYYY());
-
-    SerialDate d4 = SerialDate.addMonths(1, SerialDate.addMonths(1, d1));
-    assertEquals(30, d4.getDayOfMonth());
-    assertEquals(7, d4.getMonth());
-    assertEquals(2004, d4.getYYYY());
-}
+def testAddMonths():
+	  d1 = SerialDate.createInstance(31, 5, 2004)
+    
+    d2 = SerialDate.addMonths(1, d1)
+    assertEqual(30, d2.getDayOfMonth())
+    assertEqual(6, d2.getMonth())
+    assertEqual(2004, d2.getYYYY())
+    
+    d3 = SerialDate.addMonths(2, d1)
+    assertEqual(31, d3.getDayOfMonth())
+    assertEqual(7, d3.getMonth())
+    assertEqual(2004, d3.getYYYY())
+    
+    d4 = SerialDate.addMonths(1, SerialDate.addMonths(1, d1))
+    assertEqual(30, d4.getDayOfMonth())
+    assertEqual(7, d4.getMonth())
+    assertEqual(2004, d4.getYYYY())
 ```
 
 목록 9-8은 각 절에 assert 문이 여럿이라는 사실이 문제가 아니다. 한 테스트 함수에서 여러 개념을 테스트한다는 사실이 문제다.
