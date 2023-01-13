@@ -503,7 +503,7 @@ public class PrimeGenerator {
     insert(fields: Object[]): string;
     selectAll(): string;
     findByKey(keyColumn: string, keyValue: string): string;
-    select(cloumn: Column, pattern: string): string;
+    select(column: Column, pattern: string): string;
     preparedInsert(): string;
     columnList(columns: Column[]): string;
     valuesList(fields: Object[], columns: Column[]): string;
