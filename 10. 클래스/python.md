@@ -150,12 +150,14 @@ public class SuperDashboard extends JFrame implements MetaDataUser {
   2. SuperDashboard는 스윙 컴포넌트를 관리하며 코드를 변경할 때마다 버전 번호가 달라진다.
 - 위의 클래스에서 버전관리 메서드 3개 만을 따로하는 Version이라는 클래스를 만들어준다.
 
-```java
-public class Version {
-	public int getMajorVersionNumber()
-	public int getMinorVersionNumber()
-	public int getBuildNumber()
-}
+```python
+class Version:
+    def getMajorVersionNumber(self):
+    	pass
+    def getMinorVersionNubmer(self):
+    	pass
+    def getBuildNumber(self):
+    	pass
 ```
 
 → 이렇게 만든 Version의 경우 버전이 바뀌는 것이 클래스 변경의 이유가 되며, 다른 곳에서 재사용 하기도 쉬운 구조가 된다.
@@ -183,28 +185,25 @@ public class Version {
 
   → 응집도가 높다는 소리는 클래스에 속한 메서드와 변수로 서로 의존하며 논리적인 단위로 묶인다는 의미기 때문이다.
 
-```java
-public class Stack {
-	private int topOfStack = 0;
-	List<Integer> elements = new LinkedList<Integer>();
-
-    public int size() {
-		return topOfStack;
-	}
-
-	public void push(int element) {
-		topOfStack++;
-		elements.add(element);
-	}
-
-	public int pop() throws PoppedWhenEmpty {
-		if (topOfStack == 0)
-			throw new PoppedWhenEmpty();
-		int element = elements.get(--topOfStack);
-		elements.remove(topOfStack);
-		return element;
-	}
-}
+```python
+class Stack:
+    def __init__(self):
+        self.__topOfStack = 0
+        self.elements = []
+        
+    def size(self):
+    	return self.__topOfStack
+        
+    def push(self, element):
+    	self.__topOfStack += 1
+        self.elements.append(element)
+        
+    def pop(self):
+    	if self.__topOfStack == 0:
+        	raise PoppedWhenEmpty()
+		element = self.elements[topOfStack-=1]
+        elements.pop(topOfStack)
+        return element
 ```
 
 - 위 Stack 클래스는 응집도가 아주 높다. size()를 제외한 다른 두 메서드는 두 변수를 모두 사용한다.
@@ -250,76 +249,68 @@ public class Stack {
 
 - 다음의 예시를 보라
 
-  ```java
-  // 유서깊은 예제
+```python
+M = 1000
+RR = 50
+CC = 4
+WW = 10
+ORDMAX = 30
+P = []
 
-  package literatePrimes;
+PAGENUMBER = 0
+PAGEOFFSET = 0
+ROWOFFSET = 0
+C = 0
+J = 0
+K = 0
+JPRIME = False
+ORD = 0
+SQUARE = 0
+N = 0
+MULT = []
 
-  public class PrintPrimes {
-  	public static void main(String[] args) {
-  		final int M = 1000;
-  		final int RR = 50;
-  		final int CC = 4;
-  		final int WW = 10;
-  		final int ORDMAX = 30;
-  		int P[] = new int[M + 1];
-  		int PAGENUMBER;
-  		int PAGEOFFSET;
-  		int ROWOFFSET;
-  		int C;
-  		int J;
-  		int K;
-  		boolean JPRIME;
-  		int ORD;
-  		int SQUARE;
-  		int N;
-  		int MULT[] = new int[ORDMAX + 1];
+J = 1
+K = 1
+P.append(2)
+ORD = 2
+SQUARE = 9
 
-  		J = 1;
-  		K = 1;
-  		P[1] = 2;
-  		ORD = 2;
-  		SQUARE = 9;
+while K<M:
+	while true:
+    	J += 1
+        if J == SQUARE:
+        	ORD += 1
+            SQUARE = P[ORD]**2
+            MULT[ORD-1] = J
+        N = 2
+        JPRIME = True
+        while (N<ORD and JPRIME):
+        	while MULT[N] < J:
+            	MULT[N] = MULT[N] + P[N] + P[N]
+            if (MULT[N] == J):
+            	JPRIME = False
+            N += 1
+            
+        if JPRIME:
+        	break
+    K += 1
+    P[K] = J
+    
+PAGENUMBER = 1
+PAGEOFFSET = 1
 
-  		while (K < M) {
-  			do {
-  				J = J + 2;
-  				if (J == SQUARE) {
-  					ORD = ORD + 1;
-  					SQUARE = P[ORD] * P[ORD];
-  					MULT[ORD - 1] = J;
-  				}
-  				N = 2;
-  				JPRIME = true;
-  				while (N < ORD && JPRIME) {
-  					while (MULT[N] < J)
-  						MULT[N] = MULT[N] + P[N] + P[N];
-  					if (MULT[N] == J)
-  						JPRIME = false;
-  					N = N + 1;
-  				}
-  			} while (!JPRIME);
-  			K = K + 1;
-  			P[K] = J;
-  		}
-  		{
-  			PAGENUMBER = 1;
-  			PAGEOFFSET = 1;
-  			while (PAGEOFFSET <= M) {
-  				System.out.println("The First " + M + " Prime Numbers --- Page " + PAGENUMBER);
-  				System.out.println("");
-  				for (ROWOFFSET = PAGEOFFSET; ROWOFFSET < PAGEOFFSET + RR; ROWOFFSET++) {
-  					for (C = 0; C < CC;C++)
-  						if (ROWOFFSET + C * RR <= M)
-  							System.out.format("%10d", P[ROWOFFSET + C * RR]);
-  					System.out.println("");
-  				}
-  				System.out.println("\f"); PAGENUMBER = PAGENUMBER + 1; PAGEOFFSET = PAGEOFFSET + RR * CC;
-  			}
-  		}
-  	}
-  }
-  ```
+while (PAGEOFFSET <= M):
+	print(f"The First {M} Prime Numbers --- Page {PAGENUMBER}")
+    print()
+    for ROWOFFSET in range(PAGEOFFSET, PAGEOFFSET+RR):
+    	for C in range(CC):
+        	if(ROWOFFSET + C * RR <= M):
+            	print("%10d", %(P[ROWOFFSET + C * RR]))
+        print()
+    print()
+    PAGENUMBER += 1
+    PAGEOFFSET = PAGEOFFSET + RR * CC
+```
 
   → 이 코드는 함수가 하나로 이루어진대다가 들여쓰기가 심하고, 변수도 정리가 안되어있고, 주고가 빡빡하게 결합되었다.
 
@@ -327,152 +318,121 @@ public class Stack {
 
 - 위의 긴 코드를 작은 함수와 클래스로 나눈 후 함수, 클래스, 변수에 좀 더 의미 있는 이름을 부여한 결과
 
-```java
-package literatePrimes;
+```python
+# PrimePrinter.py
 
-public class PrimePrinter {
-	public static void main(String[] args) {
-		final int NUMBER_OF_PRIMES = 1000;
-		int[] primes = PrimeGenerator.generate(NUMBER_OF_PRIMES);
+NUMBER_OF_PRIMES = 1000
+primes = PrimeGenerator.generate(NUMBER_OF_PRIMES)
 
-		final int ROWS_PER_PAGE = 50;
-		final int COLUMNS_PER_PAGE = 4;
-		RowColumnPagePrinter tablePrinter =
-			new RowColumnPagePrinter(ROWS_PER_PAGE,
-						COLUMNS_PER_PAGE,
-						"The First " + NUMBER_OF_PRIMES + " Prime Numbers");
-		tablePrinter.print(primes);
-	}
-}
+ROWS_PER_PAGE = 50
+COLUMNS_PER_PAGE = 4
+tablePrinter = RowColumnPagePrinter(ROWS_PER_PAGE, COLUMNS_PER_PAGE, f"The First {NUMBER_OF_PRIMES} Prime Numbers")
+
+tablePRinter.print(primes)
 ```
 
-```java
-package literatePrimes;
+```python
+# RowColumnPagePrinter
 
-import java.io.PrintStream;
-
-public class RowColumnPagePrinter {
-	private int rowsPerPage;
-	private int columnsPerPage;
-	private int numbersPerPage;
-	private String pageHeader;
-	private PrintStream printStream;
-
-	public RowColumnPagePrinter(int rowsPerPage, int columnsPerPage, String pageHeader) {
-		this.rowsPerPage = rowsPerPage;
-		this.columnsPerPage = columnsPerPage;
-		this.pageHeader = pageHeader;
-		numbersPerPage = rowsPerPage * columnsPerPage;
-		printStream = System.out;
-	}
-
-	public void print(int data[]) {
-		int pageNumber = 1;
-		for (int firstIndexOnPage = 0 ;
-			firstIndexOnPage < data.length ;
-			firstIndexOnPage += numbersPerPage) {
-			int lastIndexOnPage =  Math.min(firstIndexOnPage + numbersPerPage - 1, data.length - 1);
-			printPageHeader(pageHeader, pageNumber);
-			printPage(firstIndexOnPage, lastIndexOnPage, data);
-			printStream.println("\f");
-			pageNumber++;
-		}
-	}
-
-	private void printPage(int firstIndexOnPage, int lastIndexOnPage, int[] data) {
-		int firstIndexOfLastRowOnPage =
-		firstIndexOnPage + rowsPerPage - 1;
-		for (int firstIndexInRow = firstIndexOnPage ;
-			firstIndexInRow <= firstIndexOfLastRowOnPage ;
-			firstIndexInRow++) {
-			printRow(firstIndexInRow, lastIndexOnPage, data);
-			printStream.println("");
-		}
-	}
-
-	private void printRow(int firstIndexInRow, int lastIndexOnPage, int[] data) {
-		for (int column = 0; column < columnsPerPage; column++) {
-			int index = firstIndexInRow + column * rowsPerPage;
-			if (index <= lastIndexOnPage)
-				printStream.format("%10d", data[index]);
-		}
-	}
-
-	private void printPageHeader(String pageHeader, int pageNumber) {
-		printStream.println(pageHeader + " --- Page " + pageNumber);
-		printStream.println("");
-	}
-
-	public void setOutput(PrintStream printStream) {
-		this.printStream = printStream;
-	}
-}
+class RowColumnPagePrinter:
+    def __init__(self):
+    	self.rowsPerPage = 0
+        self.columnsPerPage = 0
+        self.numbersPerPage = 0
+        self.pageHeader = ""
+        self.printStream = NULL
+        
+    def __init__(self, rowsPerPage, columnsPerPage, pageHeader):
+    	self.rowsPerPage = rowsPerPage
+        self.columnsPerPage = columnsPerPage
+        self.pageHeader = pageHeader
+        self.numbersPerPage = rowsPerPage * columnsPerPage
+        self.printStream = print
+        
+    def print(self, data):
+    	pageNumber = 1
+        for firstIndexOnPage in range(0, len(data), numbersPerPage):
+        	lastIndexOnPage = min(firstIndexOnPage+numbersPerPage-1, len(data)-1)
+            self.printPageHeader(pageHeader, pageNumber)
+            self.printPage(firstIndexOnPage, lastIndexOnPage, data)
+            self.printStream = "\f"
+            pageNumber += 1
+            
+    def printPage(self, firstIndexOnPage, lastIndexOnPage, data):
+    	firstIndexOfLastRowOnPage = firstIndexOnPage + rowsPerPage - 1
+        for firstIndexInRow in range(firstIndexOnPage, firstIndexOfLastRowOnPage+1):
+        	self.printRow(firstIndexInRow, lastIndexOnPage, data)
+			sefl.printStream = "\n"
+            
+    def printRow(self, firstIndexInRow, lastIndexOnPage, data):
+    	for column in range(columnsPerPage):
+        	index = firstIndexInRow + column * rowsPerPage
+            
+            if (index <= lastIndexOnPage):
+            	self.printStream.format("%10d" %(data[index])
+                
+    def printPageHeader(self, pageHeader, pageNumber):
+    	self.printStream = f"{pageHeader} --- Page {PageNumber}"
+        self.printStream += "\n"
+        
+    def setOutput(self, printStream):
+    	self.printStream = printStream
 ```
 
-```java
-package literatePrimes;
+```python
+# PrimeGenerator.py
 
-import java.util.ArrayList;
-
-public class PrimeGenerator {
-	private static int[] primes;
-	private static ArrayList<Integer> multiplesOfPrimeFactors;
-
-	protected static int[] generate(int n) {
-		primes = new int[n];
-		multiplesOfPrimeFactors = new ArrayList<Integer>();
-		set2AsFirstPrime();
-		checkOddNumbersForSubsequentPrimes();
-		return primes;
-	}
-
-	private static void set2AsFirstPrime() {
-		primes[0] = 2;
-		multiplesOfPrimeFactors.add(2);
-	}
-
-	private static void checkOddNumbersForSubsequentPrimes() {
-		int primeIndex = 1;
-		for (int candidate = 3 ; primeIndex < primes.length ; candidate += 2) {
-			if (isPrime(candidate))
-				primes[primeIndex++] = candidate;
-		}
-	}
-
-	private static boolean isPrime(int candidate) {
-		if (isLeastRelevantMultipleOfNextLargerPrimeFactor(candidate)) {
-			multiplesOfPrimeFactors.add(candidate);
-			return false;
-		}
-		return isNotMultipleOfAnyPreviousPrimeFactor(candidate);
-	}
-
-	private static boolean isLeastRelevantMultipleOfNextLargerPrimeFactor(int candidate) {
-		int nextLargerPrimeFactor = primes[multiplesOfPrimeFactors.size()];
-		int leastRelevantMultiple = nextLargerPrimeFactor * nextLargerPrimeFactor;
-		return candidate == leastRelevantMultiple;
-	}
-
-	private static boolean isNotMultipleOfAnyPreviousPrimeFactor(int candidate) {
-		for (int n = 1; n < multiplesOfPrimeFactors.size(); n++) {
-			if (isMultipleOfNthPrimeFactor(candidate, n))
-				return false;
-		}
-		return true;
-	}
-
-	private static boolean isMultipleOfNthPrimeFactor(int candidate, int n) {
-		return candidate == smallestOddNthMultipleNotLessThanCandidate(candidate, n);
-	}
-
-	private static int smallestOddNthMultipleNotLessThanCandidate(int candidate, int n) {
-		int multiple = multiplesOfPrimeFactors.get(n);
-		while (multiple < candidate)
-			multiple += 2 * primes[n];
-		multiplesOfPrimeFactors.set(n, multiple);
-		return multiple;
-	}
-}
+class PrimeGenerator:
+    def __init__(self):
+    	self.primes = []
+        self.multiplesOfPrimeFactors = []
+        
+    def generate(self, n):
+     	self.primes = []
+        self.multiplesOfPrimeFactors = []
+        self.set2AsFirstPrime()
+        self.checkOddNumbersForSubsequentPrimes()
+        return self.primes
+        
+    def set2AsFirstPrime(self):
+     	primes.append(2)
+        self.multiplesOfPrimeFactors.append(2)
+        
+    def checkOddNumbersForSubsequentPrimes(self):
+    	primeIndex = 1
+        candidate = 3
+		while True:
+        	candidate += 2
+        	if(primeIndex >= len(self.primes):
+            	break
+                
+            if(self.isPrime(candidate)):
+            	self.primes.append(candidate)
+                
+    def isPrime(self, candidate):
+    	if self.isLeastRelevantMultipleOfNextLargerPrimeFactor(candidate):
+        	self.multiplesOfPrimeFactors.append(candidate)
+            return False
+            
+        return self.isNotMultipleOfAnyPreviousPrimeFactor(candidate)
+        
+    def isLeastRelevantMultipleOfNextLargerPrimeFactor(self, candidate):
+    	nextLargerPrimeFactor = primes[len(self.multiplesOfPrimeFactors)]
+        leastRelevantMultiple = nextLargerPrimeFactor**2
+        return candidate == leastRelevantMultiple
+        
+    def isNotMultipleOfAnyPreviousPrimeFactor(self, candidate):
+    	for n in range(1, len(multiplesOfPrimeFactors)):
+        	if(self.isMultipleOfNthPrimeFactor(candidate, n))
+            	return False
+        return True
+        
+    def smallestOddNthMultipleNotLessThanCandidate(self, candidate, n):
+    	multiple = self.multiplesOfPrimeFactors[n]
+        while(multiple < candidate):
+        	multiple += 2*primes[n]
+        self.multiplesOfPrimeFactors.set(n, multiple)
+        return multiple
 ```
 
 - 이렇게 리펙토링 한 결과
@@ -494,79 +454,98 @@ public class PrimeGenerator {
   → 깨끗한 시스템은 클래스를 체계적으로 정리해 변경에 수반하는 위험을 낮춘다.
 
 - 다음은 SQL 문자열을 만드는 sql 클래스다.
-  ```java
-  public class Sql {
-  public Sql(String table, Column[] columns)
-  public String create()
-  public String insert(Object[] fields)
-  public String selectAll()
-  public String findByKey(String keyColumn, String keyValue)
-  public String select(Column column, String pattern)
-  public String select(Criteria criteria)
-  public String preparedInsert()
-  private String columnList(Column[] columns)
-  private String valuesList(Object[] fields, final Column[] columns) private String selectWithCriteria(String criteria)
-  private String placeholderList(Column[] columns)
-  }
-  ```
+```python
+class Sql:
+    def __init__(self, table, columns):
+    	pass
+    def create(self):
+    	pass
+    def insert(self, fields):
+    	pass
+    def selectAll(self):
+    	pass
+    def findByKey(self, keyColumn, keyValue):
+    	pass
+    def select(self, column, pattern):
+    	pass
+    def select(self, criteria):
+    	pass
+    def preparedInsert(self):
+    	pass
+    def columnList(self, columns):
+    	pass
+    def valuesList(self, fields, columns):
+    	pass
+    def selectWithCriteria(self, criteria):
+    	pass
+    def placeholderList(self, columns):
+    	pass
+```
   - 두가지 이유로 변경을 해야하므로 SRP 위반
     1. 새로운 SQL문을 지원할때 sql 클래스를 변경해야함
     2. 기본 sql문을 수정할때도 sql 클래스를 변경해야함
 - 위에서 공개 인터페이스를 각각 sql 클래스에서 파생하는 클래스로 만들었다.
 
-  ```java
-  abstract public class Sql {
-    public Sql(String table, Column[] columns)
-    abstract public String generate();
-  }
+```python
+class Sql:
+    def __init__(self, table, columns):
+    	pass
+    @abstractmethod
+    def generate(self):
+    	pass
+        
+class CreateSql(Sql):
+    def __init__(self, table, columns):
+    	pass
+    def generate(self):
+    	pass
+        
+class SelectSql(Sql):
+    def __init__(self, table, columns):
+    	pass
+    def generate(self):
+    	pass
+        
+class InsertSql(Sql):
+    def __init__(self, table, columns, fields):
+    	pass
+    def generate(self):
+    	pass
+    def valuesList(self, fields, columns):
+    	pass
+        
+class SelectWithMatchSql(Sql):
+    def __init__(self, table, columns, column, pattern):
+    	pass
+	def generate(self):
+    	pass
+        
+class FindByKeySql(Sql):
+    def __init__(self, table, columns, keyColumn, keyValue):
+    	pass
+    def generate(self):
+    	pass
 
-  public class CreateSql extends Sql {
-    public CreateSql(String table, Column[] columns)
-  	@Override public String generate()
-  }
-
-  public class SelectSql extends Sql {
-  	public SelectSql(String table, Column[] columns)
-  	@Override public String generate()
-  }
-
-  public class InsertSql extends Sql {
-    public InsertSql(String table, Column[] columns, Object[] fields)
-  	@Override public String generate()
-    private String valuesList(Object[] fields, final Column[] columns)
-  }
-
-  public class SelectWithCriteriaSql extends Sql {
-  	public SelectWithCriteriaSql(string table, Column[] columns, Criteria criteria)
-  	@Override public String generate()
-  }
-
-  public class SelectWithMatchSql extends Sql {
-    public SelectWithMatchSql(string table, Column[] columns, Column column, string pattern)
-  	@Override public String generate()
-  }
-
-  public class FindByKeySql extends Sql {
-    public FindByKeySql(string table, Column[] columns, string keyColumn, string keyValue)
-  	@Override String generate()
-  }
-
-  public class PreparedInsertSql extends Sql {
-    public PreparedInsertSql(string table, Column[] columns)
-    @Override String generate()
-    private String placeholderList(Column[] columns)
-  }
-
-  public class Where {
-    public Where(string criteria)
-    public String generate()
-  }
-
-  public class ColumnList {
-    public ColumnList(Column[] columns)
-  	public String generate()
-  }
-  ```
+class PreparedInsertSql(Sql):
+    def __init__(self, table, columns):
+    	pass
+    def generate(self):
+    	pass
+    def placeholderList(self, columns):
+    	pass
+        
+class Where:
+    def __init__(self, criteria):
+    	pass
+    def generate(self):
+    	pass
+        
+class ColumnList:
+    def __init__(self, columns):
+    	pass
+    def generate(self):
+    	pass
+```
 
   - 이렇게 고친다면 각 클래스는 극도로 단순해지고 코드를 순식간에 이해할 수 있다.
   - 또한 함수 하나를 수정했다고 다른 함수가 망가질 위험도 사실상 사라진다.
@@ -585,47 +564,43 @@ public class PrimeGenerator {
     → 5분마다 값이 달라지는 api이므로 테스트 코드를 짜기란 쉽지 않다.
 - 그래서 직접 api를 호출하는게 아닌 exchange라는 추상클래스 생성 후 메서드를 하나 선언
 
-```java
-public interface StockExchange {
-	Money currentPrice(String Symbol);
-}
+```python
+class StockExchange:
+    def __init__(self):
+    	pass
+    def currentPrice(self, symbol):
+    	pass
 ```
 
 - 다음으로 StockExchange 추상클래스를 구현하는 TokyoStockExchange 클래스를 구현.
   또한 PortFolio 생성자를 수정해 StockExchange 참조라를 인수로 받는다.
 
-```java
-public Portfolio {
-	private StockExchange exchange;
-	public Portfolio (StockExchange exchange){
-        this.exchange = exchage;
-    }
-}
+```python
+class Portfolio:
+    def __init__(self):
+    	self.exchange = StockExchange()
+    def __init__(self, exchange):
+    	this.exchange = exchange
 ```
 
 - 이제 TokyoStockExchange 클래스를 흉내내는 테스트용 클래스를 만들 수 있다.
   - 테스트용 클래스는 StockExchagne 추상클래스를 사용하여 고정된 주가를 반환.
   - 고정된 값을 테스트에 이용.
 
-```java
-// 테스트용 클래스는 StockExchange 인터페이스를 구현하며 고정된 주가를 반환한다.
-public class PortfolioTest {
-	private FixedStockExchangeStub exchange;
-	private Portfolio portfolio;
-
-@Before
-protected void setUp() throws Exception {
-	exchange = new FixedStockExchangeStub();
-	exchange.fix("MSFT", 100);
-	portfolio = new Portfolio(exchange);
-	}
-
-@Test
-public void GivenFiveMSFTTotalShouldBe500() throws Exception {
-		portfolio.add(5, "MSFT");
-		Assert.assertEquals(500, portfolio.value());
-	}
-}
+```python
+class PortfolioTest:
+    def __init__(self):
+        self.exchange = NULL
+        self.portfolio = NULL
+        
+	def setUp(self):
+    	self.exchange = FixedStockExchangeStup()
+        self.exchange.fix("MSFT", 100)
+        self.portfolio = Portfolio(self.exchange)
+        
+	def GivenFiveMSFTTotalShouldBe500(self):
+    	self.portfolio.add(5, "MSFT")
+        assertEqual(500, self.portfolio.value())
 ```
 
 - 위에서 개선한 Portfolio 클래스는 상세 구현 클래스가 아닌 StockExchange라는 인터페이스에 의존하므로,실제로 주가를 얻어오는 출처나 얻어오는 방식 등과 같은 구체적인 사실을 모두 숨길 수 있다.

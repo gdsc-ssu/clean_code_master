@@ -13,25 +13,6 @@
 
 ⇒ 추상화 단계가 순차적으로 내려간다.
 
-(c++의 경우)
-
-1. 공개(public) 변수와 함수를 먼저 작성한다
-2. 그 후에 비공개(private) 변수와 함수를 작성한다
-
-```Java
-
-class Student {
-	char name[20]="";
-	int age = 0;
-
-    void show(){
-        System.out.println(name + age + id);
-	}
-
-    private int id=123124123;
-}
-```
-
 ### 캡슐화
 
 - 변수와 유틸리티 함수는 가능한 공개하지 않는 편이 좋다. (반드시는 아니다)
@@ -41,8 +22,9 @@ class Student {
 
 ### 클래스는 작아야한다
 
-- 클래스를 만들 때 제일 중요한 것은 **“크기가 작아야 한다”**이다.
-  → 여기서 작아야하는 것은 물리적인 행뿐만 아니라 **“책임”**도 포함된다.
+
+- 클래스를 만들 때 제일 중요한 것은 **“크기가 작아야 한다”** 이다.
+  → 여기서 작아야하는 것은 물리적인 행뿐만 아니라 **“책임”** 도 포함된다.
 
 ```java
 //슈퍼클래스?(어마어마하게 큰 만능 클래스)
@@ -137,7 +119,7 @@ public class SuperDashboard extends JFrame implements MetaDataUser {
 ```
 
 - 이 클래스는 크기가 작은가?
-  → 물리적은 크기는 작지만 **“책임”**이 너무 많다. 이래서는 안된다.
+  → 물리적인 크기는 작지만 ** “책임” **이 너무 많다. 이래서는 안된다.
 - 클래스 이름은 해당 클래스의 책임(역할)을 기술해야 한다.
   - 클래스 이름이 떠오르지 않는다면 책임이 너무 많거나 크기가 커서 그런것이다.
   - 클래스 설명은 if, and, but, or을 사용하지 않고 25단어 내외로 가능해야 한다.
@@ -183,34 +165,37 @@ public class Version {
 
   → 응집도가 높다는 소리는 클래스에 속한 메서드와 변수로 서로 의존하며 논리적인 단위로 묶인다는 의미기 때문이다.
 
-```java
-public class Stack {
-	private int topOfStack = 0;
-	List<Integer> elements = new LinkedList<Integer>();
+```typescript
+class Stack {
+  topOfStack: number;
+  elements: number[];
 
-    public int size() {
-		return topOfStack;
-	}
+  constructor(topOfStack = 0, elements = []) {
+    this.topOfStack = topOfStack;
+    this.elements = elements;
+  }
 
-	public void push(int element) {
-		topOfStack++;
-		elements.add(element);
-	}
+  size() {
+    return this.topOfStack;
+  }
 
-	public int pop() throws PoppedWhenEmpty {
-		if (topOfStack == 0)
-			throw new PoppedWhenEmpty();
-		int element = elements.get(--topOfStack);
-		elements.remove(topOfStack);
-		return element;
-	}
+  push(element: number) {
+    this.topOfStack++;
+    this.elements[this.topOfStack] = element;
+  }
+
+  pop() {
+    if (this.topOfStack === 0) throw new Error('PoppedWhenEmpty');
+    const element = this.elements[--this.topOfStack];
+    return element;
+  }
 }
 ```
 
 - 위 Stack 클래스는 응집도가 아주 높다. size()를 제외한 다른 두 메서드는 두 변수를 모두 사용한다.
 
 - “함수를 작게, 매개변수 목록을 짧게”라는 전략을 따르다 보면 때때로 몇몇 메서드만이 사용하는 인스턴스 변수가 아주 많아진다.
-  → 이는 새로운 클래스로 쪼개야 한다느 신호다. 응집도가 높아지도록 변수와 메서드를 적절히 분리해 새로은 클래스를 만든다.
+  → 이는 새로운 클래스로 쪼개야 한다는 신호다. 응집도가 높아지도록 변수와 메서드를 적절히 분리해 새로은 클래스를 만든다.
 
 ### 응집도를 유지하면 작은 클래스 여럿이 나온다
 
@@ -220,25 +205,40 @@ public class Stack {
 
     → 네 변수를 클래스 인스턴스 변수로 승격한다면 새 함수는 인수가 필요없다.
 
-  ```java
-  public class AAA{
-  	public void fourOperations(){
-  		int a=1,b=2,c,3,d=4
-  		System.out.println(a + b + c + d);
-  		... //많은 양의 코드들
-  	}
+  ```typescript
+  class AAA {
+    fourOperations() {
+      const a = 1;
+      const b = 2;
+      const c = 3;
+      const d = 4;
+      console.log(a + b + c + d);
+      ... //많은 양의 코드들
+    }
   }
   ```
 
-  ```java
-  public class AAA{
-  	int a=1,b=2,c=3,d=4; //fourOperations 안에 있는 a,b,c,d를 클래스 인스턴스 변수로 만들어줌
-  	public void sum(){ //인수 없이 사용가능.
-        System.out.println(a + b + c + d);
-  	}
-  	void fourOperations(){
-
-  	}
+  ```typescript
+  class AAA {
+    a: number;
+    b: number;
+    c: number;
+    d: number;
+  
+    constructor() {
+      this.a = 1;
+      this.b = 2;
+      this.c = 3;
+      this.d = 4;
+      // fourOperations 안에 있는 a,b,c,d를 클래스 인스턴스 변수로 만들어줌
+    }
+  
+    sum() {
+      // 인수 없이 사용가능.
+      console.log(this.a + this.b + this.c + this.d);
+    }
+  
+    fourOperations() {}
   }
   ```
 
@@ -321,7 +321,7 @@ public class Stack {
   }
   ```
 
-  → 이 코드는 함수가 하나로 이루어진대다가 들여쓰기가 심하고, 변수도 정리가 안되어있고, 주고가 빡빡하게 결합되었다.
+  → 이 코드는 함수가 하나로 이루어진대다가 들여쓰기가 심하고, 변수도 정리가 안되어있고, 구조가 빡빡하게 결합되었다.
 
   → 최소한 여러 함수로는. 나눠야 한다.
 
@@ -494,19 +494,21 @@ public class PrimeGenerator {
   → 깨끗한 시스템은 클래스를 체계적으로 정리해 변경에 수반하는 위험을 낮춘다.
 
 - 다음은 SQL 문자열을 만드는 sql 클래스다.
-  ```java
-  public class Sql {
-  public Sql(String table, Column[] columns)
-  public String create()
-  public String insert(Object[] fields)
-  public String selectAll()
-  public String findByKey(String keyColumn, String keyValue)
-  public String select(Column column, String pattern)
-  public String select(Criteria criteria)
-  public String preparedInsert()
-  private String columnList(Column[] columns)
-  private String valuesList(Object[] fields, final Column[] columns) private String selectWithCriteria(String criteria)
-  private String placeholderList(Column[] columns)
+  ```typescript
+  interface Sql {
+    table: string;
+    columns: Column[];
+  
+    create(): string;
+    insert(fields: Object[]): string;
+    selectAll(): string;
+    findByKey(keyColumn: string, keyValue: string): string;
+    select(column: Column, pattern: string): string;
+    preparedInsert(): string;
+    columnList(columns: Column[]): string;
+    valuesList(fields: Object[], columns: Column[]): string;
+    selectWithCriteria(criteria: string): string;
+    placeholderList(columns: Column[]): string;
   }
   ```
   - 두가지 이유로 변경을 해야하므로 SRP 위반
@@ -514,65 +516,56 @@ public class PrimeGenerator {
     2. 기본 sql문을 수정할때도 sql 클래스를 변경해야함
 - 위에서 공개 인터페이스를 각각 sql 클래스에서 파생하는 클래스로 만들었다.
 
-  ```java
-  abstract public class Sql {
-    public Sql(String table, Column[] columns)
-    abstract public String generate();
+  ```typescript
+  interface Sql {
+    table: string;
+    columns: Column[];
+    generate(): string;
   }
-
-  public class CreateSql extends Sql {
-    public CreateSql(String table, Column[] columns)
-  	@Override public String generate()
+  
+  interface CreateSql extends Sql {}
+  
+  interface SelectSql extends Sql {}
+  
+  interface InsertSql extends Sql {
+    fields: Object[];
+    valuesList(fields: Object[], column: Column[]): string;
   }
-
-  public class SelectSql extends Sql {
-  	public SelectSql(String table, Column[] columns)
-  	@Override public String generate()
+  
+  interface SelectWithCriteriaSql extends Sql {
+    criteria: Criteria;
   }
-
-  public class InsertSql extends Sql {
-    public InsertSql(String table, Column[] columns, Object[] fields)
-  	@Override public String generate()
-    private String valuesList(Object[] fields, final Column[] columns)
+  
+  interface SelectWithMatchSql extends Sql {
+    column: Column;
+    pattern: string;
   }
-
-  public class SelectWithCriteriaSql extends Sql {
-  	public SelectWithCriteriaSql(string table, Column[] columns, Criteria criteria)
-  	@Override public String generate()
+  
+  interface FindByKeySql extends Sql {
+    keyColumn: string;
+    keyValue: string;
   }
-
-  public class SelectWithMatchSql extends Sql {
-    public SelectWithMatchSql(string table, Column[] columns, Column column, string pattern)
-  	@Override public String generate()
+  
+  interface PreparedInsertSql extends Sql {
+    placeholderList(columns: Column[]): string;
   }
-
-  public class FindByKeySql extends Sql {
-    public FindByKeySql(string table, Column[] columns, string keyColumn, string keyValue)
-  	@Override String generate()
+  
+  interface Where {
+    criteria: string;
+    generate(): string;
   }
-
-  public class PreparedInsertSql extends Sql {
-    public PreparedInsertSql(string table, Column[] columns)
-    @Override String generate()
-    private String placeholderList(Column[] columns)
-  }
-
-  public class Where {
-    public Where(string criteria)
-    public String generate()
-  }
-
-  public class ColumnList {
-    public ColumnList(Column[] columns)
-  	public String generate()
+  
+  interface ColumnList {
+    columns: Column[];
+    generate(): string;
   }
   ```
-
+  
   - 이렇게 고친다면 각 클래스는 극도로 단순해지고 코드를 순식간에 이해할 수 있다.
   - 또한 함수 하나를 수정했다고 다른 함수가 망가질 위험도 사실상 사라진다.
   - 새로운 sql문을 추가하여도 다른 코드가 망가지지 않는다.
   - 객체 지향 설계인 OCP(Open-Closed Principle)도 지원한다.
-    - OCP란 클래스는 확장에 개바적이고 수정에 폐쇄적이어야 한다는 원칙
+    - OCP란 클래스는 확장에 개방적이고 수정에 폐쇄적이어야 한다는 원칙
       → 위의 sql 클래스는 파생 클래스를 생성하는 방식으로 새 기능에 개방적인 동시에, 다른 클래스를 닫아 놓는 방식으로 수정에 폐쇄적이다.
 
 ### 변경으로부터 격리
@@ -585,21 +578,21 @@ public class PrimeGenerator {
     → 5분마다 값이 달라지는 api이므로 테스트 코드를 짜기란 쉽지 않다.
 - 그래서 직접 api를 호출하는게 아닌 exchange라는 추상클래스 생성 후 메서드를 하나 선언
 
-```java
-public interface StockExchange {
-	Money currentPrice(String Symbol);
+```typescript
+interface StockExchange {
+	currentPrice(Symbol: string): Money;
 }
 ```
 
 - 다음으로 StockExchange 추상클래스를 구현하는 TokyoStockExchange 클래스를 구현.
-  또한 PortFolio 생성자를 수정해 StockExchange 참조라를 인수로 받는다.
+  또한 PortFolio 생성자를 수정해 StockExchange 참조를 인수로 받는다.
 
-```java
-public Portfolio {
-	private StockExchange exchange;
-	public Portfolio (StockExchange exchange){
-        this.exchange = exchage;
-    }
+```typescript
+class Portfolio {
+  private exchange: StockExchange;
+  constructor(exchange: StockExchange) {
+    this.exchange = exchange
+  }
 }
 ```
 
@@ -607,24 +600,22 @@ public Portfolio {
   - 테스트용 클래스는 StockExchagne 추상클래스를 사용하여 고정된 주가를 반환.
   - 고정된 값을 테스트에 이용.
 
-```java
+```typescript
 // 테스트용 클래스는 StockExchange 인터페이스를 구현하며 고정된 주가를 반환한다.
-public class PortfolioTest {
-	private FixedStockExchangeStub exchange;
-	private Portfolio portfolio;
+class PortfolioTest {
+  private exchange: FixedStockExchangeStub;
+  private portfolio: Portfolio;
 
-@Before
-protected void setUp() throws Exception {
-	exchange = new FixedStockExchangeStub();
-	exchange.fix("MSFT", 100);
-	portfolio = new Portfolio(exchange);
-	}
+  protected setUp() {
+    this.exchange = new FixedStockExchangeStub();
+    this.exchange.fix('MSFT', 100);
+    this.portfolio = new Portfolio(this.exchange);
+  }
 
-@Test
-public void GivenFiveMSFTTotalShouldBe500() throws Exception {
-		portfolio.add(5, "MSFT");
-		Assert.assertEquals(500, portfolio.value());
-	}
+  GivenFiveMSFTTotalShouldBe500() {
+    portfolio.add(5, 'MSFT');
+    Assert.assertEquals(500, portfolio.value());
+  }
 }
 ```
 
