@@ -48,7 +48,7 @@
 ### - 동시성은 복잡하다.
 간단한 문제라도 동시성은 복잡하다.
 ### - 일반적으로 동시성 버그는 재현하기 어렵다.
-그래서 진짜 결합으로 간주되지 않고 일회성 버그로 여겨 무시하기 쉽다.
+그래서 진짜 결함으로 간주되지 않고 일회성 버그로 여겨 무시하기 쉽다.
 
 ## 난관
 
@@ -295,7 +295,7 @@ POJO와 스레드를 제어하는 클래스로 프로그램을 분할하면, 보
 
 ### *자동화*
 
-보조 코드를 자동으로 추가하려면 (AOF)[https://diaryofgreen.tistory.com/159](Aspect Oriented Framework), CGLIB, ASM 등과 같은 도구를 사용한다. 다음은 메서드가 하나인 클래스이다.
+보조 코드를 자동으로 추가하려면 [AOF](https://diaryofgreen.tistory.com/159)(Aspect Oriented Framework), CGLIB, ASM 등과 같은 도구를 사용한다. 다음은 메서드가 하나인 클래스이다.
 
 ```java
 public class ThreadJigglePoint {
