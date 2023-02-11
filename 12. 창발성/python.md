@@ -36,70 +36,62 @@ SRP를 준수하는 클래스는 테스트가 훨씬 더 쉽다!
 
 똑같은 코드는 당연히 중복이고, 비슷한 코드는 더 비슷하게 고쳐보면 리팩터링이 쉽다.
 
-```java
-int size() {}
-    boolean isEmpty() {}
+```python
+def size():
+  def isEmpty():
+    pass
 ```
 
 위와 같은 메서드가 존재한다고 생각해보자. 이것들을 각각 구현할 수도 있지만, isEmpty 메서드에서 size 메서드를 이용해서 추가적으로 구현할 필요가 없다!
 
-```java
-bool isEmpty() {
-    return 0 == size();
-}
+```python
+def isEmpty():
+  return 0 == size()
 ```
 
 깔끔한 시스템을 만드려면 **_모든 중복을 제거하겠다는 의지_**가 있어야 한다!
 
-```java
-public void scaleToOneDimension(
-    float desiredDimension, float imageDimension) {
-    if (Math.abs(desiredDimension - imageDimension) < errorThreshold) {
-        return;
-    }
-    float scalingFactor = desireDimension / imageDimension;
-    scalingFactor = (float)(Math.floor(scalingFactor * 100) * 0.01);
+```python
+from math import abs, floor
 
-    RenderOp newImage = ImageUtilities.getScaledImage(
-        image, scalingFactor, scalingFactor);
-    image.dispose();
-    System.gc();
-    image = newImage;
-}
-
-public synchronized void rotate(int degrees) {
-    RenderedOp newImage = ImageUtilities.getRotatedImage(
-        image, degrees);
-    image.dispose();
-    System.gc();
-    image = newImage;
-}
+def scaleToOneDimension(desiredDimension, imageDimension):
+    if abs(desireDimension - imageDimension) < errorThreshold:
+    	return
+    scalingFactor = desiredDimension / imageDimension
+    scalingFactor = float(floor(scalingFactor*100)*0.01)
+    
+    newImage = ImageUtilities.getScaledImage(image, scalingFactor, scalingFactor)
+    image.dispose()
+    System.gc()
+    image = newImage
+    
+def rotate(degrees):
+    newImage = ImageUtilities.getRotatedImage(image, degrees)
+    image.dispose()
+    System.gc()
+    image = newImage
 ```
 
 scaleToOneDimension 메서드와 rotate 메서드를 살펴보면 일부 코드가 동일하다! 중복을 제거해보자.
 
-```java
-public void scaleToOneDimension(
-    float desiredDimension, float imageDimension) {
-    if(Math.abs(desiredDimension - imageDimension) < errorThreshold) {
-        return;
-    }
-    float scalingFactor = desireDimension / imageDimension;
-    scalingFactor = (float)(Math.floor(scalingFactor * 100) * 0.01);
-        replaceImage(ImageUtilities.getScaledImage(
-            image, scalingFactor, scalingFactor));
-}
+```python
+from math import abs, floor
 
-public synchronized void rotate(int degrees) {
-    replaceImage(ImageUtilities.getRotatedImage(image, degrees));
-}
-
-//이 함수를 추가함으로 중복을 피할 수 있다!
-private void replaceImage(RenderedOp newImage) {
-    image.dispose();
-    System.gc();
-    image = newImage;
-}
+def scaleToOneDimension(desiredDimension, imageDimension):
+    if abs(desiredDimension - imageDimension) < errorThreshold:
+    	return
+    scalingFactor = desiredDimension / imageDimension
+    scalingFactor = float(floor(scalingFactor*100)*0.01)
+    replaceImage(ImageUtilities.getScaledImage(image, scalingFactor, scalingFactor))
+    
+def rotate(degrees):
+    replaceImage(ImageUtilities.getRotatedImage(image, degrees))
+    
+# 이 함수르 추가함으로써 중복을 피할 수 있다!
+def replaceImage(newImage):
+    image.dispose()
+    System.gc()
+    image = newImage
 ```
 
 작은 부분이지만, 공통 부분을 뽑고 나니 클래스가 SRP을 위반해버린다! 따라서 새로 만든 replaceImage 메서드를 다른 클래스로 옮겨도 좋겠다. 그렇다면 새 메서드의 가시성이 높아진다.
@@ -108,56 +100,52 @@ private void replaceImage(RenderedOp newImage) {
 
 TEMPLATE METHOD 패턴은 고차원 중복을 제거하기 위한 목적으로 자주 사용한다.
 
-```java
-public class VacationPolicy {
-    public void accrueUSDivisionVacation() {
-        // 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
-        //...
-        // 휴가 일수가 미국 최소 법정 일수를 만족하는지 확인하는 코드
-        // ...
-        // 휴가 일수를 급여 대장에 적용하는 코드
-        // ...
-    }
-
-    public void accrueEUDivisionVacation() {
-        // 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
-        //...
-        // 휴가 일수가 미국 최소 법정 일수를 만족하는지 확인하는 코드
-        // ...
-        // 휴가 일수를 급여 대장에 적용하는 코드
-        // ...
-    }
-}
+```python
+class VacationPolicy:
+    def accureUSDivisionVacation(self):
+        # 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
+        # ...
+        # 휴가 일수가 미국 최소 법정 일수를 만족하는지 확인하는 코드
+        # ...
+        # 휴가 일수를 급여 대장에 적용하는 코드
+        # ...
+        
+    def accureEUDivisionVacation(self):
+        # 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
+        # ...
+        # 휴가 일수가 유럽 연합 최소 법정 일수를 만족하는지 확인하는 코드
+        # ...
+        # 휴가 일수를 급여 대장에 적용하는 코드
+        # ...
 ```
 
 위의 법정 일수가 계산하는 코드만 제외하면 두 메서드는 거의 동일하다! 하지만 알고리즘은 직원 유형에 따라서 변경되는 것이다.
 
 TEMPLATE METHOD 패턴을 적용하여 눈에 들어오는 중복을 제거해보자.
 
-```java
-abstract class VacationPolicy {
-    public void accrueVacation() {
-        calculateBaseVacationHours();
-        alterForLegalMinimums();
-        applyToPayroll();
-    }
-
-    public void calculateBaseVacationHours() { /* ... */}
-    abstract void alterForLegalMinimums();
-    private void applyToPayroll() { /* ... */ }
-}
-
-public class USVacationPolicy extends VacationPolicy {
-    @override protected void alterForLegalMinimums() {
-        // 미국 최소 법정 일수 사용
-    }
-}
-
-public class EUVacationPolicy extends VacationPolicy {
-    @override protected void alterForLegalMinimums() {
-        // 유럽연합 최소 법정 일수 사용
-    }
-}
+```python
+class VacationPolicy:
+    def accureVacation(self):
+        self.calculateBaseVacationHours()
+        self.alterForLegalMinimums()
+        self.applyToPayroll()
+        
+    def calculateBaseVacationHours(self):
+        # ...
+        
+    def alterForLegalMinimums(self):
+        pass
+        
+    def applyToPayroll(self):
+        # ...
+        
+class USVacationPolicy(VacationPolicy):
+    def alterForLegalMinimums(self):
+        # 미국 최소 법정 일수를 사용한다.
+        
+class EUVacationPolicy(VacationPolicy):
+    def alterForLegalMinimums(self):
+        # 유럽연합 최소 법정 일수를 사용한다.
 ```
 
 하위 클래스에 중복되지 않는 정보만을 제공하여 accrueVacation 알고리즘에서 빠진 부분을 채워주자!

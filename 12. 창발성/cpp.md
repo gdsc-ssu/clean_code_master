@@ -36,14 +36,14 @@ SRP를 준수하는 클래스는 테스트가 훨씬 더 쉽다!
 
 똑같은 코드는 당연히 중복이고, 비슷한 코드는 더 비슷하게 고쳐보면 리팩터링이 쉽다.
 
-```java
+```c++
 int size() {}
-    boolean isEmpty() {}
+bool isEmpty() {}
 ```
 
 위와 같은 메서드가 존재한다고 생각해보자. 이것들을 각각 구현할 수도 있지만, isEmpty 메서드에서 size 메서드를 이용해서 추가적으로 구현할 필요가 없다!
 
-```java
+```c++
 bool isEmpty() {
     return 0 == size();
 }
@@ -51,8 +51,9 @@ bool isEmpty() {
 
 깔끔한 시스템을 만드려면 **_모든 중복을 제거하겠다는 의지_**가 있어야 한다!
 
-```java
-public void scaleToOneDimension(
+```c++
+public:
+void scaleToOneDimension(
     float desiredDimension, float imageDimension) {
     if (Math.abs(desiredDimension - imageDimension) < errorThreshold) {
         return;
@@ -67,7 +68,7 @@ public void scaleToOneDimension(
     image = newImage;
 }
 
-public synchronized void rotate(int degrees) {
+void rotate(int degrees) {
     RenderedOp newImage = ImageUtilities.getRotatedImage(
         image, degrees);
     image.dispose();
@@ -78,8 +79,8 @@ public synchronized void rotate(int degrees) {
 
 scaleToOneDimension 메서드와 rotate 메서드를 살펴보면 일부 코드가 동일하다! 중복을 제거해보자.
 
-```java
-public void scaleToOneDimension(
+```c++
+void scaleToOneDimension(
     float desiredDimension, float imageDimension) {
     if(Math.abs(desiredDimension - imageDimension) < errorThreshold) {
         return;
@@ -89,13 +90,12 @@ public void scaleToOneDimension(
         replaceImage(ImageUtilities.getScaledImage(
             image, scalingFactor, scalingFactor));
 }
-
-public synchronized void rotate(int degrees) {
+void rotate(int degrees) {
     replaceImage(ImageUtilities.getRotatedImage(image, degrees));
 }
 
 //이 함수를 추가함으로 중복을 피할 수 있다!
-private void replaceImage(RenderedOp newImage) {
+void replaceImage(RenderedOp newImage) {
     image.dispose();
     System.gc();
     image = newImage;
@@ -108,9 +108,10 @@ private void replaceImage(RenderedOp newImage) {
 
 TEMPLATE METHOD 패턴은 고차원 중복을 제거하기 위한 목적으로 자주 사용한다.
 
-```java
-public class VacationPolicy {
-    public void accrueUSDivisionVacation() {
+```c++
+class VacationPolicy {
+public:
+    void accrueUSDivisionVacation() {
         // 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
         //...
         // 휴가 일수가 미국 최소 법정 일수를 만족하는지 확인하는 코드
@@ -119,7 +120,7 @@ public class VacationPolicy {
         // ...
     }
 
-    public void accrueEUDivisionVacation() {
+    void accrueEUDivisionVacation() {
         // 지금까지 근무한 시간을 바탕으로 휴가 일수를 계산하는 코드
         //...
         // 휴가 일수가 미국 최소 법정 일수를 만족하는지 확인하는 코드
@@ -134,27 +135,31 @@ public class VacationPolicy {
 
 TEMPLATE METHOD 패턴을 적용하여 눈에 들어오는 중복을 제거해보자.
 
-```java
-abstract class VacationPolicy {
-    public void accrueVacation() {
+```c++
+class VacationPolicy {
+public:
+    void accrueVacation() {
         calculateBaseVacationHours();
         alterForLegalMinimums();
         applyToPayroll();
     }
 
-    public void calculateBaseVacationHours() { /* ... */}
-    abstract void alterForLegalMinimums();
-    private void applyToPayroll() { /* ... */ }
+    void calculateBaseVacationHours() { /* ... */}
+    virtual void alterForLegalMinimums();
+private:
+    void applyToPayroll() { /* ... */ }
 }
 
-public class USVacationPolicy extends VacationPolicy {
-    @override protected void alterForLegalMinimums() {
+class USVacationPolicy :public VacationPolicy {
+protected:
+    void alterForLegalMinimums() {
         // 미국 최소 법정 일수 사용
     }
 }
 
-public class EUVacationPolicy extends VacationPolicy {
-    @override protected void alterForLegalMinimums() {
+class EUVacationPolicy : public VacationPolicy {
+protected:
+    void alterForLegalMinimums() {
         // 유럽연합 최소 법정 일수 사용
     }
 }
