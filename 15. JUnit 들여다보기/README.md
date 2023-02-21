@@ -469,7 +469,7 @@ private int findCommonSuffix(int prefixIndex) {
 ```
 
 `prefixIndex`를 인수로 전달하는 방식은 다소 자의적이다.    
-함수 호출 순서는 확실히 정해지나, `prefixlndlex`가 필요한 이유는 설명하지 못하고 있다.    
+함수 호출 순서는 확실히 정해지나, `prefixIndex`가 필요한 이유는 설명하지 못하고 있다.    
 
 ```java
 private void compactExpectedAndActual() {
