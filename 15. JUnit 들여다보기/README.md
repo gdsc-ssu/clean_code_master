@@ -733,7 +733,7 @@ public class ComparisonCompactor {
 <br>
 
 코드의 리팩터링을 반복하며 처음에 추출했던 메서드 몇개를 `formatCompactedComparison`에다 다시 집어넣었다.   
-또한 `shouldNotNeCompacted`의 조건 역시 원래대로 되돌렸다.   
+또한 `shouldNotBeCompacted`의 조건 역시 원래대로 되돌렸다.   
 <br>
 
 코드를 리팩터링하다 보면, 원래 했던 변경을 되돌리는 경우가 흔하다.   
