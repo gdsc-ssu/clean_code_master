@@ -445,7 +445,7 @@ private int findCommonSuffix() {
 멤버 변수 이름이 조금 더 정확하게 바뀌었다.   
 
 ### 5️⃣ 숨겨진 시간적인 결합(hidden temporal coupling) 수정 
-`findCommonsuffix`는 `findcommonPrefix`가 `prefixIndex`를 계산한다는 사실에 의존한다.    
+`findCommonSuffix`는 `findcommonPrefix`가 `prefixIndex`를 계산한다는 사실에 의존한다.    
 만약 `findCommonPrefix`와 `findCommonSuffix`를 잘못된 순서로 호출하면 무한 디버깅이 시작될 수 있다.    
 그래서 시간 결합을 외부에 노출하고자 `findCommonSuffix`를 고쳐 `prefixIndex`를 인수로 넘기도록 수정한다.   
 ```java
